@@ -1,0 +1,360 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "popupContent": "Kensington",
+        "markerType": "district"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.186725,
+          51.504148
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "popupContent": "Albert Hall",
+        "markerType": "performance site"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.177648,
+          51.500942
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "popupContent": "Buckingham Palace",
+        "markerType": "district"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.142908,
+          51.500662
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "popupContent": "Big Ben",
+        "markerType": "district"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.125206,
+          51.500502
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "popupContent": "Smithfield Market",
+        "markerType": "performance site"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.101752,
+          51.519172
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "popupContent": "London Tower",
+        "markerType": "district"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.076046,
+          51.508048
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "popupContent": "London Bridge",
+        "markerType": "district"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.087783,
+          51.508101
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "popupContent": "Trafalgar Square",
+        "markerType": "performance site"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.128746,
+          51.507868
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "popupContent": "Picadilly Circus",
+        "markerType": "performance site"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.134379,
+          51.509624
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "popupContent": "Town Hall",
+        "markerType": "district"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.128381,
+          51.509691
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "popupContent": "Southwark Park - The Oval",
+        "markerType": "performance site"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.052056,
+          51.493542
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "popupContent": "Southwark",
+        "markerType": "district"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.043731,
+          51.500996
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "popupContent": "Deptford",
+        "markerType": "district"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.043945,
+          51.482813
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "popupContent": "Lem's Spot",
+        "markerType": "performance site"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.037218,
+          51.491397
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "popupContent": "Lem's Spot",
+        "markerType": "campsite"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.036982,
+          51.491431
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "popupContent": "Cloucester Circus",
+        "markerType": "performance site"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.008562,
+          51.478142
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "popupContent": "Battersea Park",
+        "markerType": "performance site"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.158175,
+          51.479318
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "popupContent": "Blackfriars Bridge",
+        "markerType": "district"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.104477,
+          51.509824
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "popupContent": "St. George's Circus",
+        "markerType": "performance site"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.10452,
+          51.498805
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "popupContent": "Surrey Grounds",
+        "markerType": "performance site"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.115592,
+          51.484416
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "popupContent": "Rumor Mill",
+        "markerType": "rumor mill",
+        "visibility": "private"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.039182,
+          51.492206
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "popupContent": "Birmingham",
+        "markerType": "district",
+        "visibility": "public"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.84227,
+          52.482989
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "popupContent": "Manchester",
+        "markerType": "district",
+        "visibility": "public"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.183876,
+          53.488556
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "popupContent": "Glasgow",
+        "markerType": "district",
+        "visibility": "public"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.198494,
+          55.850457
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "popupContent": "Newcastle",
+        "markerType": "district",
+        "visibility": "public"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.621857,
+          54.987267
+        ]
+      }
+    }
+  ]
+}

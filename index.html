@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Le Grimoire Électrique</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+    }
+
+    a.skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: #222;
+      color: white;
+      padding: 8px;
+      z-index: 100;
+    }
+
+    a.skip-link:focus {
+      top: 0;
+    }
+
+    nav {
+      background: #222;
+      color: white;
+      display: flex;
+      align-items: center;
+      padding: 0.5em;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 1em;
+      flex-wrap: wrap;
+    }
+
+    .nav-buttons button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    .nav-buttons button.active {
+      text-decoration: underline;
+    }
+
+    .nav-dropdown {
+      display: none;
+      width: 100%;
+      margin-top: 0.5em;
+    }
+
+    .nav-dropdown select {
+      width: 100%;
+      padding: 0.5em;
+      font-size: 1rem;
+      background: #222;
+      color: white;
+      border: none;
+    }
+
+    @media (max-width: 768px) {
+      .nav-buttons {
+        display: none;
+      }
+      .nav-dropdown {
+        display: block;
+      }
+    }
+
+    .view {
+      display: none;
+      padding: 2em;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    .viewer-panel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1em;
+      flex-wrap: wrap;
+    }
+
+    .viewer-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 100%;
+      gap: 1em;
+    }
+
+    .viewer-title {
+      background: white;
+      padding: 6px 12px;
+      font-size: 1.1em;
+      font-weight: 600;
+      border: 1px solid #444;
+      border-radius: 4px;
+      display: none;
+    }
+
+    .viewer-image-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 100%;
+      max-height: 80vh;
+      overflow: hidden;
+    }
+
+    .viewer-image {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    video.bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    @media (max-width: 768px) {
+      video.bg-video {
+        display: none;
+      }
+    }
+
+    #bgVideo,
+    #bgFallback {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    #bgFallback {
+      display: none;
+    }
+    
+    @media (max-width: 768px) {
+      #bgVideo {
+        display: none;
+      }
+      #bgFallback {
+        display: block;
+      }
+    }
+
+    .home-content {
+      padding: 2em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .intro-box {
+      display: flex;
+      flex-wrap: wrap;
+      width: 90%;
+      max-width: 1000px;
+      margin: 2em auto;
+      background: #f0e4cf;
+      border: 2px solid black;
+    }
+    
+    .intro-title,
+    .intro-body {
+      flex: 1 1 50%;
+      aspect-ratio: 4 / 3;
+    }
+    
+    .intro-title img,
+    .intro-body img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    
+    .button-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2em;
+      width: 100%;
+      max-width: 1600px;
+    }
+    
+    .section-button {
+      width: clamp(140px, 20vw, 300px);
+      aspect-ratio: 3 / 2;
+      border: 2px solid black;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    
+    .section-button:nth-child(odd) {
+      transform: translateY(40px);
+    }
+    
+    .section-button img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    @media (max-width: 768px) {
+      .intro-box {
+        flex-direction: column;
+      }
+    
+      .section-button:nth-child(odd) {
+        transform: none;
+      }
+    
+      .button-grid {
+        flex-direction: column;
+        gap: 1.2em;
+      }
+    }
+
+    
+  </style>
+</head>
+<body>
+
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <!-- Optional Background Video -->
+  <video class="bg-video" autoplay muted loop playsinline>
+    <source src="gifs/Cirque Electrique Main000.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+
+  <img id="bgFallback" src="gifs/cirque electrique Still000.png" alt="Cirque Electrique background" />
+  
+  <nav>
+    <div class="nav-buttons">
+      <button onclick="showView('home')" class="active">Home</button>
+      <button onclick="showView('videos')">Videos</button>
+      <button onclick="showView('map')">Map</button>
+      <button onclick="showView('gallery')">Gallery</button>
+      <button onclick="showView('documents')">Documents</button>
+      <button onclick="showView('mechanics')">Mechanics</button>
+      <button onclick="showView('faq')">FAQ</button>
+    </div>
+    <div class="nav-dropdown">
+      <select id="navSelect" onchange="showView(this.value)">
+        <option value="home">Home</option>
+        <option value="videos">Videos</option>
+        <option value="map">Map</option>
+        <option value="gallery">Gallery</option>
+        <option value="documents">Documents</option>
+        <option value="mechanics">Mechanics</option>
+        <option value="faq">FAQ</option>
+      </select>
+    </div>
+  </nav>
+
+  <main id="main">
+    <div class="view active" id="home">
+      <div class="home-content">
+        <div class="intro-box">
+          <div class="intro-title">
+            <img src="gifs/Le Grimoire Electrique.gif" alt="Logo" />
+          </div>
+          <div class="intro-body">
+            <img src="gifs/Home Intro Text.png" alt="Intro Text" />
+          </div>
+        </div>
+    
+        <div class="button-grid">
+          <div class="section-button" onclick="showView('videos')">
+            <img src="gifs/VideosFlash.gif" alt="Videos" />
+          </div>
+          <div class="section-button" onclick="showView('map')">
+            <img src="gifs/Map.gif" alt="Map" />
+          </div>
+          <div class="section-button" onclick="showView('gallery')">
+            <img src="gifs/Gallery.gif" alt="Gallery" />
+          </div>
+          <div class="section-button" onclick="showView('documents')">
+            <img src="gifs/Documents.gif" alt="Documents" />
+          </div>
+          <div class="section-button" onclick="showView('mechanics')">
+            <img src="gifs/Mechanics.gif" alt="Mechanics" />
+          </div>
+          <div class="section-button" onclick="showView('faq')">
+            <img src="gifs/FAQ.gif" alt="FAQ" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="view" id="map">
+      <h1>Map View</h1>
+      <p>Placeholder for interactive map.</p>
+    </div>
+
+    <div class="view" id="gallery">
+      <div class="viewer-panel">
+        <div class="viewer-container">
+          <div id="imageTitle" class="viewer-title"></div>
+          <div class="viewer-image-wrapper">
+            <img id="mainImage" class="viewer-image" src="" alt="Selected Image" style="display: none;" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="view" id="documents">
+      <h1>Documents View</h1>
+      <p>Placeholder for document list.</p>
+    </div>
+
+    <div class="view" id="mechanics">
+      <h1>Game Mechanics View</h1>
+      <p>Placeholder for game system rules and content.</p>
+    </div>
+
+    <div class="view" id="faq">
+      <h1>FAQ View</h1>
+      <p>Frequently Asked Questions.</p>
+    </div>
+  </main>
+
+  <script>
+    function showView(id) {
+      document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = [...document.querySelectorAll('nav button')].find(btn => btn.textContent.toLowerCase() === id);
+      if (activeBtn) activeBtn.classList.add('active');
+      const dropdown = document.getElementById('navSelect');
+      if (dropdown) dropdown.value = id;
+    }
+
+    function showInViewer(src, title) {
+      const viewer = document.getElementById('mainImage');
+      const titleBox = document.getElementById('imageTitle');
+      viewer.src = src;
+      viewer.style.display = 'block';
+      titleBox.textContent = title || src.split('/').pop();
+      titleBox.style.display = 'block';
+    }
+  </script>
+
+</body>
+</html>
