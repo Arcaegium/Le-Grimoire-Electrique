@@ -1,17 +1,15 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Le Grimoire Électrique</title>
-
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.awesome-markers@2.0.4/dist/leaflet.awesome-markers.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-  
-  <style>
-      :root {
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Le Grimoire Électrique</title>
+<link href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" rel="stylesheet"/>
+<link href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" rel="stylesheet"/>
+<link href="https://unpkg.com/leaflet.awesome-markers@2.0.4/dist/leaflet.awesome-markers.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+<style>:root {
         --bg-dark: #222;
         --bg-light: #f0e4cf;
         --text-light: white;
@@ -312,167 +310,167 @@
           top: 80px;
           height: calc(100vh - 80px);
         }
-
-    </style>
-
+#mapContainer {
+  width: 100%;
+  height: 80vh;
+  position: relative;
+  z-index: 1;
+}
+@media (max-width: 768px) {
+  #mapContainer {
+    height: 70vh;
+    position: relative;
+  }
+}
+#map {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+.leaflet-control-attribution {
+  font-size: 12px;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 4px 6px;
+  margin: 4px;
+}</style>
 </head>
 <body>
-  <a href="#main" class="skip-link">Skip to content</a>
-
-  <video class="bg-video" autoplay muted loop playsinline id="bgVideo">
-    <source src="gifs/Cirque Electrique Main000.mp4" type="video/mp4" />
+<a class="skip-link" href="#main">Skip to content</a>
+<video autoplay="" class="bg-video" id="bgVideo" loop="" muted="" playsinline="">
+<source src="gifs/Cirque Electrique Main000.mp4" type="video/mp4"/>
     Your browser does not support the video tag.
   </video>
-
-  <img id="bgFallback" src="gifs/cirque electrique Still000.png" alt="Cirque Electrique background" />
-
-  <nav>
-    <div class="nav-buttons">
-      <button onclick="showView('home')" class="active">Home</button>
-      <button onclick="showView('videos')">Videos</button>
-      <button onclick="showView('map')">Map</button>
-      <button onclick="showView('gallery')">Gallery</button>
-      <button onclick="showView('documents')">Documents</button>
-      <button onclick="showView('mechanics')">Mechanics</button>
-      <button onclick="showView('faq')">FAQ</button>
-    </div>
-    <div class="nav-dropdown">
-      <select id="navSelect" onchange="showView(this.value)">
-        <option value="home">Home</option>
-        <option value="videos">Videos</option>
-        <option value="map">Map</option>
-        <option value="gallery">Gallery</option>
-        <option value="documents">Documents</option>
-        <option value="mechanics">Mechanics</option>
-        <option value="faq">FAQ</option>
-      </select>
-    </div>
-  </nav>
-
-  <main id="main">
-    <div class="view active" id="home">
-      <div class="home-content">
-        <div class="intro-box">
-          <div class="intro-title">
-            <img src="gifs/Le Grimoire Electrique.gif" alt="Logo" />
-          </div>
-          <div class="intro-body">
-            <img src="gifs/Home Intro Text.png" alt="Intro Text" />
-          </div>
-        </div>
-
-        <div class="button-grid">
-          <div class="section-button" onclick="showView('videos')">
-            <img src="gifs/VideosFlash.gif" alt="Videos" />
-          </div>
-          <div class="section-button" onclick="showView('map')">
-            <img src="gifs/Map.gif" alt="Map" />
-          </div>
-          <div class="section-button" onclick="showView('gallery')">
-            <img src="gifs/Gallery.gif" alt="Gallery" />
-          </div>
-          <div class="section-button" onclick="showView('documents')">
-            <img src="gifs/Documents.gif" alt="Documents" />
-          </div>
-          <div class="section-button" onclick="showView('mechanics')">
-            <img src="gifs/Mechanics.gif" alt="Mechanics" />
-          </div>
-          <div class="section-button" onclick="showView('faq')">
-            <img src="gifs/FAQ.gif" alt="FAQ" />
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="view" id="videos">
-      <img alt="Videos Title" src="gifs/VideosFlash.gif" style="display:block; margin: 40px auto; max-width: 100%; height: auto;" />
-      <div class="video-grid">
-        <div class="video-item">
-          <h3>Intro to Cirque Electrique</h3>
-          <iframe src="https://www.youtube.com/embed/ygY18Ax94TU" title="Intro to Cirque Electrique" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-        <div class="video-item">
-          <h3>Timeline of Cirque Electrique</h3>
-          <iframe src="https://www.youtube.com/embed/uvXA0CtOm9o" title="Timeline of Cirque Electrique" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-        <div class="video-item">
-          <h3>A History in Threads</h3>
-          <iframe src="https://www.youtube.com/embed/xRujUwXcE_c" title="A History in Threads" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-        <div class="video-item">
-          <h3>The Big Top Big Top 10</h3>
-          <iframe src="https://www.youtube.com/embed/JosZ-q5rGiw" title="The Big Top Big Top 10" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-        <div class="video-item">
-          <h3>Circus Management</h3>
-          <iframe src="https://www.youtube.com/embed/AAH3dVwGmuk" title="Circus Management" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-      </div>
-    </div>
-
-    
-    <div class="view" id="map">
-      <div id="ownerControls" style="display:none;">
-        <select id="typeSelector">
-          <option value="alchemicals">alchemicals</option>
-          <option value="campsite">campsite</option>
-          <option value="concern">concern</option>
-          <option value="contact">contact</option>
-          <option value="district">district</option>
-          <option value="doctor">doctor</option>
-          <option value="electriques">electriques</option>
-          <option value="mechaniques">mechaniques</option>
-          <option value="performance site">performance site</option>
-          <option value="rumor mill">rumor mill</option>
-          <option value="ward">ward</option>
-        </select>
-        <select id="visibilityToggle">
-          <option value="public">Public</option>
-          <option value="private">Private</option>
-        </select>
-        <button id="exportBtn" onclick="exportGeoJSON()">Export GeoJSON</button>
-      </div>
-      <div id="mapContainer"></div>
-    </div>
-
-
-
-    <div class="view" id="gallery">
-      <div class="viewer-panel">
-        <div class="viewer-container">
-          <div id="imageTitle" class="viewer-title"></div>
-          <div class="viewer-image-wrapper">
-            <img id="mainImage" class="viewer-image" src="" alt="Selected Image" style="display: none;" />
-          </div>
-        </div>
-      </div>
-    </div>
-
-    
-    <div class="view" id="documents">
-      <h1>Documents View</h1>
-      <p>Placeholder for document list.</p>
-    </div>
-
-    
-    <div class="view" id="mechanics">
-      <h1>Game Mechanics View</h1>
-      <p>Placeholder for game system rules and content.</p>
-    </div>
-
-    
-    <div class="view" id="faq">
-      <h1>FAQ View</h1>
-      <p>Frequently Asked Questions.</p>
-    </div>
-  </main>
-
-  
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet.awesome-markers@2.0.4/dist/leaflet.awesome-markers.js"></script>
-  <script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>
-  
-  <script>
+<img alt="Cirque Electrique background" id="bgFallback" src="gifs/cirque electrique Still000.png"/>
+<nav>
+<div class="nav-buttons">
+<button class="active" onclick="showView('home')">Home</button>
+<button onclick="showView('videos')">Videos</button>
+<button onclick="showView('map')">Map</button>
+<button onclick="showView('gallery')">Gallery</button>
+<button onclick="showView('documents')">Documents</button>
+<button onclick="showView('mechanics')">Mechanics</button>
+<button onclick="showView('faq')">FAQ</button>
+</div>
+<div class="nav-dropdown">
+<select id="navSelect" onchange="showView(this.value)">
+<option value="home">Home</option>
+<option value="videos">Videos</option>
+<option value="map">Map</option>
+<option value="gallery">Gallery</option>
+<option value="documents">Documents</option>
+<option value="mechanics">Mechanics</option>
+<option value="faq">FAQ</option>
+</select>
+</div>
+</nav>
+<main id="main">
+<div class="view active" id="home">
+<div class="home-content">
+<div class="intro-box">
+<div class="intro-title">
+<img alt="Logo" src="gifs/Le Grimoire Electrique.gif"/>
+</div>
+<div class="intro-body">
+<img alt="Intro Text" src="gifs/Home Intro Text.png"/>
+</div>
+</div>
+<div class="button-grid">
+<div class="section-button" onclick="showView('videos')">
+<img alt="Videos" src="gifs/VideosFlash.gif"/>
+</div>
+<div class="section-button" onclick="showView('map')">
+<img alt="Map" src="gifs/Map.gif"/>
+</div>
+<div class="section-button" onclick="showView('gallery')">
+<img alt="Gallery" src="gifs/Gallery.gif"/>
+</div>
+<div class="section-button" onclick="showView('documents')">
+<img alt="Documents" src="gifs/Documents.gif"/>
+</div>
+<div class="section-button" onclick="showView('mechanics')">
+<img alt="Mechanics" src="gifs/Mechanics.gif"/>
+</div>
+<div class="section-button" onclick="showView('faq')">
+<img alt="FAQ" src="gifs/FAQ.gif"/>
+</div>
+</div>
+</div>
+</div>
+<div class="view" id="videos">
+<img alt="Videos Title" src="gifs/VideosFlash.gif" style="display:block; margin: 40px auto; max-width: 100%; height: auto;"/>
+<div class="video-grid">
+<div class="video-item">
+<h3>Intro to Cirque Electrique</h3>
+<iframe allowfullscreen="" frameborder="0" loading="lazy" src="https://www.youtube.com/embed/ygY18Ax94TU" title="Intro to Cirque Electrique"></iframe>
+</div>
+<div class="video-item">
+<h3>Timeline of Cirque Electrique</h3>
+<iframe allowfullscreen="" frameborder="0" loading="lazy" src="https://www.youtube.com/embed/uvXA0CtOm9o" title="Timeline of Cirque Electrique"></iframe>
+</div>
+<div class="video-item">
+<h3>A History in Threads</h3>
+<iframe allowfullscreen="" frameborder="0" loading="lazy" src="https://www.youtube.com/embed/xRujUwXcE_c" title="A History in Threads"></iframe>
+</div>
+<div class="video-item">
+<h3>The Big Top Big Top 10</h3>
+<iframe allowfullscreen="" frameborder="0" loading="lazy" src="https://www.youtube.com/embed/JosZ-q5rGiw" title="The Big Top Big Top 10"></iframe>
+</div>
+<div class="video-item">
+<h3>Circus Management</h3>
+<iframe allowfullscreen="" frameborder="0" loading="lazy" src="https://www.youtube.com/embed/AAH3dVwGmuk" title="Circus Management"></iframe>
+</div>
+</div>
+</div>
+<div class="view" id="map">
+<div id="ownerControls" style="display:none;">
+<select id="typeSelector">
+<option value="alchemicals">alchemicals</option>
+<option value="campsite">campsite</option>
+<option value="concern">concern</option>
+<option value="contact">contact</option>
+<option value="district">district</option>
+<option value="doctor">doctor</option>
+<option value="electriques">electriques</option>
+<option value="mechaniques">mechaniques</option>
+<option value="performance site">performance site</option>
+<option value="rumor mill">rumor mill</option>
+<option value="ward">ward</option>
+</select>
+<select id="visibilityToggle">
+<option value="public">Public</option>
+<option value="private">Private</option>
+</select>
+<button id="exportBtn" onclick="exportGeoJSON()">Export GeoJSON</button>
+</div>
+<div id="mapContainer"></div>
+</div>
+<div class="view" id="gallery">
+<div class="viewer-panel">
+<div class="viewer-container">
+<div class="viewer-title" id="imageTitle"></div>
+<div class="viewer-image-wrapper">
+<img alt="Selected Image" class="viewer-image" id="mainImage" src="" style="display: none;"/>
+</div>
+</div>
+</div>
+</div>
+<div class="view" id="documents">
+<h1>Documents View</h1>
+<p>Placeholder for document list.</p>
+</div>
+<div class="view" id="mechanics">
+<h1>Game Mechanics View</h1>
+<p>Placeholder for game system rules and content.</p>
+</div>
+<div class="view" id="faq">
+<h1>FAQ View</h1>
+<p>Frequently Asked Questions.</p>
+</div>
+</main>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.awesome-markers@2.0.4/dist/leaflet.awesome-markers.js"></script>
+<script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>
+<script>
     function showView(id) {
       document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
       document.getElementById(id).classList.add('active');
@@ -493,8 +491,7 @@
       titleBox.style.display = 'block';
     }
   </script>
-
-  <script>
+<script>
     let mapInitialized = false;
     
     function initMap() {
@@ -632,6 +629,5 @@
       legend.addTo(map);
     }
     </script>
-  
 </body>
 </html>
