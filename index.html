@@ -4,7 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Le Grimoire Électrique</title>
-     <style>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.awesome-markers@2.0.4/dist/leaflet.awesome-markers.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  
+  <style>
       :root {
         --bg-dark: #222;
         --bg-light: #f0e4cf;
@@ -272,7 +278,41 @@
           max-height: 100%;
           object-fit: contain;
         }
-      }
+
+        .legend {
+          background-color: var(--bg-light);
+          padding: 10px 12px;
+          font-size: 14px;
+          box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+          line-height: 22px;
+          text-align: left;
+        }
+        
+        .legend i {
+          width: 20px;
+          height: 20px;
+          float: left;
+          margin-right: 8px;
+          border-radius: 50%;
+          text-align: center;
+          line-height: 20px;
+          color: white;
+        }
+
+        #mapContainer {
+          position: fixed;
+          top: 48px;
+          left: 0;
+          right: 0;
+          height: calc(100vh - 48px);
+          z-index: 0;
+        }
+        
+        body.owner-active #mapContainer {
+          top: 80px;
+          height: calc(100vh - 80px);
+        }
+
     </style>
 
 </head>
@@ -392,7 +432,6 @@
         </select>
         <button id="exportBtn" onclick="exportGeoJSON()">Export GeoJSON</button>
       </div>
-      <div id="mapContainer" style="width:100%; height:80vh;"></div>
     </div>
 
 
@@ -407,22 +446,26 @@
       </div>
     </div>
 
+    
     <div class="view" id="documents">
       <h1>Documents View</h1>
       <p>Placeholder for document list.</p>
     </div>
 
+    
     <div class="view" id="mechanics">
       <h1>Game Mechanics View</h1>
       <p>Placeholder for game system rules and content.</p>
     </div>
 
+    
     <div class="view" id="faq">
       <h1>FAQ View</h1>
       <p>Frequently Asked Questions.</p>
     </div>
   </main>
 
+  
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.awesome-markers@2.0.4/dist/leaflet.awesome-markers.js"></script>
   <script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>
