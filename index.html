@@ -9,7 +9,7 @@
       margin: 0;
       font-family: sans-serif;
     }
-
+  
     a.skip-link {
       position: absolute;
       top: -40px;
@@ -19,11 +19,11 @@
       padding: 8px;
       z-index: 100;
     }
-
+  
     a.skip-link:focus {
       top: 0;
     }
-
+  
     nav {
       background: #222;
       color: white;
@@ -33,13 +33,13 @@
       justify-content: space-between;
       flex-wrap: wrap;
     }
-
+  
     .nav-buttons {
       display: flex;
       gap: 1em;
       flex-wrap: wrap;
     }
-
+  
     .nav-buttons button {
       background: none;
       border: none;
@@ -47,17 +47,17 @@
       font-size: 1em;
       cursor: pointer;
     }
-
+  
     .nav-buttons button.active {
       text-decoration: underline;
     }
-
+  
     .nav-dropdown {
       display: none;
       width: 100%;
       margin-top: 0.5em;
     }
-
+  
     .nav-dropdown select {
       width: 100%;
       padding: 0.5em;
@@ -66,25 +66,16 @@
       color: white;
       border: none;
     }
-
-    @media (max-width: 768px) {
-      .nav-buttons {
-        display: none;
-      }
-      .nav-dropdown {
-        display: block;
-      }
-    }
-
+  
     .view {
       display: none;
       padding: 2em;
     }
-
+  
     .view.active {
       display: block;
     }
-
+  
     .viewer-panel {
       display: flex;
       align-items: center;
@@ -92,7 +83,7 @@
       padding: 1em;
       flex-wrap: wrap;
     }
-
+  
     .viewer-container {
       display: flex;
       flex-direction: column;
@@ -102,7 +93,7 @@
       max-width: 100%;
       gap: 1em;
     }
-
+  
     .viewer-title {
       background: white;
       padding: 6px 12px;
@@ -112,7 +103,7 @@
       border-radius: 4px;
       display: none;
     }
-
+  
     .viewer-image-wrapper {
       display: flex;
       align-items: center;
@@ -122,13 +113,13 @@
       max-height: 80vh;
       overflow: hidden;
     }
-
+  
     .viewer-image {
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
     }
-
+  
     .bg-video,
     #bgFallback {
       position: fixed;
@@ -140,27 +131,18 @@
       z-index: -1;
       pointer-events: none;
     }
-
+  
     #bgFallback {
       display: none;
     }
-
-    @media (max-width: 768px) {
-      .bg-video {
-        display: none;
-      }
-      #bgFallback {
-        display: block;
-      }
-    }
-
+  
     .home-content {
       padding: 2em;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
-
+  
     .intro-box {
       display: flex;
       flex-wrap: wrap;
@@ -171,13 +153,13 @@
       border: 2px solid black;
       box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
     }
-    
+  
     .intro-title,
     .intro-body {
       flex: 1 1 50%;
       aspect-ratio: 4 / 3;
     }
-    
+  
     .intro-title img,
     .intro-body img {
       width: 100%;
@@ -185,30 +167,7 @@
       object-fit: contain;
       display: block;
     }
-    
-    @media (max-width: 768px) {
-      .intro-box {
-        flex-direction: column;
-        margin: 4em auto 2em auto;
-        padding: 1em 0;
-        width: 95%;
-      }
-    
-      .intro-title,
-      .intro-body {
-        aspect-ratio: unset;
-        width: 100%;
-        height: auto;
-      }
-    
-      .intro-title img,
-      .intro-body img {
-        height: auto;
-        max-height: 100%;
-        object-fit: contain;
-      }
-    }
-
+  
     .button-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -217,7 +176,7 @@
       max-width: 1600px;
       justify-items: center;
     }
-
+  
     .section-button {
       width: 100%;
       aspect-ratio: 3 / 2;
@@ -228,19 +187,54 @@
       justify-content: center;
       cursor: pointer;
     }
-
+  
     .section-button img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
-
+  
+    /* --- MOBILE OVERRIDES --- */
     @media (max-width: 768px) {
+      .nav-buttons {
+        display: none;
+      }
+  
+      .nav-dropdown {
+        display: block;
+      }
+  
+      .bg-video {
+        display: none;
+      }
+  
+      #bgFallback {
+        display: block;
+      }
+  
       .intro-box {
         flex-direction: column;
+        margin: 4em auto 2em auto;
+        padding: 1em 0;
+        width: 95%;
+      }
+  
+      .intro-title,
+      .intro-body {
+        aspect-ratio: unset;
+        width: 100%;
+        height: auto;
+      }
+  
+      .intro-title img,
+      .intro-body img {
+        height: auto;
+        max-height: 100%;
+        object-fit: contain;
       }
     }
   </style>
+
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to content</a>
