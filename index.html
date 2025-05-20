@@ -4,236 +4,276 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Le Grimoire Électrique</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: sans-serif;
-    }
-  
-    a.skip-link {
-      position: absolute;
-      top: -40px;
-      left: 0;
-      background: #222;
-      color: white;
-      padding: 8px;
-      z-index: 100;
-    }
-  
-    a.skip-link:focus {
-      top: 0;
-    }
-  
-    nav {
-      background: #222;
-      color: white;
-      display: flex;
-      align-items: center;
-      padding: 0.5em;
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
-  
-    .nav-buttons {
-      display: flex;
-      gap: 1em;
-      flex-wrap: wrap;
-    }
-  
-    .nav-buttons button {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 1em;
-      cursor: pointer;
-    }
-  
-    .nav-buttons button.active {
-      text-decoration: underline;
-    }
-  
-    .nav-dropdown {
-      display: none;
-      width: 100%;
-      margin-top: 0.5em;
-    }
-  
-    .nav-dropdown select {
-      width: 100%;
-      padding: 0.5em;
-      font-size: 1rem;
-      background: #222;
-      color: white;
-      border: none;
-    }
-  
-    .view {
-      display: none;
-      padding: 2em;
-    }
-  
-    .view.active {
-      display: block;
-    }
-  
-    .viewer-panel {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1em;
-      flex-wrap: wrap;
-    }
-  
-    .viewer-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      max-width: 100%;
-      gap: 1em;
-    }
-  
-    .viewer-title {
-      background: white;
-      padding: 6px 12px;
-      font-size: 1.1em;
-      font-weight: 600;
-      border: 1px solid #444;
-      border-radius: 4px;
-      display: none;
-    }
-  
-    .viewer-image-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      max-width: 100%;
-      max-height: 80vh;
-      overflow: hidden;
-    }
-  
-    .viewer-image {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-    }
-  
-    .bg-video,
-    #bgFallback {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      object-fit: cover;
-      z-index: -1;
-      pointer-events: none;
-    }
-  
-    #bgFallback {
-      display: none;
-    }
-  
-    .home-content {
-      padding: 2em;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-  
-    .intro-box {
-      display: flex;
-      flex-wrap: wrap;
-      width: 90%;
-      max-width: 1000px;
-      margin: 3em auto;
-      background: #f0e4cf;
-      border: 2px solid black;
-      box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
-    }
-  
-    .intro-title,
-    .intro-body {
-      flex: 1 1 50%;
-      aspect-ratio: 4 / 3;
-    }
-  
-    .intro-title img,
-    .intro-body img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-    }
-  
-    .button-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 2em;
-      width: 100%;
-      max-width: 1600px;
-      justify-items: center;
-    }
-  
-    .section-button {
-      width: 100%;
-      aspect-ratio: 3 / 2;
-      border: 2px solid black;
-      background: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-  
-    .section-button img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  
-    /* --- MOBILE OVERRIDES --- */
-    @media (max-width: 768px) {
+     <style>
+      :root {
+        --bg-dark: #222;
+        --bg-light: #f0e4cf;
+        --text-light: white;
+        --text-dark: #111;
+        --max-width: 1600px;
+        --mobile-break: 768px;
+      }
+    
+      body {
+        margin: 0;
+        font-family: sans-serif;
+      }
+    
+      a.skip-link {
+        position: absolute;
+        top: -40px;
+        left: 0;
+        background: var(--bg-dark);
+        color: var(--text-light);
+        padding: 8px;
+        z-index: 100;
+      }
+    
+      a.skip-link:focus {
+        top: 0;
+      }
+    
+      nav {
+        background: var(--bg-dark);
+        color: var(--text-light);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.5em;
+        flex-wrap: wrap;
+      }
+    
       .nav-buttons {
-        display: none;
+        display: flex;
+        gap: 1em;
+        flex-wrap: wrap;
       }
-  
+    
+      .nav-buttons button {
+        background: none;
+        border: none;
+        color: var(--text-light);
+        font-size: 1em;
+        cursor: pointer;
+      }
+    
+      .nav-buttons button.active {
+        text-decoration: underline;
+      }
+    
       .nav-dropdown {
-        display: block;
-      }
-  
-      .bg-video {
         display: none;
+        width: 100%;
+        margin-top: 0.5em;
       }
-  
-      #bgFallback {
+    
+      .nav-dropdown select {
+        width: 100%;
+        padding: 0.5em;
+        font-size: 1rem;
+        background: var(--bg-dark);
+        color: var(--text-light);
+        border: none;
+      }
+    
+      .view {
+        display: none;
+        padding: 2em;
+      }
+    
+      .view.active {
         display: block;
       }
-  
-      .intro-box {
+    
+      .home-content {
+        padding: 2em;
+        display: flex;
         flex-direction: column;
-        margin: 4em auto 2em auto;
-        padding: 1em 0;
-        width: 95%;
+        align-items: center;
       }
-  
+    
+      .intro-box {
+        display: flex;
+        flex-wrap: wrap;
+        width: 90%;
+        max-width: 1000px;
+        margin: 3em auto;
+        padding: 0;
+        background: var(--bg-light);
+        border: 2px solid black;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+      }
+    
       .intro-title,
       .intro-body {
-        aspect-ratio: unset;
-        width: 100%;
-        height: auto;
+        flex: 1 1 50%;
+        aspect-ratio: 4 / 3;
       }
-  
+    
       .intro-title img,
       .intro-body img {
-        height: auto;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+      }
+    
+      .button-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 2em;
+        width: 100%;
+        max-width: var(--max-width);
+        justify-items: center;
+      }
+    
+      .section-button {
+        width: 100%;
+        aspect-ratio: 3 / 2;
+        border: 2px solid black;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+    
+      .section-button img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    
+      .video-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2em;
+        justify-content: center;
+        padding: 2em 1em;
+      }
+    
+      .video-item {
+        width: 100%;
+        max-width: 560px;
+        text-align: center;
+      }
+    
+      .video-item h3 {
+        background: rgba(255, 255, 255, 0.85);
+        display: inline-block;
+        padding: 8px 16px;
+        margin: 0 auto 10px;
+        font-size: 1.2em;
+        font-weight: 600;
+        color: var(--text-dark);
+        border: 1px solid black;
+        border-radius: 6px;
+      }
+    
+      .video-item iframe {
+        width: 100%;
+        height: 315px;
+        border: none;
+      }
+    
+      .viewer-panel {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1em;
+        flex-wrap: wrap;
+      }
+    
+      .viewer-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        gap: 1em;
+      }
+    
+      .viewer-title {
+        background: white;
+        padding: 6px 12px;
+        font-size: 1.1em;
+        font-weight: 600;
+        border: 1px solid #444;
+        border-radius: 4px;
+        display: none;
+      }
+    
+      .viewer-image-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        max-height: 80vh;
+        overflow: hidden;
+      }
+    
+      .viewer-image {
+        max-width: 100%;
         max-height: 100%;
         object-fit: contain;
       }
-    }
-  </style>
+    
+      .bg-video,
+      #bgFallback {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        object-fit: cover;
+        z-index: -1;
+        pointer-events: none;
+      }
+    
+      #bgFallback {
+        display: none;
+      }
+    
+      /* --- MOBILE OVERRIDES --- */
+      @media (max-width: var(--mobile-break)) {
+        .nav-buttons {
+          display: none;
+        }
+    
+        .nav-dropdown {
+          display: block;
+        }
+    
+        .bg-video {
+          display: none;
+        }
+    
+        #bgFallback {
+          display: block;
+        }
+    
+        .intro-box {
+          flex-direction: column;
+          margin: 4em auto 2em auto;
+          padding: 1em 0;
+          width: 95%;
+        }
+    
+        .intro-title,
+        .intro-body {
+          aspect-ratio: unset;
+          width: 100%;
+          height: auto;
+        }
+    
+        .intro-title img,
+        .intro-body img {
+          height: auto;
+          max-height: 100%;
+          object-fit: contain;
+        }
+      }
+    </style>
 
 </head>
 <body>
@@ -305,9 +345,31 @@
     </div>
 
     <div class="view" id="videos">
-      <h1>Videos View</h1>
-      <p>Placeholder for video content.</p>
+      <img alt="Videos Title" src="gifs/VideosFlash.gif" style="display:block; margin: 40px auto; max-width: 600px;" />
+      <div class="video-grid">
+        <div class="video-item">
+          <h3>Intro to Cirque Electrique</h3>
+          <iframe src="https://www.youtube.com/embed/ygY18Ax94TU" title="Intro to Cirque Electrique" frameborder="0" allowfullscreen loading="lazy"></iframe>
+        </div>
+        <div class="video-item">
+          <h3>Timeline of Cirque Electrique</h3>
+          <iframe src="https://www.youtube.com/embed/uvXA0CtOm9o" title="Timeline of Cirque Electrique" frameborder="0" allowfullscreen loading="lazy"></iframe>
+        </div>
+        <div class="video-item">
+          <h3>A History in Threads</h3>
+          <iframe src="https://www.youtube.com/embed/xRujUwXcE_c" title="A History in Threads" frameborder="0" allowfullscreen loading="lazy"></iframe>
+        </div>
+        <div class="video-item">
+          <h3>The Big Top Big Top 10</h3>
+          <iframe src="https://www.youtube.com/embed/JosZ-q5rGiw" title="The Big Top Big Top 10" frameborder="0" allowfullscreen loading="lazy"></iframe>
+        </div>
+        <div class="video-item">
+          <h3>Circus Management</h3>
+          <iframe src="https://www.youtube.com/embed/AAH3dVwGmuk" title="Circus Management" frameborder="0" allowfullscreen loading="lazy"></iframe>
+        </div>
+      </div>
     </div>
+
     
     <div class="view" id="map">
       <h1>Map View</h1>
