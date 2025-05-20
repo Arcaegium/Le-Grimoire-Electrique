@@ -129,24 +129,7 @@
       object-fit: contain;
     }
 
-    video.bg-video {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      object-fit: cover;
-      z-index: -1;
-      pointer-events: none;
-    }
-
-    @media (max-width: 768px) {
-      video.bg-video {
-        display: none;
-      }
-    }
-
-    #bgVideo,
+    .bg-video,
     #bgFallback {
       position: fixed;
       top: 0;
@@ -157,13 +140,13 @@
       z-index: -1;
       pointer-events: none;
     }
-    
+
     #bgFallback {
       display: none;
     }
-    
+
     @media (max-width: 768px) {
-      #bgVideo {
+      .bg-video {
         display: none;
       }
       #bgFallback {
@@ -177,7 +160,7 @@
       flex-direction: column;
       align-items: center;
     }
-    
+
     .intro-box {
       display: flex;
       flex-wrap: wrap;
@@ -187,13 +170,13 @@
       background: #f0e4cf;
       border: 2px solid black;
     }
-    
+
     .intro-title,
     .intro-body {
       flex: 1 1 50%;
       aspect-ratio: 4 / 3;
     }
-    
+
     .intro-title img,
     .intro-body img {
       width: 100%;
@@ -201,18 +184,18 @@
       object-fit: contain;
       display: block;
     }
-    
+
     .button-grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 2em;
       width: 100%;
       max-width: 1600px;
+      justify-items: center;
     }
-    
+
     .section-button {
-      width: clamp(140px, 20vw, 300px);
+      width: 100%;
       aspect-ratio: 3 / 2;
       border: 2px solid black;
       background: white;
@@ -221,47 +204,30 @@
       justify-content: center;
       cursor: pointer;
     }
-    
-    .section-button:nth-child(odd) {
-      transform: translateY(40px);
-    }
-    
+
     .section-button img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
-    
+
     @media (max-width: 768px) {
       .intro-box {
         flex-direction: column;
       }
-    
-      .section-button:nth-child(odd) {
-        transform: none;
-      }
-    
-      .button-grid {
-        flex-direction: column;
-        gap: 1.2em;
-      }
     }
-
-    
   </style>
 </head>
 <body>
-
   <a href="#main" class="skip-link">Skip to content</a>
 
-  <!-- Optional Background Video -->
-  <video class="bg-video" autoplay muted loop playsinline>
+  <video class="bg-video" autoplay muted loop playsinline id="bgVideo">
     <source src="gifs/Cirque Electrique Main000.mp4" type="video/mp4" />
     Your browser does not support the video tag.
   </video>
 
   <img id="bgFallback" src="gifs/cirque electrique Still000.png" alt="Cirque Electrique background" />
-  
+
   <nav>
     <div class="nav-buttons">
       <button onclick="showView('home')" class="active">Home</button>
@@ -296,7 +262,7 @@
             <img src="gifs/Home Intro Text.png" alt="Intro Text" />
           </div>
         </div>
-    
+
         <div class="button-grid">
           <div class="section-button" onclick="showView('videos')">
             <img src="gifs/VideosFlash.gif" alt="Videos" />
@@ -319,7 +285,6 @@
         </div>
       </div>
     </div>
-
 
     <div class="view" id="map">
       <h1>Map View</h1>
@@ -373,6 +338,5 @@
       titleBox.style.display = 'block';
     }
   </script>
-
 </body>
 </html>
