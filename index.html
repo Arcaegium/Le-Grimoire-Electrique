@@ -372,9 +372,29 @@
 
     
     <div class="view" id="map">
-      <h1>Map View</h1>
-      <p>Placeholder for interactive map.</p>
+      <div id="ownerControls" style="display:none;">
+        <select id="typeSelector">
+          <option value="alchemicals">alchemicals</option>
+          <option value="campsite">campsite</option>
+          <option value="concern">concern</option>
+          <option value="contact">contact</option>
+          <option value="district">district</option>
+          <option value="doctor">doctor</option>
+          <option value="electriques">electriques</option>
+          <option value="mechaniques">mechaniques</option>
+          <option value="performance site">performance site</option>
+          <option value="rumor mill">rumor mill</option>
+          <option value="ward">ward</option>
+        </select>
+        <select id="visibilityToggle">
+          <option value="public">Public</option>
+          <option value="private">Private</option>
+        </select>
+        <button id="exportBtn" onclick="exportGeoJSON()">Export GeoJSON</button>
+      </div>
+      <div id="mapContainer" style="width:100%; height:80vh;"></div>
     </div>
+
 
     <div class="view" id="gallery">
       <div class="viewer-panel">
@@ -403,6 +423,10 @@
     </div>
   </main>
 
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.awesome-markers@2.0.4/dist/leaflet.awesome-markers.js"></script>
+  <script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>
+  
   <script>
     function showView(id) {
       document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
@@ -412,6 +436,7 @@
       if (activeBtn) activeBtn.classList.add('active');
       const dropdown = document.getElementById('navSelect');
       if (dropdown) dropdown.value = id;
+      if (id === 'map') initMap();
     }
 
     function showInViewer(src, title) {
@@ -423,5 +448,145 @@
       titleBox.style.display = 'block';
     }
   </script>
+
+  <script>
+    let mapInitialized = false;
+    
+    function initMap() {
+      if (mapInitialized) return;
+      mapInitialized = true;
+    
+      let maptilerKey = new URLSearchParams(window.location.search).get('key') || localStorage.getItem('maptilerKey');
+      if (!maptilerKey) {
+        maptilerKey = prompt('Enter your MapTiler API key:');
+        if (maptilerKey) {
+          localStorage.setItem('maptilerKey', maptilerKey);
+          window.location.search = `?key=${maptilerKey}`;
+        }
+      }
+    
+      const isOwner = maptilerKey === 'r0HKkxDJMfqlCVzaro7d';
+      const map = L.map('mapContainer').setView([51.5074, -0.1278], 13);
+    
+      if (isOwner) document.getElementById('ownerControls').style.display = 'block';
+    
+      L.tileLayer(`https://api.maptiler.com/tiles/uk-osgb10k1888/{z}/{x}/{y}.jpg?key=${maptilerKey}`, {
+        tileSize: 256,
+        minZoom: 0,
+        maxZoom: 18,
+        attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://maps.nls.uk/">NLS</a>'
+      }).addTo(map);
+    
+      const publicMarkers = new L.FeatureGroup().addTo(map);
+      const privateMarkers = new L.FeatureGroup();
+      if (isOwner) privateMarkers.addTo(map);
+    
+      const drawControl = new L.Control.Draw({
+        edit: { featureGroup: publicMarkers, edit: isOwner },
+        draw: {
+          polygon: true, polyline: true, rectangle: true, marker: true,
+          circle: false, circlemarker: false
+        }
+      });
+      map.addControl(drawControl);
+    
+      const markerStyles = {
+        'alchemicals': { icon: 'flask', markerColor: 'cadetblue' },
+        'campsite': { icon: 'home', markerColor: 'blue' },
+        'concern': { icon: 'exclamation-triangle', markerColor: 'red' },
+        'contact': { icon: 'user', markerColor: 'purple' },
+        'district': { icon: 'flag-o', markerColor: 'darkgreen' },
+        'doctor': { icon: 'plus-square', markerColor: 'purple' },
+        'electriques': { icon: 'tachometer', markerColor: 'cadetblue' },
+        'mechaniques': { icon: 'cogs', markerColor: 'cadetblue' },
+        'performance site': { icon: 'star', markerColor: 'green' },
+        'rumor mill': { icon: 'comments-o', markerColor: 'orange' },
+        'ward': { icon: 'shield', markerColor: 'darkred' }
+      };
+    
+      function getMarkerStyle(type) {
+        const style = markerStyles[type] || { icon: 'map-marker', markerColor: 'cadetblue' };
+        return L.AwesomeMarkers.icon({ ...style, prefix: 'fa' });
+      }
+    
+      map.on(L.Draw.Event.CREATED, e => {
+        if (e.layerType === 'marker') {
+          const type = document.getElementById('typeSelector').value.trim();
+          const isPublic = document.getElementById('visibilityToggle').value === 'public';
+          const label = prompt('Enter label for marker:') || '';
+          const icon = getMarkerStyle(type);
+          const marker = L.marker(e.layer.getLatLng(), { icon });
+    
+          if (label.trim()) marker.bindPopup(label);
+          marker.feature = {
+            type: 'Feature',
+            properties: {
+              popupContent: label,
+              markerType: type,
+              visibility: isPublic ? 'public' : 'private'
+            },
+            geometry: {
+              type: 'Point',
+              coordinates: [e.layer.getLatLng().lng, e.layer.getLatLng().lat]
+            }
+          };
+    
+          (isPublic ? publicMarkers : privateMarkers).addLayer(marker);
+        }
+      });
+    
+      function exportGeoJSON() {
+        const allMarkers = new L.FeatureGroup();
+        publicMarkers.eachLayer(layer => allMarkers.addLayer(layer));
+        privateMarkers.eachLayer(layer => allMarkers.addLayer(layer));
+        const json = allMarkers.toGeoJSON();
+        const blob = new Blob([JSON.stringify(json, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'data.geojson';
+        link.click();
+        URL.revokeObjectURL(url);
+      }
+    
+      window.exportGeoJSON = exportGeoJSON;
+    
+      fetch('data.geojson')
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (!data) return;
+          L.geoJSON(data, {
+            pointToLayer: (feature, latlng) => {
+              const visibility = feature.properties?.visibility || 'public';
+              const isPrivate = visibility === 'private';
+              if (isPrivate && !isOwner) return null;
+              const icon = getMarkerStyle(feature.properties?.markerType);
+              const marker = L.marker(latlng, { icon });
+              if (feature.properties?.popupContent) marker.bindPopup(feature.properties.popupContent);
+              marker.feature = feature;
+              return marker;
+            }
+          }).eachLayer(layer => {
+            const isPrivate = layer.feature?.properties?.visibility === 'private';
+            (isPrivate ? privateMarkers : publicMarkers).addLayer(layer);
+          });
+        });
+    
+      L.control.scale({ metric: true, imperial: false }).addTo(map);
+      const legend = L.control({ position: 'bottomright' });
+      legend.onAdd = () => {
+        const div = L.DomUtil.create('div', 'legend');
+        for (const key in markerStyles) {
+          const { icon, markerColor } = markerStyles[key];
+          div.innerHTML += `<div style="margin-bottom:4px;">
+            <i class="fa fa-${icon}" style="color:white; background:${markerColor}; border-radius:50%; width:22px; height:22px; line-height:22px; text-align:center;"></i> ${key}
+          </div>`;
+        }
+        return div;
+      };
+      legend.addTo(map);
+    }
+    </script>
+  
 </body>
 </html>
