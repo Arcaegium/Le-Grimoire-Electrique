@@ -633,6 +633,7 @@
                 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
                 <script src="https://unpkg.com/leaflet.awesome-markers@2.0.4/dist/leaflet.awesome-markers.js"></script>
                 <script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>
+                <script src="galleryData.js"></script>
                 
                 <script>
                         function showView(id) {
@@ -656,21 +657,6 @@
                 </script>
 
                 <script>
-                        const galleryData = {
-                                people: [
-                                        'gallery/people/sample1.jpg',
-                                        'gallery/people/sample2.jpg',
-                                        'gallery/people/sample3.jpg'
-                                ],
-                                places: [
-                                        'gallery/places/sample1.jpg',
-                                        'gallery/places/sample2.jpg'
-                                ],
-                                things: [
-                                        'gallery/things/sample1.jpg',
-                                        'gallery/things/sample2.jpg'
-                                ]
-                        };
 
                         const preview = document.getElementById('mainPreview');
                         const strip = document.getElementById('thumbnailStrip');
@@ -678,14 +664,14 @@
                         
                         function loadCategory(category) {
                                 strip.innerHTML = '';
-                                galleryData[category].forEach(src => {
+                                window.galleryData[category].forEach(src => {
                                         const img = document.createElement('img');
                                         img.src = src;
                                         img.alt = src.split('/').pop();
                                         img.onclick = () => preview.src = src;
                                         strip.appendChild(img);
                                 });
-                                preview.src = galleryData[category][0];
+                                preview.src = window.galleryData[category][0];
                                 switchButtons.forEach(b => b.classList.remove('active'));
                                 document.querySelector(`[data-category="${category}"]`).classList.add('active');
                         }
