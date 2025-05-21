@@ -656,22 +656,26 @@
               fetch('data.geojson')
                 .then(res => res.ok ? res.json() : null)
                 .then(data => {
-                  if (!data) return;
-                  L.geoJSON(data, {
-                    pointToLayer: (feature, latlng) => {
-                      const visibility = feature.properties?.visibility || 'public';
-                      const isPrivate = visibility === 'private';
-                      if (isPrivate && !isOwner) return null;
-                      const icon = getMarkerStyle(feature.properties?.markerType);
-                      const marker = L.marker(latlng, { icon });
-                      if (feature.properties?.popupContent) marker.bindPopup(feature.properties.popupContent);
-                      marker.feature = feature;
-                      return marker;
-                    }
-                  }).eachLayer(layer => {
-                    const isPrivate = layer.feature?.properties?.visibility === 'private';
-                    (isPrivate ? privateMarkers : publicMarkers).addLayer(layer);
-                  });
+                        if (!data) return;
+                        L.geoJSON(data, {
+                                pointToLayer: (feature, latlng) => {
+                                        const visibility = feature.properties?.visibility || 'public';
+                                        const isPrivate = visibility === 'private';
+                                        if (isPrivate && !isOwner) return null;
+                                        const icon = getMarkerStyle(feature.properties?.markerType);
+                                        const marker = L.marker(latlng, { icon });
+                                        if (feature.properties?.popupContent) marker.bindPopup(feature.properties.popupContent);
+                                        marker.feature = feature;
+                                        return marker;
+                                }
+                        }).eachLayer(layer => {
+                                const isPrivate = layer.feature?.properties?.visibility === 'private';
+                                (isPrivate ? privateMarkers : publicMarkers).addLayer(layer);
+                        });
+                        L.control.layers(null, {
+                                'Public Markers': publicMarkers,
+                                ...(isOwner ? { 'Private Markers': privateMarkers } : {})
+                        }).addTo(map);
                 });
             
               L.control.scale({ metric: true, imperial: false }).addTo(map);
