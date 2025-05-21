@@ -306,14 +306,15 @@
                           }
 
                         #ownerControls {
-                                position: relative;
-                                z-index: 10;
+                                position: absolute;
+                                top: 10px;
+                                left: 50%;
+                                transform: translateX(-50%);
+                                z-index: 1000;
                                 background: rgba(240, 228, 207, 0.95);
                                 padding: 10px;
                                 border: 1px solid #333;
                                 border-radius: 6px;
-                                margin: 10px auto;
-                                max-width: 600px;
                                 display: flex;
                                 flex-wrap: wrap;
                                 justify-content: center;
@@ -463,29 +464,31 @@
                                         </div>
                                 </div>
                         </div>
+
+                        
                         <div class="view" id="map">
-                                <div id="ownerControls" style="display:none;">
-                                        <select id="typeSelector">
-                                                <option value="alchemicals">alchemicals</option>
-                                                <option value="campsite">campsite</option>
-                                                <option value="concern">concern</option>
-                                                <option value="contact">contact</option>
-                                                <option value="district">district</option>
-                                                <option value="doctor">doctor</option>
-                                                <option value="electriques">electriques</option>
-                                                <option value="mechaniques">mechaniques</option>
-                                                <option value="performance site">performance site</option>
-                                                <option value="rumor mill">rumor mill</option>
-                                                <option value="ward">ward</option>
-                                        </select>
-                                        <select id="visibilityToggle">
-                                                <option value="public">Public</option>
-                                                <option value="private">Private</option>
-                                        </select>
-                                        <button id="exportBtn" onclick="exportGeoJSON()">Export GeoJSON</button>
-                                </div>
                                 <div id="mapContainer">
                                         <div id="map"></div>
+                                        <div id="ownerControls" style="display:none;">
+                                                <select id="typeSelector">
+                                                        <option value="alchemicals">alchemicals</option>
+                                                        <option value="campsite">campsite</option>
+                                                        <option value="concern">concern</option>
+                                                        <option value="contact">contact</option>
+                                                        <option value="district">district</option>
+                                                        <option value="doctor">doctor</option>
+                                                        <option value="electriques">electriques</option>
+                                                        <option value="mechaniques">mechaniques</option>
+                                                        <option value="performance site">performance site</option>
+                                                        <option value="rumor mill">rumor mill</option>
+                                                        <option value="ward">ward</option>
+                                                </select>
+                                                <select id="visibilityToggle">
+                                                        <option value="public">Public</option>
+                                                        <option value="private">Private</option>
+                                                </select>
+                                                <button id="exportBtn" onclick="exportGeoJSON()">Export GeoJSON</button>
+                                        </div>
                                 </div>
                         </div>
 
@@ -581,7 +584,6 @@
 
                 if (isOwner) {
                   document.body.classList.add('owner-active');
-                  document.getElementById('mapContainer').style.top = '92px';
                 }
                     
               const drawControl = new L.Control.Draw({
