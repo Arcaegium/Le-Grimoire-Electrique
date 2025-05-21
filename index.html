@@ -368,6 +368,106 @@
                                         align-items: stretch;
                                 }
                         }
+
+                        #gallery {
+                          display: flex;
+                          flex-direction: column;
+                          align-items: center;
+                          gap: 1em;
+                          padding: 2em;
+                        }
+                        
+                        .gallery-controls {
+                          display: flex;
+                          justify-content: space-between;
+                          align-items: center;
+                          width: 100%;
+                          max-width: 1000px;
+                        }
+                        
+                        .gallery-switch button {
+                          background: var(--bg-dark);
+                          color: var(--text-light);
+                          border: 2px solid black;
+                          padding: 0.5em 1em;
+                          margin: 0 0.25em;
+                          cursor: pointer;
+                        }
+                        
+                        .gallery-switch button.active {
+                          background: var(--bg-light);
+                          color: var(--text-dark);
+                          font-weight: bold;
+                        }
+                        
+                        .gallery-dial button {
+                          font-size: 1.2em;
+                          padding: 0.5em 1em;
+                          background: var(--bg-dark);
+                          color: var(--text-light);
+                          border: 2px solid black;
+                          cursor: pointer;
+                        }
+                        
+                        .gallery-preview {
+                          width: 100%;
+                          max-width: 1000px;
+                          border: 4px solid black;
+                          background: white;
+                          padding: 1em;
+                          box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+                        }
+                        
+                        .gallery-preview img {
+                          width: 100%;
+                          height: auto;
+                          object-fit: contain;
+                        }
+                        
+                        .thumbnail-strip {
+                          display: flex;
+                          overflow-x: auto;
+                          width: 100%;
+                          max-width: 1000px;
+                          gap: 0.5em;
+                          padding: 1em 0;
+                          scroll-behavior: smooth;
+                        }
+                        
+                        .thumbnail-strip img {
+                          height: 100px;
+                          cursor: pointer;
+                          border: 2px solid transparent;
+                          transition: border 0.2s;
+                        }
+                        
+                        .thumbnail-strip img:hover {
+                          border-color: black;
+                        }
+                        
+                        @media (max-width: 768px) {
+                          .gallery-controls {
+                            flex-direction: column;
+                            gap: 1em;
+                          }
+                        
+                          .gallery-dial {
+                            display: flex;
+                            justify-content: center;
+                            gap: 1em;
+                          }
+                        
+                          .thumbnail-strip img {
+                            height: 80px;
+                          }
+                        
+                          .gallery-preview {
+                            padding: 0.5em;
+                          }
+                        }
+
+
+                        
                 </style>
               
         </head>
@@ -489,15 +589,23 @@
                         </div>
 
 
-                        
                         <div class="view" id="gallery">
-                                <div class="viewer-panel">
-                                        <div class="viewer-container">
-                                                <div class="viewer-title" id="imageTitle"></div>
-                                                <div class="viewer-image-wrapper">
-                                                        <img alt="Selected Image" class="viewer-image" id="mainImage" src="" style="display: none;"/>
-                                                </div>
+                                <div class="gallery-controls">
+                                        <div class="gallery-switch">
+                                                <button data-category="people" class="active">People</button>
+                                                <button data-category="places">Places</button>
+                                                <button data-category="things">Things</button>
                                         </div>
+                                        <div class="gallery-dial">
+                                                <button id="scrollLeft" aria-label="Scroll Left">&lt;</button>
+                                                <button id="scrollRight" aria-label="Scroll Right">&gt;</button>
+                                        </div>
+                                </div>
+                                <div class="gallery-preview">
+                                        <img id="mainPreview" src="" alt="Preview" />
+                                </div>
+                                <div class="thumbnail-strip" id="thumbnailStrip">
+                                        <!-- Thumbnails dynamically injected -->
                                 </div>
                         </div>
 
@@ -527,192 +635,243 @@
                 <script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>
                 
                 <script>
-            function showView(id) {
-              document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
-              document.getElementById(id).classList.add('active');
-              document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
-              const activeBtn = [...document.querySelectorAll('nav button')].find(btn => btn.textContent.toLowerCase() === id);
-              if (activeBtn) activeBtn.classList.add('active');
-              const dropdown = document.getElementById('navSelect');
-              if (dropdown) dropdown.value = id;
-              if (id === 'map') initMap();
-            }
-        
-            function showInViewer(src, title) {
-              const viewer = document.getElementById('mainImage');
-              const titleBox = document.getElementById('imageTitle');
-              viewer.src = src;
-              viewer.style.display = 'block';
-              titleBox.textContent = title || src.split('/').pop();
-              titleBox.style.display = 'block';
-            }
-          </script>
-        <script>
-            let mapInitialized = false;
-            
-            function initMap() {
-              if (mapInitialized) return;
-              mapInitialized = true;
-            
-              let maptilerKey = new URLSearchParams(window.location.search).get('key') || localStorage.getItem('maptilerKey');
-              if (!maptilerKey) {
-                maptilerKey = prompt('Enter your MapTiler API key:');
-                if (maptilerKey) {
-                  localStorage.setItem('maptilerKey', maptilerKey);
-                  window.location.search = `?key=${maptilerKey}`;
-                }
-              }
-            
-              const isOwner = maptilerKey === 'r0HKkxDJMfqlCVzaro7d';
-              const map = L.map('map').setView([51.5074, -0.1278], 13);
-            
-              if (isOwner) document.getElementById('ownerControls').style.display = 'block';
-            
-              L.tileLayer(`https://api.maptiler.com/tiles/uk-osgb10k1888/{z}/{x}/{y}.jpg?key=${maptilerKey}`, {
-                tileSize: 256,
-                minZoom: 0,
-                maxZoom: 18,
-                attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://maps.nls.uk/">NLS</a>'
-              }).addTo(map);
-            
-              const publicMarkers = new L.FeatureGroup().addTo(map);
-              const privateMarkers = new L.FeatureGroup();
-              if (isOwner) privateMarkers.addTo(map);
+                        function showView(id) {
+                                document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+                                document.getElementById(id).classList.add('active');
+                                document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+                                const activeBtn = [...document.querySelectorAll('nav button')].find(btn => btn.textContent.toLowerCase() === id);
+                                if (activeBtn) activeBtn.classList.add('active');
+                                const dropdown = document.getElementById('navSelect');
+                                if (dropdown) dropdown.value = id;
+                                if (id === 'map') initMap();
+                        }
+                        function showInViewer(src, title) {
+                                const viewer = document.getElementById('mainImage');
+                                const titleBox = document.getElementById('imageTitle');
+                                viewer.src = src;
+                                viewer.style.display = 'block';
+                                titleBox.textContent = title || src.split('/').pop();
+                                titleBox.style.display = 'block';
+                        }
+                </script>
 
-                if (isOwner) {
-                  document.body.classList.add('owner-active');
-                }
-                    
-              const drawControl = new L.Control.Draw({
-                edit: { featureGroup: publicMarkers, edit: isOwner },
-                draw: {
-                  polygon: true, polyline: true, rectangle: true, marker: true,
-                  circle: false, circlemarker: false
-                }
-              });
-              map.addControl(drawControl);
-            
-              const markerStyles = {
-                'alchemicals': { icon: 'flask', markerColor: 'cadetblue' },
-                'campsite': { icon: 'home', markerColor: 'blue' },
-                'concern': { icon: 'exclamation-triangle', markerColor: 'red' },
-                'contact': { icon: 'user', markerColor: 'purple' },
-                'district': { icon: 'flag-o', markerColor: 'darkgreen' },
-                'doctor': { icon: 'plus-square', markerColor: 'purple' },
-                'electriques': { icon: 'tachometer', markerColor: 'cadetblue' },
-                'mechaniques': { icon: 'cogs', markerColor: 'cadetblue' },
-                'performance site': { icon: 'star', markerColor: 'green' },
-                'rumor mill': { icon: 'comments-o', markerColor: 'orange' },
-                'ward': { icon: 'shield', markerColor: 'darkred' }
-              };
-            
-              function getMarkerStyle(type) {
-                const style = markerStyles[type] || { icon: 'map-marker', markerColor: 'cadetblue' };
-                return L.AwesomeMarkers.icon({ ...style, prefix: 'fa' });
-              }
-            
-              map.on(L.Draw.Event.CREATED, e => {
-                if (e.layerType === 'marker') {
-                  const type = document.getElementById('typeSelector').value.trim();
-                  const isPublic = document.getElementById('visibilityToggle').value === 'public';
-                  const label = prompt('Enter label for marker:') || '';
-                  const icon = getMarkerStyle(type);
-                  const marker = L.marker(e.layer.getLatLng(), { icon });
-            
-                  if (label.trim()) marker.bindPopup(label);
-                  marker.feature = {
-                    type: 'Feature',
-                    properties: {
-                      popupContent: label,
-                      markerType: type,
-                      visibility: isPublic ? 'public' : 'private'
-                    },
-                    geometry: {
-                      type: 'Point',
-                      coordinates: [e.layer.getLatLng().lng, e.layer.getLatLng().lat]
-                    }
-                  };
-            
-                  (isPublic ? publicMarkers : privateMarkers).addLayer(marker);
-                }
-              });
-            
-              function exportGeoJSON() {
-                const allMarkers = new L.FeatureGroup();
-                publicMarkers.eachLayer(layer => allMarkers.addLayer(layer));
-                privateMarkers.eachLayer(layer => allMarkers.addLayer(layer));
-                const json = allMarkers.toGeoJSON();
-                const blob = new Blob([JSON.stringify(json, null, 2)], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = 'data.geojson';
-                link.click();
-                URL.revokeObjectURL(url);
-              }
-            
-              window.exportGeoJSON = exportGeoJSON;
-            
-              fetch('data.geojson')
-                .then(res => res.ok ? res.json() : null)
-                .then(data => {
-                        if (!data) return;
-                        L.geoJSON(data, {
-                                pointToLayer: (feature, latlng) => {
-                                        const visibility = feature.properties?.visibility || 'public';
-                                        const isPrivate = visibility === 'private';
-                                        if (isPrivate && !isOwner) return null;
-                                        const icon = getMarkerStyle(feature.properties?.markerType);
-                                        const marker = L.marker(latlng, { icon });
-                                        if (feature.properties?.popupContent) marker.bindPopup(feature.properties.popupContent);
-                                        marker.feature = feature;
-                                        return marker;
-                                }
-                        }).eachLayer(layer => {
-                                const isPrivate = layer.feature?.properties?.visibility === 'private';
-                                (isPrivate ? privateMarkers : publicMarkers).addLayer(layer);
-                        });
-                        L.control.layers(null, {
-                                'Public Markers': publicMarkers,
-                                ...(isOwner ? { 'Private Markers': privateMarkers } : {})
-                        }).addTo(map);
+                <script>
+                        const galleryData = {
+                                people: [
+                                        'gallery/people/sample1.jpg',
+                                        'gallery/people/sample2.jpg',
+                                        'gallery/people/sample3.jpg'
+                                ],
+                                places: [
+                                        'gallery/places/sample1.jpg',
+                                        'gallery/places/sample2.jpg'
+                                ],
+                                things: [
+                                        'gallery/things/sample1.jpg',
+                                        'gallery/things/sample2.jpg'
+                                ]
+                        };
+
+                        const preview = document.getElementById('mainPreview');
+                        const strip = document.getElementById('thumbnailStrip');
+                        const switchButtons = document.querySelectorAll('.gallery-switch button');
                         
-                        setTimeout(() => {
-                                const layersControl = document.querySelector('.leaflet-control-layers');
-                                if (layersControl) {
-                                        // Force it to be expanded at first
-                                        layersControl.classList.add('leaflet-control-layers-expanded');
-                                        
-                                        // Collapse on first click anywhere inside the control
-                                        const handler = () => {
-                                                layersControl.classList.remove('leaflet-control-layers-expanded');
-                                                layersControl.removeEventListener('click', handler);
-                                        };
-                                        layersControl.addEventListener('click', handler);
+                        function loadCategory(category) {
+                                strip.innerHTML = '';
+                                galleryData[category].forEach(src => {
+                                        const img = document.createElement('img');
+                                        img.src = src;
+                                        img.alt = src.split('/').pop();
+                                        img.onclick = () => preview.src = src;
+                                        strip.appendChild(img);
+                                });
+                                preview.src = galleryData[category][0];
+                                switchButtons.forEach(b => b.classList.remove('active'));
+                                document.querySelector(`[data-category="${category}"]`).classList.add('active');
+                        }
+                        
+                        document.getElementById('scrollLeft').onclick = () => {
+                                strip.scrollBy({ left: -200, behavior: 'smooth' });
+                        };
+                        document.getElementById('scrollRight').onclick = () => {
+                                strip.scrollBy({ left: 200, behavior: 'smooth' });
+                        };
+                        switchButtons.forEach(btn => {
+                                btn.onclick = () => loadCategory(btn.dataset.category);
+                        });
+
+                        // Init default view
+                        loadCategory('people');
+                </script>
+
+                
+                <script>
+                        let mapInitialized = false;
+                        function initMap() {
+                                if (mapInitialized) return;
+                                mapInitialized = true;
+                                
+                                let maptilerKey = new URLSearchParams(window.location.search).get('key') || localStorage.getItem('maptilerKey');
+                                
+                                if (!maptilerKey) {
+                                        maptilerKey = prompt('Enter your MapTiler API key:');
+                                        if (maptilerKey) {
+                                                localStorage.setItem('maptilerKey', maptilerKey);
+                                                window.location.search = `?key=${maptilerKey}`;
+                                        }
                                 }
-                        }, 250);
-                });
+                                
+                                const isOwner = maptilerKey === 'r0HKkxDJMfqlCVzaro7d';
+                                const map = L.map('map').setView([51.5074, -0.1278], 13);
+                                
+                                if (isOwner) document.getElementById('ownerControls').style.display = 'block';
+                                L.tileLayer(`https://api.maptiler.com/tiles/uk-osgb10k1888/{z}/{x}/{y}.jpg?key=${maptilerKey}`, {
+                                        tileSize: 256,
+                                        minZoom: 0,
+                                        maxZoom: 18,
+                                        attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://maps.nls.uk/">NLS</a>'
+                                }).addTo(map);
+                                
+                                const publicMarkers = new L.FeatureGroup().addTo(map);
+                                const privateMarkers = new L.FeatureGroup();
+                                
+                                if (isOwner) privateMarkers.addTo(map);
+                                if (isOwner) {
+                                        document.body.classList.add('owner-active');
+                                }
+                                
+                                const drawControl = new L.Control.Draw({
+                                        edit: { featureGroup: publicMarkers, edit: isOwner },
+                                        draw: {
+                                                polygon: true, polyline: true, rectangle: true, marker: true,
+                                                circle: false, circlemarker: false
+                                        }
+                                });
+                                map.addControl(drawControl);
             
-              L.control.scale({ metric: true, imperial: false }).addTo(map);
-              const legend = L.control({ position: 'bottomright' });
-              legend.onAdd = () => {
-                const div = L.DomUtil.create('div', 'legend');
-                for (const key in markerStyles) {
-                  const { icon, markerColor } = markerStyles[key];
-                  div.innerHTML += `<div style="margin-bottom:4px;">
-                    <i class="fa fa-${icon}" style="color:white; background:${markerColor}; border-radius:50%; width:22px; height:22px; line-height:22px; text-align:center;"></i> ${key}
-                  </div>`;
-                }
-                return div;
-              };
-              legend.addTo(map);
-                    setTimeout(() => {
-                            const el = document.querySelector('.legend');
-                            el.id = 'mapLegend';
-                            if (window.innerWidth <= 768) el.classList.add('collapsed');
-                            el.addEventListener('click', () => el.classList.toggle('collapsed'));
-                    });
-            }
-        </script>
+                                const markerStyles = {
+                                        'alchemicals': { icon: 'flask', markerColor: 'cadetblue' },
+                                        'campsite': { icon: 'home', markerColor: 'blue' },
+                                        'concern': { icon: 'exclamation-triangle', markerColor: 'red' },
+                                        'contact': { icon: 'user', markerColor: 'purple' },
+                                        'district': { icon: 'flag-o', markerColor: 'darkgreen' },
+                                        'doctor': { icon: 'plus-square', markerColor: 'purple' },
+                                        'electriques': { icon: 'tachometer', markerColor: 'cadetblue' },
+                                        'mechaniques': { icon: 'cogs', markerColor: 'cadetblue' },
+                                        'performance site': { icon: 'star', markerColor: 'green' },
+                                        'rumor mill': { icon: 'comments-o', markerColor: 'orange' },
+                                        'ward': { icon: 'shield', markerColor: 'darkred' }
+                                };
+
+                                function getMarkerStyle(type) {
+                                        const style = markerStyles[type] || { icon: 'map-marker', markerColor: 'cadetblue' };
+                                        return L.AwesomeMarkers.icon({ ...style, prefix: 'fa' });
+                                }
+            
+                                map.on(L.Draw.Event.CREATED, e => {
+                                        if (e.layerType === 'marker') {
+                                                const type = document.getElementById('typeSelector').value.trim();
+                                                const isPublic = document.getElementById('visibilityToggle').value === 'public';
+                                                const label = prompt('Enter label for marker:') || '';
+                                                const icon = getMarkerStyle(type);
+                                                const marker = L.marker(e.layer.getLatLng(), { icon });
+                  
+                                                if (label.trim()) marker.bindPopup(label);
+                                                marker.feature = {
+                                                        type: 'Feature',
+                                                        properties: {
+                                                                popupContent: label,
+                                                                markerType: type,
+                                                                visibility: isPublic ? 'public' : 'private'
+                                                        },
+                                                        geometry: {
+                                                                type: 'Point',
+                                                                coordinates: [e.layer.getLatLng().lng, e.layer.getLatLng().lat]
+                                                        }
+                                                };
+
+                                                (isPublic ? publicMarkers : privateMarkers).addLayer(marker);
+                                        }
+                                });
+            
+                                function exportGeoJSON() {
+                                        const allMarkers = new L.FeatureGroup();
+                                        publicMarkers.eachLayer(layer => allMarkers.addLayer(layer));
+                                        privateMarkers.eachLayer(layer => allMarkers.addLayer(layer));
+                                        const json = allMarkers.toGeoJSON();
+                                        const blob = new Blob([JSON.stringify(json, null, 2)], { type: 'application/json' });
+                                        const url = URL.createObjectURL(blob);
+                                        const link = document.createElement('a');
+                                        link.href = url;
+                                        link.download = 'data.geojson';
+                                        link.click();
+                                        URL.revokeObjectURL(url);
+                                }
+        
+                                window.exportGeoJSON = exportGeoJSON;
+            
+                                fetch('data.geojson')
+                                        .then(res => res.ok ? res.json() : null)
+                                        .then(data => {
+                                                if (!data) return;
+                                                L.geoJSON(data, {
+                                                        pointToLayer: (feature, latlng) => {
+                                                                const visibility = feature.properties?.visibility || 'public';
+                                                                const isPrivate = visibility === 'private';
+                                                                if (isPrivate && !isOwner) return null;
+                                                                const icon = getMarkerStyle(feature.properties?.markerType);
+                                                                const marker = L.marker(latlng, { icon });
+                                                                if (feature.properties?.popupContent) marker.bindPopup(feature.properties.popupContent);
+                                                                marker.feature = feature;
+                                                                return marker;
+                                                        }
+                                                }).eachLayer(layer => {
+                                                        const isPrivate = layer.feature?.properties?.visibility === 'private';
+                                                        (isPrivate ? privateMarkers : publicMarkers).addLayer(layer);
+                                                });
+                                                L.control.layers(null, {
+                                                        'Public Markers': publicMarkers,
+                                                        ...(isOwner ? { 'Private Markers': privateMarkers } : {})
+                                                }).addTo(map);
+
+                                                setTimeout(() => {
+                                                        const layersControl = document.querySelector('.leaflet-control-layers');
+                                                        if (layersControl) {
+                                                                // Force it to be expanded at first
+                                                                layersControl.classList.add('leaflet-control-layers-expanded');
+                                                                // Collapse on first click anywhere inside the control
+                                                                const handler = () => {
+                                                                        layersControl.classList.remove('leaflet-control-layers-expanded');
+                                                                        layersControl.removeEventListener('click', handler);
+                                                                };
+                                                                layersControl.addEventListener('click', handler);
+                                                        }
+                                                }, 250);
+                                        });
+        
+                                L.control.scale({ metric: true, imperial: false }).addTo(map);
+                                
+                                const legend = L.control({ position: 'bottomright' });
+                                
+                                legend.onAdd = () => {
+                                        const div = L.DomUtil.create('div', 'legend');
+                                        for (const key in markerStyles) {
+                                                const { icon, markerColor } = markerStyles[key];
+                                                div.innerHTML += `<div style="margin-bottom:4px;">
+                                                <i class="fa fa-${icon}" style="color:white; background:${markerColor}; border-radius:50%; width:22px; height:22px; line-height:22px; text-align:center;"></i> ${key}
+                                                </div>`;
+                                        }
+                                        return div;
+                                };
+                                legend.addTo(map);
+                               
+                                setTimeout(() => {
+                                        const el = document.querySelector('.legend');
+                                        el.id = 'mapLegend';
+                                        if (window.innerWidth <= 768) el.classList.add('collapsed');
+                                        el.addEventListener('click', () => el.classList.toggle('collapsed'));
+                                });
+                        }
+                </script>
         </body>
 </html>
