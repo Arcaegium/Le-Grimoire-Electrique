@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+
+<html lang="en">
+        <head>
+                <meta charset="utf-8"/>
+                <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+                <title>Le Grimoire Électrique</title>
+                <link href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" rel="stylesheet"/>
+                <link href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" rel="stylesheet"/>
+                <link href="https://unpkg.com/leaflet.awesome-markers@2.0.4/dist/leaflet.awesome-markers.css" rel="stylesheet"/>
+                <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+
+                <style>
+                          :root {
+                            --bg-dark: #222;
+                            --bg-light: #f0e4cf;
+                            --text-light: white;
+                            --text-dark: #111;
+                            --max-width: 1600px;
+                            --mobile-break: 768px;
+                          }
+                        
+                          body {
+                            margin: 0;
+                            font-family: sans-serif;
+                          }
+                        
+                          a.skip-link {
+                            position: absolute;
+                            top: -40px;
+                            left: 0;
+                            background: var(--bg-dark);
+                            color: var(--text-light);
+                            padding: 8px;
+                            z-index: 100;
+                          }
+                        
+                          a.skip-link:focus {
+                            top: 0;
+                          }
+                        
+                          nav {
+                            background: var(--bg-dark);
+                            color: var(--text-light);
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            padding: 0.5em;
+                            flex-wrap: wrap;
+                          }
+                        
+                          .nav-buttons {
+                            display: flex;
+                            gap: 1em;
+                            flex-wrap: wrap;
+                          }
+                        
+                          .nav-buttons button {
+                            background: none;
+                            border: none;
+                            color: var(--text-light);
+                            font-size: 1em;
+                            cursor: pointer;
+                          }
+                        
+                          .nav-buttons button.active {
+                            text-decoration: underline;
+                          }
+                        
+                          .nav-dropdown {
+                            display: none;
+                            width: 100%;
+                            margin-top: 0.5em;
+                          }
+                        
+                          .nav-dropdown select {
+                            width: 100%;
+                            padding: 0.5em;
+                            font-size: 1rem;
+                            background: var(--bg-dark);
+                            color: var(--text-light);
+                            border: none;
+                          }
+                        
+                          .view {
+                            display: none;
+                            padding: 2em;
+                          }
+                        
+                          .view.active {
+                            display: block;
+                          }
+                        
+                          .home-content {
+                            padding: 2em;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                          }
+                        
+                          .intro-box {
+                            display: flex;
+                            flex-wrap: wrap;
+                            width: 90%;
+                            max-width: 1000px;
+                            margin: 3em auto;
+                            padding: 0;
+                            background: var(--bg-light);
+                            border: 2px solid black;
+                            box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+                          }
+                        
+                          .intro-title,
+                          .intro-body {
+                            flex: 1 1 50%;
+                            aspect-ratio: 4 / 3;
+                          }
+                        
+                          .intro-title img,
+                          .intro-body img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: contain;
+                            display: block;
+                          }
+                        
+                          .button-grid {
+                            display: grid;
+                            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                            gap: 2em;
+                            width: 100%;
+                            max-width: var(--max-width);
+                            justify-items: center;
+                          }
+                        
+                          .section-button {
+                            width: 100%;
+                            aspect-ratio: 3 / 2;
+                            border: 2px solid black;
+                            background: white;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            cursor: pointer;
+                          }
+                        
+                          .section-button img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                          }
+                        
+                          .video-grid {
+                            display: flex;
+                            flex-wrap: wrap;
+                            gap: 2em;
+                            justify-content: center;
+                            padding: 2em 1em;
+                          }
+                        
+                          .video-item {
+                            width: 100%;
+                            max-width: 560px;
+                            text-align: center;
+                          }
+                        
+                          .video-item h3 {
+                            background: rgba(255, 255, 255, 0.85);
+                            display: inline-block;
+                            padding: 8px 16px;
+                            margin: 0 auto 10px;
+                            font-size: 1.2em;
+                            font-weight: 600;
+                            color: var(--text-dark);
+                            border: 1px solid black;
+                            border-radius: 6px;
+                          }
+                        
+                          .video-item iframe {
+                            width: 100%;
+                            height: 315px;
+                            border: none;
+                          }
+                        
+                          .viewer-panel {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            padding: 1em;
+                            flex-wrap: wrap;
+                          }
+                        
+                          .viewer-container {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+                            width: 100%;
+                            gap: 1em;
+                          }
+                        
+                          .viewer-title {
+                            background: white;
+                            padding: 6px 12px;
+                            font-size: 1.1em;
+                            font-weight: 600;
+                            border: 1px solid #444;
+                            border-radius: 4px;
+                            display: none;
+                          }
+                        
+                          .viewer-image-wrapper {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            width: 100%;
+                            max-height: 80vh;
+                            overflow: hidden;
+                          }
+                        
+                          .viewer-image {
+                            max-width: 100%;
+                            max-height: 100%;
+                            object-fit: contain;
+                          }
+                        
+                          .bg-video,
+                          #bgFallback {
+                            position: fixed;
+                            top: 0;
+                            left: 0;
+                            width: 100vw;
+                            height: 100vh;
+                            object-fit: cover;
+                            z-index: -1;
+                            pointer-events: none;
+                          }
+                        
+                          #bgFallback {
+                            display: none;
+                          }
+                        
+                          #mapContainer {
+                                  position: relative;
+                                  width: 100%;
+                                  height: calc(100vh - 92px); /* or whatever margin you need */
+                                  z-index: 0;
+                          }
+                        #map {
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 100%;
+                                z-index: 1;
+                        }
+                        
+                          #mapLegend {
+                                  position: absolute;
+                                  bottom: 10px;
+                                  right: 10px;
+                                  max-width: 300px;
+                                  font-size: 14px;
+                                  background: var(--bg-light);
+                                  padding: 10px;
+                                  box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+                                  line-height: 22px;
+                                  border-radius: 6px;
+                                  z-index: 500;
+                                  transition: all 0.3s ease;
+                          }
+                        
+                        #mapLegend.collapsed {
+                                padding: 6px 10px;
+                                max-width: unset;
+                                background: rgba(240, 228, 207, 0.9);
+                                cursor: pointer;
+                        }
+                        
+                        #mapLegend.collapsed::after {
+                                content: "Legend";
+                                color: var(--text-dark);
+                                font-weight: 600;
+                        }
+                        
+                        #mapLegend.collapsed > div {
+                                display: none;
+                        }
+                        
+                        #mapLegend i {
+                                width: 20px;
+                                height: 20px;
+                                float: left;
+                                margin-right: 8px;
+                                border-radius: 50%;
+                                text-align: center;
+                                line-height: 20px;
+                                color: white;
+                        }
+                        
+                          .leaflet-control-attribution {
+                                  font-size: 12px;
+                                  background: rgba(255, 255, 255, 0.85);
+                                  padding: 4px 6px;
+                                  margin: 4px;
+                          }
+
+                        #ownerControls {
+                                position: absolute;
+                                top: 10px;
+                                left: 50%;
+                                transform: translateX(-50%);
+                                z-index: 1000;
+                                background: rgba(240, 228, 207, 0.95);
+                                padding: 10px;
+                                border-radius: 6px;
+                                border: 1px solid #333;
+                        }
+                        #ownerControls select,
+                        #ownerControls button {
+                                padding: 6px 10px;
+                                font-size: 1em;
+                        }
+                                                
+                        @media (max-width: 768px) {
+                                .nav-buttons {
+                                        display: none;
+                                }
+                                .nav-dropdown {
+                                        display: block;
+                                }
+                                .bg-video {
+                                        display: none;
+                                }
+                                #bgFallback {
+                                        display: block;
+                                }
+                                .intro-box {
+                                        flex-direction: column;
+                                        margin: 4em auto 2em auto;
+                                        padding: 1em 0;
+                                        width: 95%;
+                                }
+                                .intro-title,
+                                .intro-body {
+                                        aspect-ratio: unset;
+                                        width: 100%;
+                                        height: auto;
+                                }
+                                .intro-title img,
+                                .intro-body img {
+                                        height: auto;
+                                        max-height: 100%;
+                                        object-fit: contain;
+                                }                                
+                                #mapLegend.collapsed {
+                                        padding: 6px 12px;
+                                        max-width: unset;
+                                        background: rgba(240, 228, 207, 0.9);
+                                        cursor: pointer;
+                                        white-space: nowrap; /* Prevent line break */
+                                        font-size: 14px;       /* Ensure it's legible */
+                                        border-radius: 4px;
+                                        min-width: 60px;       /* Ensures "Legend" fits fully */
+                                }
+                                #ownerControls {
+                                        flex-direction: column;
+                                        align-items: stretch;
+                                }
+                        }
+                </style>
+              
+        </head>
+        <body>
+                <a class="skip-link" href="#main">Skip to content</a>
+                <video autoplay="" class="bg-video" id="bgVideo" loop="" muted="" playsinline="">
+                        <source src="gifs/Cirque Electrique Main000.mp4" type="video/mp4"/>
+                        Your browser does not support the video tag.
+                </video>
+                <img alt="Cirque Electrique background" id="bgFallback" src="gifs/cirque electrique Still000.png"/>
+                
+                <nav>
+                        <div class="nav-buttons">
+                                <button class="active" onclick="showView('home')">Home</button>
+                                <button onclick="showView('videos')">Videos</button>
+                                <button onclick="showView('map')">Map</button>
+                                <button onclick="showView('gallery')">Gallery</button>
+                                <button onclick="showView('documents')">Documents</button>
+                                <button onclick="showView('mechanics')">Mechanics</button>
+                                <button onclick="showView('faq')">FAQ</button>
+                        </div>
+                        <div class="nav-dropdown">
+                                <select id="navSelect" onchange="showView(this.value)">
+                                        <option value="home">Home</option>
+                                        <option value="videos">Videos</option>
+                                        <option value="map">Map</option>
+                                        <option value="gallery">Gallery</option>
+                                        <option value="documents">Documents</option>
+                                        <option value="mechanics">Mechanics</option>
+                                        <option value="faq">FAQ</option>
+                                </select>
+                        </div>
+                </nav>
+               
+                <main id="main">
+                        <div class="view active" id="home">
+                                <div class="home-content">
+                                        <div class="intro-box">
+                                                <div class="intro-title">
+                                                        <img alt="Logo" src="gifs/Le Grimoire Electrique.gif"/>
+                                                </div>
+                                                <div class="intro-body">
+                                                        <img alt="Intro Text" src="gifs/Home Intro Text.png"/>
+                                                </div>
+                                        </div>
+                                        <div class="button-grid">
+                                                <div class="section-button" onclick="showView('videos')">
+                                                        <img alt="Videos" src="gifs/VideosFlash.gif"/>
+                                                </div>
+                                                <div class="section-button" onclick="showView('map')">
+                                                        <img alt="Map" src="gifs/Map.gif"/>
+                                                </div>
+                                                <div class="section-button" onclick="showView('gallery')">
+                                                        <img alt="Gallery" src="gifs/Gallery.gif"/>
+                                                </div>
+                                                <div class="section-button" onclick="showView('documents')">
+                                                        <img alt="Documents" src="gifs/Documents.gif"/>
+                                                </div>
+                                                <div class="section-button" onclick="showView('mechanics')">
+                                                        <img alt="Mechanics" src="gifs/Mechanics.gif"/>
+                                                </div>
+                                                <div class="section-button" onclick="showView('faq')">
+                                                        <img alt="FAQ" src="gifs/FAQ.gif"/>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+                        <div class="view" id="videos">
+                                <img alt="Videos Title" src="gifs/VideosFlash.gif" style="display:block; margin: 40px auto; max-width: 100%; height: auto;"/>
+                                <div class="video-grid">
+                                        <div class="video-item">
+                                                <h3>Intro to Cirque Electrique</h3>
+                                                <iframe allowfullscreen="" frameborder="0" loading="lazy" src="https://www.youtube.com/embed/ygY18Ax94TU" title="Intro to Cirque Electrique"></iframe>
+                                        </div>
+                                        <div class="video-item">
+                                                <h3>Timeline of Cirque Electrique</h3>
+                                                <iframe allowfullscreen="" frameborder="0" loading="lazy" src="https://www.youtube.com/embed/uvXA0CtOm9o" title="Timeline of Cirque Electrique"></iframe>
+                                        </div>
+                                        <div class="video-item">
+                                                <h3>A History in Threads</h3>
+                                                <iframe allowfullscreen="" frameborder="0" loading="lazy" src="https://www.youtube.com/embed/xRujUwXcE_c" title="A History in Threads"></iframe>
+                                        </div>
+                                        <div class="video-item">
+                                                <h3>The Big Top Big Top 10</h3>
+                                                <iframe allowfullscreen="" frameborder="0" loading="lazy" src="https://www.youtube.com/embed/JosZ-q5rGiw" title="The Big Top Big Top 10"></iframe>
+                                        </div>
+                                        <div class="video-item">
+                                                <h3>Circus Management</h3>
+                                                <iframe allowfullscreen="" frameborder="0" loading="lazy" src="https://www.youtube.com/embed/AAH3dVwGmuk" title="Circus Management"></iframe>
+                                        </div>
+                                </div>
+                        </div>
+
+
+                        <div class="view" id="map" style="position: relative;">
+                                <div id="ownerControls" style="display: none;">
+                                        <select id="typeSelector">
+                                                <option value="alchemicals">alchemicals</option>
+                                                <option value="campsite">campsite</option>
+                                                <option value="concern">concern</option>
+                                                <option value="contact">contact</option>
+                                                <option value="district">district</option>
+                                                <option value="doctor">doctor</option>
+                                                <option value="electriques">electriques</option>
+                                                <option value="mechaniques">mechaniques</option>
+                                                <option value="performance site">performance site</option>
+                                                <option value="rumor mill">rumor mill</option>
+                                                <option value="ward">ward</option>
+                                        </select>
+                                        <select id="visibilityToggle">
+                                                <option value="public">Public</option>
+                                                <option value="private">Private</option>
+                                        </select>
+                                        <button id="exportBtn" onclick="exportGeoJSON()">Export GeoJSON</button>
+                                </div>
+                                <div id="mapContainer">
+                                        <div id="map"></div>
+                                </div>
+                        </div>
+
+
+                        
+                        <div class="view" id="gallery">
+                                <div class="viewer-panel">
+                                        <div class="viewer-container">
+                                                <div class="viewer-title" id="imageTitle"></div>
+                                                <div class="viewer-image-wrapper">
+                                                        <img alt="Selected Image" class="viewer-image" id="mainImage" src="" style="display: none;"/>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+
+                        
+                        <div class="view" id="documents">
+                                <h1>Documents View</h1>
+                                <p>Placeholder for document list.</p>
+                        </div>
+                        
+                        
+                        <div class="view" id="mechanics">
+                                <h1>Game Mechanics View</h1>
+                                <p>Placeholder for game system rules and content.</p>
+                        </div>
+                        
+                        
+                        <div class="view" id="faq">
+                                <h1>FAQ View</h1>
+                                <p>Frequently Asked Questions.</p>
+                        </div>
+
+                        
+                </main>
+                
+                <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+                <script src="https://unpkg.com/leaflet.awesome-markers@2.0.4/dist/leaflet.awesome-markers.js"></script>
+                <script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>
+                
+                <script>
+            function showView(id) {
+              document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+              document.getElementById(id).classList.add('active');
+              document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+              const activeBtn = [...document.querySelectorAll('nav button')].find(btn => btn.textContent.toLowerCase() === id);
+              if (activeBtn) activeBtn.classList.add('active');
+              const dropdown = document.getElementById('navSelect');
+              if (dropdown) dropdown.value = id;
+              if (id === 'map') initMap();
+            }
+        
+            function showInViewer(src, title) {
+              const viewer = document.getElementById('mainImage');
+              const titleBox = document.getElementById('imageTitle');
+              viewer.src = src;
+              viewer.style.display = 'block';
+              titleBox.textContent = title || src.split('/').pop();
+              titleBox.style.display = 'block';
+            }
+          </script>
+        <script>
+            let mapInitialized = false;
+            
+            function initMap() {
+              if (mapInitialized) return;
+              mapInitialized = true;
+            
+              let maptilerKey = new URLSearchParams(window.location.search).get('key') || localStorage.getItem('maptilerKey');
+              if (!maptilerKey) {
+                maptilerKey = prompt('Enter your MapTiler API key:');
+                if (maptilerKey) {
+                  localStorage.setItem('maptilerKey', maptilerKey);
+                  window.location.search = `?key=${maptilerKey}`;
+                }
+              }
+            
+              const isOwner = maptilerKey === 'r0HKkxDJMfqlCVzaro7d';
+              const map = L.map('map').setView([51.5074, -0.1278], 13);
+            
+              if (isOwner) document.getElementById('ownerControls').style.display = 'block';
+            
+              L.tileLayer(`https://api.maptiler.com/tiles/uk-osgb10k1888/{z}/{x}/{y}.jpg?key=${maptilerKey}`, {
+                tileSize: 256,
+                minZoom: 0,
+                maxZoom: 18,
+                attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://maps.nls.uk/">NLS</a>'
+              }).addTo(map);
+            
+              const publicMarkers = new L.FeatureGroup().addTo(map);
+              const privateMarkers = new L.FeatureGroup();
+              if (isOwner) privateMarkers.addTo(map);
+
+                if (isOwner) {
+                  document.body.classList.add('owner-active');
+                }
+                    
+              const drawControl = new L.Control.Draw({
+                edit: { featureGroup: publicMarkers, edit: isOwner },
+                draw: {
+                  polygon: true, polyline: true, rectangle: true, marker: true,
+                  circle: false, circlemarker: false
+                }
+              });
+              map.addControl(drawControl);
+            
+              const markerStyles = {
+                'alchemicals': { icon: 'flask', markerColor: 'cadetblue' },
+                'campsite': { icon: 'home', markerColor: 'blue' },
+                'concern': { icon: 'exclamation-triangle', markerColor: 'red' },
+                'contact': { icon: 'user', markerColor: 'purple' },
+                'district': { icon: 'flag-o', markerColor: 'darkgreen' },
+                'doctor': { icon: 'plus-square', markerColor: 'purple' },
+                'electriques': { icon: 'tachometer', markerColor: 'cadetblue' },
+                'mechaniques': { icon: 'cogs', markerColor: 'cadetblue' },
+                'performance site': { icon: 'star', markerColor: 'green' },
+                'rumor mill': { icon: 'comments-o', markerColor: 'orange' },
+                'ward': { icon: 'shield', markerColor: 'darkred' }
+              };
+            
+              function getMarkerStyle(type) {
+                const style = markerStyles[type] || { icon: 'map-marker', markerColor: 'cadetblue' };
+                return L.AwesomeMarkers.icon({ ...style, prefix: 'fa' });
+              }
+            
+              map.on(L.Draw.Event.CREATED, e => {
+                if (e.layerType === 'marker') {
+                  const type = document.getElementById('typeSelector').value.trim();
+                  const isPublic = document.getElementById('visibilityToggle').value === 'public';
+                  const label = prompt('Enter label for marker:') || '';
+                  const icon = getMarkerStyle(type);
+                  const marker = L.marker(e.layer.getLatLng(), { icon });
+            
+                  if (label.trim()) marker.bindPopup(label);
+                  marker.feature = {
+                    type: 'Feature',
+                    properties: {
+                      popupContent: label,
+                      markerType: type,
+                      visibility: isPublic ? 'public' : 'private'
+                    },
+                    geometry: {
+                      type: 'Point',
+                      coordinates: [e.layer.getLatLng().lng, e.layer.getLatLng().lat]
+                    }
+                  };
+            
+                  (isPublic ? publicMarkers : privateMarkers).addLayer(marker);
+                }
+              });
+            
+              function exportGeoJSON() {
+                const allMarkers = new L.FeatureGroup();
+                publicMarkers.eachLayer(layer => allMarkers.addLayer(layer));
+                privateMarkers.eachLayer(layer => allMarkers.addLayer(layer));
+                const json = allMarkers.toGeoJSON();
+                const blob = new Blob([JSON.stringify(json, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'data.geojson';
+                link.click();
+                URL.revokeObjectURL(url);
+              }
+            
+              window.exportGeoJSON = exportGeoJSON;
+            
+              fetch('data.geojson')
+                .then(res => res.ok ? res.json() : null)
+                .then(data => {
+                  if (!data) return;
+                  L.geoJSON(data, {
+                    pointToLayer: (feature, latlng) => {
+                      const visibility = feature.properties?.visibility || 'public';
+                      const isPrivate = visibility === 'private';
+                      if (isPrivate && !isOwner) return null;
+                      const icon = getMarkerStyle(feature.properties?.markerType);
+                      const marker = L.marker(latlng, { icon });
+                      if (feature.properties?.popupContent) marker.bindPopup(feature.properties.popupContent);
+                      marker.feature = feature;
+                      return marker;
+                    }
+                  }).eachLayer(layer => {
+                    const isPrivate = layer.feature?.properties?.visibility === 'private';
+                    (isPrivate ? privateMarkers : publicMarkers).addLayer(layer);
+                  });
+                });
+            
+              L.control.scale({ metric: true, imperial: false }).addTo(map);
+              const legend = L.control({ position: 'bottomright' });
+              legend.onAdd = () => {
+                const div = L.DomUtil.create('div', 'legend');
+                for (const key in markerStyles) {
+                  const { icon, markerColor } = markerStyles[key];
+                  div.innerHTML += `<div style="margin-bottom:4px;">
+                    <i class="fa fa-${icon}" style="color:white; background:${markerColor}; border-radius:50%; width:22px; height:22px; line-height:22px; text-align:center;"></i> ${key}
+                  </div>`;
+                }
+                return div;
+              };
+              legend.addTo(map);
+                    setTimeout(() => {
+                            const el = document.querySelector('.legend');
+                            el.id = 'mapLegend';
+                            if (window.innerWidth <= 768) el.classList.add('collapsed');
+                            el.addEventListener('click', () => el.classList.toggle('collapsed'));
+                    });
+            }
+        </script>
+        </body>
+</html>
