@@ -664,27 +664,25 @@
                         
                         function loadCategory(category) {
                                 strip.innerHTML = '';
-                                window.galleryData[category].forEach(src => {
+                                const items = window.imageLibrary?.[category] || [];
+                                items.forEach(({ src, label }) => {
                                         const img = document.createElement('img');
                                         img.src = src;
-                                        img.alt = src.split('/').pop();
-                                        img.onclick = () => preview.src = src;
+                                        img.alt = label || src.split('/').pop();
+                                        img.title = label || '';
+                                        img.onclick = () => {
+                                                preview.src = src;
+                                                preview.alt = label || src.split('/').pop();
+                                        };
                                         strip.appendChild(img);
                                 });
-                                preview.src = window.galleryData[category][0];
+                                if (items[0]) {
+                                        preview.src = items[0].src;
+                                        preview.alt = items[0].label || '';
+                                }
                                 switchButtons.forEach(b => b.classList.remove('active'));
                                 document.querySelector(`[data-category="${category}"]`).classList.add('active');
                         }
-                        
-                        document.getElementById('scrollLeft').onclick = () => {
-                                strip.scrollBy({ left: -200, behavior: 'smooth' });
-                        };
-                        document.getElementById('scrollRight').onclick = () => {
-                                strip.scrollBy({ left: 200, behavior: 'smooth' });
-                        };
-                        switchButtons.forEach(btn => {
-                                btn.onclick = () => loadCategory(btn.dataset.category);
-                        });
 
                         // Init default view
                         loadCategory('people');
