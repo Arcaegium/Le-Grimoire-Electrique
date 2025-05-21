@@ -676,6 +676,21 @@
                                 'Public Markers': publicMarkers,
                                 ...(isOwner ? { 'Private Markers': privateMarkers } : {})
                         }).addTo(map);
+                        
+                        setTimeout(() => {
+                                const layersControl = document.querySelector('.leaflet-control-layers');
+                                if (layersControl) {
+                                        // Force it to be expanded at first
+                                        layersControl.classList.add('leaflet-control-layers-expanded');
+                                        
+                                        // Collapse on first click anywhere inside the control
+                                        const handler = () => {
+                                                layersControl.classList.remove('leaflet-control-layers-expanded');
+                                                layersControl.removeEventListener('click', handler);
+                                        };
+                                        layersControl.addEventListener('click', handler);
+                                }
+                        }, 250);
                 });
             
               L.control.scale({ metric: true, imperial: false }).addTo(map);
