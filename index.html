@@ -304,7 +304,27 @@
                                   padding: 4px 6px;
                                   margin: 4px;
                           }
-                        
+
+                        #ownerControls {
+                                position: relative;
+                                z-index: 10;
+                                background: rgba(240, 228, 207, 0.95);
+                                padding: 10px;
+                                border: 1px solid #333;
+                                border-radius: 6px;
+                                margin: 10px auto;
+                                max-width: 600px;
+                                display: flex;
+                                flex-wrap: wrap;
+                                justify-content: center;
+                                gap: 10px;
+                        }
+                        #ownerControls select,
+                        #ownerControls button {
+                                padding: 6px 10px;
+                                font-size: 1em;
+                        }
+                                                
                         @media (max-width: 768px) {
                                 .nav-buttons {
                                         display: none;
@@ -345,6 +365,10 @@
                                         font-size: 14px;       /* Ensure it's legible */
                                         border-radius: 4px;
                                         min-width: 60px;       /* Ensures "Legend" fits fully */
+                                }
+                                #ownerControls {
+                                        flex-direction: column;
+                                        align-items: stretch;
                                 }
                         }
                 </style>
