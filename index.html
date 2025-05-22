@@ -248,9 +248,9 @@
                         
                           #mapContainer {
                                   position: relative;
-                                  top: 80px;
+                                  padding-top: 60px;
                                   width: 100%;
-                                  height: calc(100vh - 92px); /* or whatever margin you need */
+                                  height: calc(100vh - 60px);
                                   z-index: 0;
                           }
                         #map {
@@ -329,53 +329,6 @@
                                 font-size: 1em;
                         }
                                                 
-                        @media (max-width: 768px) {
-                                .nav-buttons {
-                                        display: none;
-                                }
-                                .nav-dropdown {
-                                        display: block;
-                                }
-                                .bg-video {
-                                        display: none;
-                                }
-                                #bgFallback {
-                                        display: block;
-                                }
-                                .intro-box {
-                                        flex-direction: column;
-                                        margin: 4em auto 2em auto;
-                                        padding: 1em 0;
-                                        width: 95%;
-                                }
-                                .intro-title,
-                                .intro-body {
-                                        aspect-ratio: unset;
-                                        width: 100%;
-                                        height: auto;
-                                }
-                                .intro-title img,
-                                .intro-body img {
-                                        height: auto;
-                                        max-height: 100%;
-                                        object-fit: contain;
-                                }                                
-                                #mapLegend.collapsed {
-                                        padding: 6px 12px;
-                                        max-width: unset;
-                                        background: rgba(240, 228, 207, 0.9);
-                                        cursor: pointer;
-                                        white-space: nowrap; /* Prevent line break */
-                                        font-size: 14px;       /* Ensure it's legible */
-                                        border-radius: 4px;
-                                        min-width: 60px;       /* Ensures "Legend" fits fully */
-                                }
-                                #ownerControls {
-                                        flex-direction: column;
-                                        align-items: stretch;
-                                }
-                        }
-
                         #gallery {
                                 display: none;
                                 padding: 2em;
@@ -476,9 +429,57 @@
                             padding: 0.5em;
                           }
                         }
-
-
                         
+                        @media (max-width: 768px) {
+                                .nav-buttons {
+                                        display: none;
+                                }
+                                .nav-dropdown {
+                                        display: block;
+                                }
+                                .bg-video {
+                                        display: none;
+                                }
+                                #bgFallback {
+                                        display: block;
+                                }
+                                .intro-box {
+                                        flex-direction: column;
+                                        margin: 4em auto 2em auto;
+                                        padding: 1em 0;
+                                        width: 95%;
+                                }
+                                .intro-title,
+                                .intro-body {
+                                        aspect-ratio: unset;
+                                        width: 100%;
+                                        height: auto;
+                                }
+                                .intro-title img,
+                                .intro-body img {
+                                        height: auto;
+                                        max-height: 100%;
+                                        object-fit: contain;
+                                }                                
+                                #mapLegend.collapsed {
+                                        padding: 6px 12px;
+                                        max-width: unset;
+                                        background: rgba(240, 228, 207, 0.9);
+                                        cursor: pointer;
+                                        white-space: nowrap; /* Prevent line break */
+                                        font-size: 14px;       /* Ensure it's legible */
+                                        border-radius: 4px;
+                                        min-width: 60px;       /* Ensures "Legend" fits fully */
+                                }
+                                #ownerControls {
+                                        flex-direction: column;
+                                        align-items: stretch;
+                                }
+                                #mapContainer {
+                                        padding-top: 64px; /* adjust as needed for smaller nav button spacing */
+                                        height: calc(100vh - 64px);
+                                }
+                        }
                 </style>
               
         </head>
