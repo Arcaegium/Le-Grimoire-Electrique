@@ -649,7 +649,9 @@
                                 const dropdown = document.getElementById('navSelect');
                                 if (dropdown) dropdown.value = id;                                
                                 if (id === 'map') initMap();
-                                if (id === 'gallery') loadCategory('people'); // Default category
+                                if (id === 'gallery') {
+                                        requestAnimationFrame(() => loadCategory('people'));
+                                }
                         } else {
                                 // Clear gallery state if leaving the gallery
                                 const strip = document.getElementById('thumbnailStrip');
