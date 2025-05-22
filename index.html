@@ -645,6 +645,7 @@
                                 const dropdown = document.getElementById('navSelect');
                                 if (dropdown) dropdown.value = id;
                                 if (id === 'map') initMap();
+                                if (id === 'gallery') loadCategory('people');
                         }
                         function showInViewer(src, title) {
                                 const viewer = document.getElementById('mainImage');
@@ -685,7 +686,10 @@
                         }
 
                         // Init default view
-                        loadCategory('people');
+                        if (document.getElementById('gallery')?.classList.contains('active')) {
+                                loadCategory('people');
+                        }
+
                 </script>
 
                 
