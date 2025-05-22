@@ -314,7 +314,7 @@
 
                         #ownerControls {
                                 position: absolute;
-                                top: 10px;
+                                top: 70px; /* 10px below 60px navbar */
                                 left: 50%;
                                 transform: translateX(-50%);
                                 z-index: 1000;
@@ -476,8 +476,7 @@
                                         align-items: stretch;
                                 }
                                 #mapContainer {
-                                        padding-top: 64px; /* adjust as needed for smaller nav button spacing */
-                                        height: calc(100vh - 64px);
+                                        height: calc(100vh - 60px); /* keep consistent with desktop */
                                 }
                         }
                 </style>
