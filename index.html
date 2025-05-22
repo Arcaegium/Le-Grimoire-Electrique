@@ -643,26 +643,33 @@
                         function showView(id) {
                                 document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
                                 document.getElementById(id).classList.add('active');
+                                
                                 document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
                                 const activeBtn = [...document.querySelectorAll('nav button')].find(btn => btn.textContent.toLowerCase() === id);
                                 if (activeBtn) activeBtn.classList.add('active');
+                                
                                 const dropdown = document.getElementById('navSelect');
-                                if (dropdown) dropdown.value = id;                                
-                                if (id === 'map') initMap();
-                                if (id === 'gallery') {
-                                        requestAnimationFrame(() => loadCategory('people'));
+                                if (dropdown) dropdown.value = id;
+                                
+                                if (id === 'map') {
+                                        initMap();
+                                } else if (id === 'gallery') {
+                                        requestAnimationFrame(() => {
+                                                setupGallery();
+                                                loadCategory('people');
+                                        });
+                                } else {
+                                        // Clear gallery state if leaving the gallery
+                                        const strip = document.getElementById('thumbnailStrip');
+                                        const preview = document.getElementById('mainPreview');
+                                        if (strip) strip.innerHTML = '';
+                                        if (preview) {
+                                                preview.src = '';
+                                                preview.alt = '';
+                                        }
                                 }
-                        } else {
-                                // Clear gallery state if leaving the gallery
-                                const strip = document.getElementById('thumbnailStrip');
-                                const preview = document.getElementById('mainPreview');
-                                if (strip) strip.innerHTML = '';
-                                if (preview) {
-                                        preview.src = '';
-                                        preview.alt = '';
-                                }
-                        }                        
-
+                        }
+                       
                         function showInViewer(src, title) {
                                 const viewer = document.getElementById('mainImage');
                                 const titleBox = document.getElementById('imageTitle');
