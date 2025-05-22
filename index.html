@@ -53,7 +53,7 @@
                                   display: flex;
                                   align-items: center;
                                   justify-content: space-between;
-                                  padding: 0 1em; /* reduce or normalize padding */
+                                  padding: 0.25em 0.5em; /* reduce or normalize padding */
                                   flex-wrap: nowrap; /* prevent accidental multi-line */
                                   z-index: 999;
                                   overflow: hidden;
@@ -254,10 +254,10 @@
                           #mapContainer {
                                   position: relative;
                                   width: 100%;
-                                  height: calc(100vh - 60px); /* match nav height */
-                                  padding-top: 60px; /* reserve space for navbar */
+                                  height: calc(100vh - 40px); /* match nav height */
                                   box-sizing: border-box;
                                   z-index: 0;
+                                  overflow: hidden;
                           }
                         
                         #map {
@@ -271,14 +271,14 @@
                                   position: absolute;
                                   bottom: 10px;
                                   right: 10px;
-                                  max-width: 300px;
+                                  max-width: 90vw;
                                   font-size: 14px;
                                   background: var(--bg-light);
                                   padding: 10px;
                                   box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
                                   line-height: 22px;
                                   border-radius: 6px;
-                                  z-index: 500;
+                                  z-index: 1000;
                                   transition: all 0.3s ease;
                           }
                         
@@ -310,30 +310,31 @@
                                 color: white;
                         }
                         
-                          .leaflet-control-attribution {
-                                  font-size: 12px;
-                                  background: rgba(255, 255, 255, 0.85);
-                                  padding: 4px 6px;
-                                  margin: 4px;
-                          }
+                        .leaflet-control-attribution {
+                                font-size: 12px;
+                                background: rgba(255, 255, 255, 0.85);
+                                padding: 4px 6px;
+                                margin: 8px 4px 20px 4px; /* Add bottom margin */
+                                z-index: 1000;
+                        
                         .leaflet-top.leaflet-left {
                                 top: 70px !important; /* push below navbar */
                         }
 
                         #ownerControls {
                                 position: absolute;
-                                top: 70px;
-                                left: 50%;
-                                transform: translateX(-50%);
-                                z-index: 1000;
+                                top: 10px;
+                                left: 10px;
                                 background: rgba(240, 228, 207, 0.95);
-                                padding: 10px;
                                 border-radius: 6px;
-                                border: 1px solid #333;
+                                padding: 6px 10px;
+                                box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+                                z-index: 1000; /* Ensure it's on top */
                                 display: flex;
-                                gap: 10px;
+                                gap: 0.5em;
                                 flex-wrap: wrap;
                         }
+
 
                         #ownerControls select,
                         #ownerControls button {
