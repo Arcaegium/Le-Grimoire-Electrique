@@ -639,14 +639,16 @@
                         function showView(id) {
                                 document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
                                 document.getElementById(id).classList.add('active');
+                                // Reset button active state
                                 document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
                                 const activeBtn = [...document.querySelectorAll('nav button')].find(btn => btn.textContent.toLowerCase() === id);
                                 if (activeBtn) activeBtn.classList.add('active');
                                 const dropdown = document.getElementById('navSelect');
                                 if (dropdown) dropdown.value = id;
                                 if (id === 'map') initMap();
-                                if (id === 'gallery') loadCategory('people');
+                                if (id === 'gallery') loadCategory('people'); // << ADD THIS
                         }
+
                         function showInViewer(src, title) {
                                 const viewer = document.getElementById('mainImage');
                                 const titleBox = document.getElementById('imageTitle');
@@ -656,40 +658,47 @@
                                 titleBox.style.display = 'block';
                         }
                 </script>
-
+               
                 <script>
-
-                        const preview = document.getElementById('mainPreview');
-                        const strip = document.getElementById('thumbnailStrip');
-                        const switchButtons = document.querySelectorAll('.gallery-switch button');
+                       function loadCategory(category) {
+                               const galleryView = document.getElementById('gallery');
+                               if (!galleryView.classList.contains('active')) return;
+                               
+                               const preview = document.getElementById('mainPreview');
+                               const strip = document.getElementById('thumbnailStrip');
+                               const switchButtons = document.querySelectorAll('.gallery-switch button');
+                               
+                               strip.innerHTML = '';
+                               const items = window.imageLibrary?.[category] || [];
+                               
+                               items.forEach(({ src, label }) => {
+                                       const img = document.createElement('img');
+                                       img.src = src;
+                                       img.alt = label || src.split('/').pop();
+                                       img.title = label || '';
+                                       img.onclick = () => {
+                                               preview.src = src;
+                                               preview.alt = label || src.split('/').pop();
+                                       };
+                                       strip.appendChild(img);
+                               });
+                                       if (items[0]) {
+                                               preview.src = items[0].src;
+                                               preview.alt = items[0].label || '';
+                                       }
+                               
+                               switchButtons.forEach(b => b.classList.remove('active'));
+                               document.querySelector(`[data-category="${category}"]`).classList.add('active');
+                       }
                         
-                        function loadCategory(category) {
-                                strip.innerHTML = '';
-                                const items = window.imageLibrary?.[category] || [];
-                                items.forEach(({ src, label }) => {
-                                        const img = document.createElement('img');
-                                        img.src = src;
-                                        img.alt = label || src.split('/').pop();
-                                        img.title = label || '';
-                                        img.onclick = () => {
-                                                preview.src = src;
-                                                preview.alt = label || src.split('/').pop();
-                                        };
-                                        strip.appendChild(img);
+                        // One-time setup for switching categories
+                        document.querySelectorAll('.gallery-switch button').forEach(btn => {
+                                btn.addEventListener('click', () => {
+                                        if (document.getElementById('gallery').classList.contains('active')) {
+                                                loadCategory(btn.dataset.category);
+                                        }
                                 });
-                                if (items[0]) {
-                                        preview.src = items[0].src;
-                                        preview.alt = items[0].label || '';
-                                }
-                                switchButtons.forEach(b => b.classList.remove('active'));
-                                document.querySelector(`[data-category="${category}"]`).classList.add('active');
-                        }
-
-                        // Init default view
-                        if (document.getElementById('gallery')?.classList.contains('active')) {
-                                loadCategory('people');
-                        }
-
+                        });
                 </script>
 
                 
