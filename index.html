@@ -47,18 +47,17 @@
                                   top: 0;
                                   left: 0;
                                   right: 0;
-                                  height: 40px;
+                                  height: 36px;
                                   background: var(--bg-dark);
                                   color: var(--text-light);
                                   display: flex;
                                   align-items: center;
                                   justify-content: space-between;
-                                  padding: 0.25em 0.5em; /* reduce or normalize padding */
+                                  padding: 0 0.4em; /* reduce or normalize padding */
                                   flex-wrap: nowrap; /* prevent accidental multi-line */
                                   z-index: 999;
                                   overflow: hidden;
                           }
-
                         
                           .nav-buttons {
                             display: flex;
@@ -269,9 +268,11 @@
                         
                           #mapLegend {
                                   position: absolute;
-                                  bottom: 10px;
+                                  bottom: 5vh;
                                   right: 10px;
                                   max-width: 90vw;
+                                  max-height: 35vh;
+                                  overlow-y: auto;
                                   font-size: 14px;
                                   background: var(--bg-light);
                                   padding: 10px;
@@ -322,6 +323,17 @@
                                 top: 50px !important; /* push below navbar */
                         }
 
+                        .leaflet-control-layers {
+                                z-index: 1000;
+                                background: rgba(255,255,255,0.95);
+                                padding: 6px;
+                                border-radius: 6px;
+                        }
+                        .leaflet-control-layers-expanded {
+                                max-height: 300px;
+                                overflow-y: auto;
+                        }
+
                         #ownerControls {
                                 position: absolute;
                                 top: 50px;
@@ -330,7 +342,7 @@
                                 border-radius: 6px;
                                 padding: 6px 10px;
                                 box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
-                                z-index: 1000; /* Ensure it's on top */
+                                z-index: 1100; /* Ensure it's on top */
                                 display: flex;
                                 gap: 0.5em;
                                 flex-wrap: wrap;
@@ -424,27 +436,21 @@
                         }
                         
                         @media (max-width: 768px) {
-                          .gallery-controls {
-                            flex-direction: column;
-                            gap: 1em;
-                          }
-                        
-                          .gallery-dial {
-                            display: flex;
-                            justify-content: center;
-                            gap: 1em;
-                          }
-                        
-                          .thumbnail-strip img {
-                            height: 80px;
-                          }
-                        
-                          .gallery-preview {
-                            padding: 0.5em;
-                          }
-                        }
-                        
-                        @media (max-width: 768px) {
+                                .gallery-controls {
+                                        flex-direction: column;
+                                        gap: 1em;
+                                }
+                                .gallery-dial {
+                                        display: flex;
+                                        justify-content: center;
+                                        gap: 1em;
+                                }                                
+                                .thumbnail-strip img {
+                                        height: 80px;
+                                }                                
+                                .gallery-preview {
+                                        padding: 0.5em;
+                                }                                
                                 .nav-buttons {
                                         display: none;
                                 }
@@ -476,14 +482,15 @@
                                         object-fit: contain;
                                 }                                
                                 #mapLegend.collapsed {
-                                        padding: 6px 12px;
+                                        padding: 8px;
                                         max-width: unset;
                                         background: rgba(240, 228, 207, 0.9);
                                         cursor: pointer;
                                         white-space: nowrap; /* Prevent line break */
-                                        font-size: 14px;       /* Ensure it's legible */
+                                        font-size: 12px;       /* Ensure it's legible */
                                         border-radius: 4px;
                                         min-width: 60px;       /* Ensures "Legend" fits fully */
+                                        margin: 4px;
                                 }
                         
                                 #ownerControls {
@@ -494,9 +501,13 @@
                                         left: 1em;
                                         transform: none;
                                 }
-                        
                                 #mapContainer {
-                                        height: calc(100vh - 60px); /* keep consistent with desktop */
+                                        height: calc(100vh - 40px); /* keep consistent with desktop */
+                                }
+                                .leaflet-control-attribution {
+                                        font-size: 10px;
+                                        padding: 2px 4px;
+                                        margin: 4px;
                                 }
                         }
                 </style>
