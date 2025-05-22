@@ -20,10 +20,13 @@
                             --mobile-break: 768px;
                           }
                         
-                          body {
-                            margin: 0;
-                            font-family: sans-serif;
-                          }
+                        html, body {
+                                margin: 0;
+                                padding: 0;
+                                height: 100%;
+                                overflow: hidden; 
+                                font-family: sans-serif;
+                        }
                         
                           a.skip-link {
                             position: absolute;
@@ -50,10 +53,12 @@
                                   display: flex;
                                   align-items: center;
                                   justify-content: space-between;
-                                  padding: 0.5em;
-                                  flex-wrap: wrap;
+                                  padding: 0 1em; /* reduce or normalize padding */
+                                  flex-wrap: nowrap; /* prevent accidental multi-line */
                                   z-index: 999;
+                                  overflow: hidden;
                           }
+
                         
                           .nav-buttons {
                             display: flex;
@@ -249,7 +254,7 @@
                           #mapContainer {
                                   position: relative;
                                   width: 100%;
-                                  height: 100vh;
+                                  height: calc(100vh - 60px); /* match nav height */
                                   padding-top: 60px; /* reserve space for navbar */
                                   box-sizing: border-box;
                                   z-index: 0;
@@ -311,10 +316,13 @@
                                   padding: 4px 6px;
                                   margin: 4px;
                           }
+                        .leaflet-top.leaflet-left {
+                                top: 70px !important; /* push below navbar */
+                        }
 
                         #ownerControls {
                                 position: absolute;
-                                top: 70px; /* 10px below 60px navbar */
+                                top: 70px;
                                 left: 50%;
                                 transform: translateX(-50%);
                                 z-index: 1000;
@@ -322,7 +330,11 @@
                                 padding: 10px;
                                 border-radius: 6px;
                                 border: 1px solid #333;
+                                display: flex;
+                                gap: 10px;
+                                flex-wrap: wrap;
                         }
+
                         #ownerControls select,
                         #ownerControls button {
                                 padding: 6px 10px;
@@ -471,10 +483,16 @@
                                         border-radius: 4px;
                                         min-width: 60px;       /* Ensures "Legend" fits fully */
                                 }
+                        
                                 #ownerControls {
                                         flex-direction: column;
                                         align-items: stretch;
+                                        top: 70px;
+                                        width: calc(100% - 2em);
+                                        left: 1em;
+                                        transform: none;
                                 }
+                        
                                 #mapContainer {
                                         height: calc(100vh - 60px); /* keep consistent with desktop */
                                 }
