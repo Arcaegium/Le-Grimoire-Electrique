@@ -40,6 +40,11 @@
                           }
                         
                           nav {
+                                  position: fixed;
+                                  top: 0;
+                                  left: 0;
+                                  right: 0;
+                                  height: 60px;
                                   background: var(--bg-dark);
                                   color: var(--text-light);
                                   display: flex;
@@ -47,13 +52,8 @@
                                   justify-content: space-between;
                                   padding: 0.5em;
                                   flex-wrap: wrap;
-                                  position: fixed;
-                                  top: 0;
-                                  left: 0;
-                                  width: 100%;
-                                  z-index: 1000;
+                                  z-index: 999;
                           }
-
                         
                           .nav-buttons {
                             display: flex;
@@ -247,22 +247,20 @@
                           }
                         
                           #mapContainer {
-                                  position: absolute;
-                                  top: 60px; /* Height of fixed navbar */
-                                  left: 0;
-                                  right: 0;
-                                  bottom: 0;
+                                  position: relative;
+                                  width: 100%;
+                                  height: 100vh;
+                                  padding-top: 60px; /* reserve space for navbar */
+                                  box-sizing: border-box;
                                   z-index: 0;
                           }
+                        
                         #map {
-                                position: absolute;
-                                top: 0;
-                                left: 0;
-                                right: 0;
-                                bottom: 0;
+                                width: 100%;
+                                height: 100%;
+                                position: relative;
                                 z-index: 1;
                         }
-
                         
                           #mapLegend {
                                   position: absolute;
