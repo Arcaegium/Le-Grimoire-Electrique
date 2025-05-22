@@ -40,14 +40,20 @@
                           }
                         
                           nav {
-                            background: var(--bg-dark);
-                            color: var(--text-light);
-                            display: flex;
-                            align-items: center;
-                            justify-content: space-between;
-                            padding: 0.5em;
-                            flex-wrap: wrap;
+                                  background: var(--bg-dark);
+                                  color: var(--text-light);
+                                  display: flex;
+                                  align-items: center;
+                                  justify-content: space-between;
+                                  padding: 0.5em;
+                                  flex-wrap: wrap;
+                                  position: fixed;
+                                  top: 0;
+                                  left: 0;
+                                  width: 100%;
+                                  z-index: 1000;
                           }
+
                         
                           .nav-buttons {
                             display: flex;
@@ -84,7 +90,7 @@
                         
                           .view {
                             display: none;
-                            padding: 2em;
+                            padding: 4em 2em 2em;
                           }
                         
                           .view.active {
