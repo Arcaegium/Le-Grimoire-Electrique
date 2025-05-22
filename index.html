@@ -714,10 +714,6 @@
                                 if (activeBtn) activeBtn.classList.add('active');
                         }
                         
-                        // One-time setup for switching categories
-                        switchButtons.forEach(b => b.classList.remove('active'));
-                        document.querySelector(`[data-category="${category}"]`).classList.add('active');
-                        
                         let galleryInitialized = false;
 
                         function setupGallery() {
