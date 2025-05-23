@@ -551,6 +551,22 @@
                                         width: calc(100% - 20px);
                                         z-index: 1200;
                                 }
+                                .owner-controls-wrapper.collapsed {
+                                        width: auto;
+                                        max-width: fit-content;
+                                        height: auto;
+                                        background: rgba(240, 228, 207, 0.95);
+                                        padding: 6px 10px;
+                                        border-radius: 6px;
+                                        box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+                                        cursor: pointer;
+                                        z-index: 1200;
+                                        overflow: visible;
+                                }
+                                #ownerControls.collapsed {
+                                        display: none;
+                                }
+
                                 
                                 #mapContainer {
                                         height: calc(100vh - 40px); /* keep consistent with desktop */
