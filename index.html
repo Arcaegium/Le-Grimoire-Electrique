@@ -357,6 +357,30 @@
                                 padding: 6px 10px;
                                 font-size: 1em;
                         }
+
+                        .owner-controls-wrapper {
+                                position: absolute;
+                                top: 10px;
+                                left: 120px;
+                                z-index: 1000;
+                                display: flex;
+                                align-items: flex-start;
+                                gap: 10px;
+                        }
+
+                        .owner-toggle {
+                                display: none;
+                                background: #333;
+                                color: white;
+                                border: none;
+                                padding: 6px;
+                                border-radius: 4px;
+                        }
+                        
+                        .owner-controls {
+                                display: flex;
+                                gap: 10px;
+                        }
                                                 
                         #gallery {
                                 display: none;
@@ -504,6 +528,26 @@
                                         left: 1em;
                                         transform: none;
                                 }
+                                 .owner-controls {
+                                         display: none;
+                                         flex-direction: column;
+                                         background: rgba(0, 0, 0, 0.7);
+                                         padding: 8px;
+                                         border-radius: 4px;
+                                 }
+                                .owner-controls.visible {
+                                        display: flex;
+                                }                                
+                                .owner-toggle {
+                                        display: inline-block;
+                                }
+                                .owner-controls-wrapper {
+                                        top: 55px;
+                                        left: 10px;
+                                        flex-direction: column;
+                                        align-items: flex-start;
+                                }
+                                
                                 #mapContainer {
                                         height: calc(100vh - 40px); /* keep consistent with desktop */
                                 }
@@ -611,32 +655,33 @@
 
 
                         <div class="view" id="map" style="position: relative;">
-                                <div id="ownerControls" style="display: none;">
-                                        <select id="typeSelector">
-                                                <option value="alchemicals">alchemicals</option>
-                                                <option value="campsite">campsite</option>
-                                                <option value="concern">concern</option>
-                                                <option value="contact">contact</option>
-                                                <option value="district">district</option>
-                                                <option value="doctor">doctor</option>
-                                                <option value="electriques">electriques</option>
-                                                <option value="mechaniques">mechaniques</option>
-                                                <option value="performance site">performance site</option>
-                                                <option value="rumor mill">rumor mill</option>
-                                                <option value="ward">ward</option>
-                                        </select>
-                                        <select id="visibilityToggle">
-                                                <option value="public">Public</option>
-                                                <option value="private">Private</option>
-                                        </select>
-                                        <button id="exportBtn" onclick="exportGeoJSON()">Export GeoJSON</button>
-                                </div>
-                                <div id="mapContainer">
-                                        <div id="map"></div>
+                                <div class="owner-controls-wrapper">
+                                        <div id="ownerControls" style="display: none;">
+                                                <select id="typeSelector">
+                                                        <option value="alchemicals">alchemicals</option>
+                                                        <option value="campsite">campsite</option>
+                                                        <option value="concern">concern</option>
+                                                        <option value="contact">contact</option>
+                                                        <option value="district">district</option>
+                                                        <option value="doctor">doctor</option>
+                                                        <option value="electriques">electriques</option>
+                                                        <option value="mechaniques">mechaniques</option>
+                                                        <option value="performance site">performance site</option>
+                                                        <option value="rumor mill">rumor mill</option>
+                                                        <option value="ward">ward</option>
+                                                </select>
+                                                <select id="visibilityToggle">
+                                                        <option value="public">Public</option>
+                                                        <option value="private">Private</option>
+                                                </select>
+                                                <button id="exportBtn" onclick="exportGeoJSON()">Export GeoJSON</button>
+                                        </div>
+                                        <div id="mapContainer">
+                                                <div id="map"></div>
+                                        </div>
                                 </div>
                         </div>
-
-
+                        
                         <div class="view" id="gallery">
                                 <div class="gallery-controls">
                                         <div class="gallery-switch">
@@ -955,6 +1000,19 @@
                                         el.addEventListener('click', () => el.classList.toggle('collapsed'));
                                 });
                         }
+                        // Add click toggle for owner controls on mobile
+                        if (window.innerWidth <= 768) {
+                                const ownerWrapper = document.querySelector('.owner-controls-wrapper');
+                                const ownerBox = document.getElementById('ownerControls');
+                                if (ownerWrapper && ownerBox) {
+                                        ownerWrapper.style.cursor = 'pointer';
+                                        ownerWrapper.onclick = () => {
+                                                ownerBox.style.display = (ownerBox.style.display === 'none') ? 'flex' : 'none';
+                                        };
+                                }
+                        }
                 </script>
+                
+
         </body>
 </html>
