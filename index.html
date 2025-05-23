@@ -530,6 +530,7 @@
                                         width: 100%;
                                         left: 0;
                                         top: 50px;
+                                        z-index: 1200;
                                 }
                                  .owner-controls {
                                          display: none;
@@ -548,6 +549,7 @@
                                         top: 50px;
                                         left: 10px;
                                         width: calc(100% - 20px);
+                                        z-index: 1200;
                                 }
                                 
                                 #mapContainer {
@@ -1013,7 +1015,9 @@
                                 if (ownerWrapper && ownerBox) {
                                         ownerWrapper.style.cursor = 'pointer';
                                         ownerWrapper.onclick = () => {
-                                                ownerBox.style.display = (ownerBox.style.display === 'none') ? 'flex' : 'none';
+                                                const visible = ownerBox.style.display !== 'none';
+                                                ownerBox.style.display = visible ? 'none' : 'flex';
+                                                ownerBox.style.pointerEvents = visible ? 'none' : 'auto';
                                         };
                                 }
                         }
