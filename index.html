@@ -525,53 +525,7 @@
                                 }
                         
                                 #ownerControls {
-                                        flex-direction: column;
-                                        align-items: stretch;
-                                        width: 100%;
-                                        left: 0;
-                                        top: 50px;
-                                        z-index: 1200;
-                                }
-                                #ownerControls.collapsed {
-                                        display: none;
-                                }
-                                 .owner-controls {
-                                         display: none;
-                                         flex-direction: column;
-                                         background: rgba(0, 0, 0, 0.7);
-                                         padding: 8px;
-                                         border-radius: 4px;
-                                 }
-                                .owner-controls.visible {
-                                        display: flex;
-                                }                                
-                                .owner-toggle {
-                                        display: inline-block;
-                                }
-                                .owner-controls-wrapper {
-                                        top: 50px;
-                                        left: 10px;
-                                        width: calc(100% - 20px);
-                                        z-index: 1200;
-                                }
-                                .owner-controls-wrapper.collapsed select,
-                                .owner-controls-wrapper.collapsed button {
-                                        display: none;
-                                }
-                                .owner-controls-wrapper.collapsed::after {
-                                        content: "Controls";
-                                        color: var(--text-dark);
-                                        font-weight: bold;
-                                }
-                                .owner-controls-wrapper.collapsed {
-                                        max-width: fit-content;
-                                        padding: 6px 10px;
-                                        background: rgba(240, 228, 207, 0.95);
-                                        border-radius: 6px;
-                                        box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
-                                        z-index: 1200;
-                                        cursor: pointer;
-                                }
+                                        display: none !important;
                                 
                                 #mapContainer {
                                         height: calc(100vh - 40px); /* keep consistent with desktop */
@@ -1029,23 +983,6 @@
                                         el.addEventListener('click', () => el.classList.toggle('collapsed'));
                                 });
                         }
-                        // Add click toggle for owner controls on mobile
-                        document.addEventListener('DOMContentLoaded', () => {
-                                if (window.innerWidth <= 768) {
-                                        const ownerWrapper = document.querySelector('.owner-controls-wrapper');
-                                        const ownerBox = document.getElementById('ownerControls');
-                                        if (ownerWrapper && ownerBox) {
-                                                ownerWrapper.style.cursor = 'pointer';
-                                                ownerWrapper.onclick = () => {
-                                                        const visible = ownerBox.style.display !== 'none';
-                                                        ownerBox.style.display = visible ? 'none' : 'flex';
-                                                        ownerBox.style.pointerEvents = visible ? 'none' : 'auto';
-                                                };
-                                        }
-                                }
-                        });
-                </script>
-                
-
+                </script>              
         </body>
 </html>
