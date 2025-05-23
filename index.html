@@ -516,20 +516,28 @@
                                 #mapLegend {
                                         display: block !important;
                                         z-index: 1100;
-                                        bottom: 5vh;
+                                        bottom: 10px;
                                         right: 10px;
+                                        max-width: 85vw;
+                                        max-height: 35vh;
+                                        overflow-y: auto;
+                                        background: rgba(240, 228, 207, 0.95);
+                                        padding: 10px;
+                                        font-size: 13px;
+                                        border-radius: 6px;
+                                        box-shadow: 0 0 6px rgba(0,0,0,0.2);
                                 }
                                 #mapLegend.collapsed {
-                                        padding: 8px;
+                                        padding: 6px 10px;
                                         max-width: unset;
                                         background: rgba(240, 228, 207, 0.9);
                                         cursor: pointer;
-                                        white-space: nowrap; /* Prevent line break */
-                                        font-size: 12px;       /* Ensure it's legible */
-                                        border-radius: 4px;
-                                        min-width: 60px;       /* Ensures "Legend" fits fully */
+                                        white-space: nowrap;
+                                        font-size: 12px;
+                                        min-width: 60px;
                                         margin: 4px;
-                                }                                
+                                }
+                              
                                 #mapContainer {
                                         height: calc(100vh - 40px); /* keep consistent with desktop */
                                 }
