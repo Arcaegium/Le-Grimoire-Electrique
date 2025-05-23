@@ -512,6 +512,12 @@
                                         max-height: 100%;
                                         object-fit: contain;
                                 }                                
+                                #mapLegend {
+                                        display: block !important;
+                                        z-index: 1100;
+                                        bottom: 5vh;
+                                        right: 10px;
+                                }
                                 #mapLegend.collapsed {
                                         padding: 8px;
                                         max-width: unset;
@@ -522,21 +528,16 @@
                                         border-radius: 4px;
                                         min-width: 60px;       /* Ensures "Legend" fits fully */
                                         margin: 4px;
-                                }
-                        
-                                #ownerControls {
-                                        display: none !important;
-                                
+                                }                                
                                 #mapContainer {
                                         height: calc(100vh - 40px); /* keep consistent with desktop */
                                 }
                                 .leaflet-control-attribution {
-                                        font-size: 10px;
-                                        padding: 2px 4px;
-                                        margin: 4px;
+                                        display: block !important;
+                                        z-index: 1100;
                                 }
                                 .leaflet-top.leaflet-left {
-                                        top: 160px !important; /* Push Leaflet tools down when owner controls are visible */
+                                        top: 50px !important; /* Push Leaflet tools down when owner controls are visible */
                                 }
                         }
                 </style>
