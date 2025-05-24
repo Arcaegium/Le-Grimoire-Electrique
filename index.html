@@ -638,7 +638,7 @@
                                 }
                                 .leaflet-bottom.leaflet-right {
                                         right: 6px;  /* Pull in from edge */
-                                        bottom: 6px; /* Ensure it's not cut off */
+                                        bottom: calc(env(safe-area-inset-bottom, 0px) + 6px);
                                 }
                                 .owner-controls-wrapper,
                                 #ownerControls {
@@ -1057,20 +1057,7 @@
                                                 L.control.layers(null, {
                                                         'Public Markers': publicMarkers,
                                                         ...(isOwner ? { 'Private Markers': privateMarkers } : {})
-                                                }).addTo(map);
-
-                                                setTimeout(() => {
-                                                        const el = document.querySelector('.legend');
-                                                        if (!el) return;
-                                                        el.id = 'mapLegend';
-                                                        el.classList.add('collapsible');
-                                                        el.style.display = 'block';
-                                                        
-                                                        el.addEventListener('click', function (e) {
-                                                                e.stopPropagation();
-                                                                this.classList.toggle('collapsed');
-                                                        }, false);
-                                                }, 250);                                                
+                                                }).addTo(map);   
                                         });
         
                                 L.control.scale({ metric: true, imperial: false }).addTo(map);
@@ -1093,9 +1080,17 @@
                                
                                 setTimeout(() => {
                                         const el = document.querySelector('.legend');
+                                        if (!el) return;
                                         el.id = 'mapLegend';
-                                        el.style.display = 'block'; // Force visibility on mobile
-                                        el.addEventListener('click', () => el.classList.toggle('collapsed'));
+                                        el.style.display = 'block';
+                                        
+                                        // Reset event listeners if re-initialized
+                                        const clone = el.cloneNode(true);
+                                        el.parentNode.replaceChild(clone, el);
+                                        
+                                        clone.addEventListener('click', () => {
+                                                clone.classList.toggle('collapsed');
+                                        });
                                 }, 250);
                         }
                 </script>              
