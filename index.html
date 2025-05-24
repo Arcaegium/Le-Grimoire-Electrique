@@ -1081,7 +1081,12 @@
                                         return div;
                                 };
                                 legend.addTo(map);
-                               
+
+                                function legendToggleHandler(e) {
+                                        e.stopPropagation();
+                                        this.classList.toggle('collapsed');
+                                }
+                                
                                 setTimeout(() => {
                                         const el = document.querySelector('.legend');
                                         if (!el) return;
@@ -1091,11 +1096,6 @@
                                         el.removeEventListener('click', legendToggleHandler);
                                         el.addEventListener('click', legendToggleHandler);
                                 }, 250);
-                                
-                                function legendToggleHandler(e) {
-                                        e.stopPropagation();
-                                        this.classList.toggle('collapsed');
-                                }
                         }
                 </script>              
         </body>
