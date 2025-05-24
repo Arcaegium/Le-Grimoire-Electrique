@@ -321,16 +321,29 @@
                                 transition: all 0.3s ease;
                         }                        
                         #mapLegend.collapsed {
+                                all: unset;
+                                position: absolute;
+                                bottom: 72px;
+                                right: 10px;
+                                z-index: 1100;
+                                background: rgba(240, 228, 207, 0.95);
                                 padding: 6px 10px;
-                                max-width: unset;
-                                background: rgba(240, 228, 207, 0.9);
+                                font-size: 13px;
+                                font-family: sans-serif;
+                                color: var(--text-dark);
+                                font-weight: 600;
+                                border-radius: 6px;
+                                box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
                                 cursor: pointer;
+                                white-space: nowrap;
+                                min-width: 60px;
+                                width: auto;
+                                height: auto;
+                                text-align: center;
                         }
                         
                         #mapLegend.collapsed::after {
                                 content: "Legend";
-                                color: var(--text-dark);
-                                font-weight: 600;
                         }
                         
                         #mapLegend.collapsed > div {
@@ -1047,18 +1060,17 @@
                                                 }).addTo(map);
 
                                                 setTimeout(() => {
-                                                        const layersControl = document.querySelector('.leaflet-control-layers');
-                                                        if (layersControl) {
-                                                                // Force it to be expanded at first
-                                                                layersControl.classList.add('leaflet-control-layers-expanded');
-                                                                // Collapse on first click anywhere inside the control
-                                                                const handler = () => {
-                                                                        layersControl.classList.remove('leaflet-control-layers-expanded');
-                                                                        layersControl.removeEventListener('click', handler);
-                                                                };
-                                                                layersControl.addEventListener('click', handler);
-                                                        }
-                                                }, 250);
+                                                        const el = document.querySelector('.legend');
+                                                        if (!el) return;
+                                                        el.id = 'mapLegend';
+                                                        el.classList.add('collapsible');
+                                                        el.style.display = 'block';
+                                                        
+                                                        el.addEventListener('click', function (e) {
+                                                                e.stopPropagation();
+                                                                this.classList.toggle('collapsed');
+                                                        }, false);
+                                                }, 250);                                                
                                         });
         
                                 L.control.scale({ metric: true, imperial: false }).addTo(map);
