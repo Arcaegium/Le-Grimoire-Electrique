@@ -617,9 +617,18 @@
                                         font-weight: 600;
                                         color: var(--text-dark);
                                 }
-                                #mapLegend.collapsed > div {
-                                        display: none !important;
+                               #mapLegend.collapsed * {
+                                       display: none !important;
+                               }
+                                
+                                #mapLegend.collapsed::after {
+                                        display: block;
                                 }
+                                
+                                #mapLegend:not(.collapsed) * {
+                                        display: revert !important;
+                                }
+
                                 #mapLegend:not(.collapsed) > div {
                                         display: block !important;
                                 }
