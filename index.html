@@ -592,22 +592,26 @@
                                 }
 
                                 #mapLegend.collapsed {
-                                        all: unset;
                                         position: absolute;
                                         bottom: 72px;
                                         right: 10px;
                                         z-index: 1100;
                                         background: rgba(240, 228, 207, 0.95);
-                                        font-size: 13px;
                                         padding: 6px 10px;
+                                        font-size: 13px;
+                                        font-family: sans-serif;
+                                        color: var(--text-dark);
+                                        font-weight: 600;
                                         border-radius: 6px;
                                         box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
                                         cursor: pointer;
                                         white-space: nowrap;
-                                        min-width: unset;
                                         width: auto;
                                         height: auto;
+                                        min-width: 65px;
+                                        text-align: center;
                                 }
+
                                 #mapLegend.collapsed::after {
                                         content: "Legend";
                                         font-weight: 600;
@@ -1084,14 +1088,14 @@
                                         el.id = 'mapLegend';
                                         el.style.display = 'block';
                                         
-                                        // Reset event listeners if re-initialized
-                                        const clone = el.cloneNode(true);
-                                        el.parentNode.replaceChild(clone, el);
-                                        
-                                        clone.addEventListener('click', () => {
-                                                clone.classList.toggle('collapsed');
-                                        });
+                                        el.removeEventListener('click', legendToggleHandler);
+                                        el.addEventListener('click', legendToggleHandler);
                                 }, 250);
+                                
+                                function legendToggleHandler(e) {
+                                        e.stopPropagation();
+                                        this.classList.toggle('collapsed');
+                                }
                         }
                 </script>              
         </body>
