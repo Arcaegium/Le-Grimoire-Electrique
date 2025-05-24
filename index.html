@@ -269,24 +269,57 @@
                                 position: relative;
                                 z-index: 1;
                         }
-                        
-                          #mapLegend {
-                                  position: absolute;
-                                  bottom: 5vh;
-                                  right: 10px;
-                                  max-width: 90vw;
-                                  max-height: 35vh;
-                                  overlow-y: auto;
-                                  font-size: 14px;
-                                  background: var(--bg-light);
-                                  padding: 10px;
-                                  box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
-                                  line-height: 22px;
-                                  border-radius: 6px;
-                                  z-index: 1000;
-                                  transition: all 0.3s ease;
-                          }
-                        
+                        .legend {
+                                position: absolute;
+                                bottom: 10px;
+                                right: 10px;
+                                max-width: 90vw;
+                                max-height: 35vh;
+                                overflow-y: auto;
+                                font-size: 14px;
+                                background: var(--bg-light);
+                                padding: 10px;
+                                box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+                                line-height: 22px;
+                                border-radius: 6px;
+                                z-index: 1100;
+                                transition: all 0.3s ease;
+                        }
+                        .legend.collapsed {
+                                padding: 6px 10px;
+                                max-width: unset;
+                                background: rgba(240, 228, 207, 0.9);
+                                cursor: pointer;
+                                white-space: nowrap;
+                                font-size: 12px;
+                                min-width: 60px;
+                                margin: 4px;
+                        }
+                        .legend.collapsed::after {
+                                content: "Legend";
+                                color: var(--text-dark);
+                                font-weight: 600;
+                        }
+                        .legend.collapsed > div {
+                                display: none;
+                        }
+
+                        #mapLegend {
+                                position: absolute;
+                                bottom: 5vh;
+                                right: 10px;
+                                max-width: 90vw;
+                                max-height: 35vh;
+                                overlow-y: auto;
+                                font-size: 14px;
+                                background: var(--bg-light);
+                                padding: 10px;
+                                box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+                                line-height: 22px;
+                                border-radius: 6px;
+                                z-index: 1000;
+                                transition: all 0.3s ease;
+                        }                        
                         #mapLegend.collapsed {
                                 padding: 6px 10px;
                                 max-width: unset;
@@ -512,7 +545,21 @@
                                         height: auto;
                                         max-height: 100%;
                                         object-fit: contain;
-                                }                                
+                                }
+                                .legend {
+                                        display: block !important;
+                                        z-index: 1100;
+                                        bottom: 10px;
+                                        right: 10px;
+                                        max-width: 85vw;
+                                        max-height: 35vh;
+                                        overflow-y: auto;
+                                        background: rgba(240, 228, 207, 0.95);
+                                        padding: 10px;
+                                        font-size: 13px;
+                                        border-radius: 6px;
+                                        box-shadow: 0 0 6px rgba(0,0,0,0.2);
+                                }
                                 #mapLegend {
                                         display: block !important;
                                         z-index: 1100;
