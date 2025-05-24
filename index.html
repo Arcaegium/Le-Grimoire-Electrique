@@ -564,9 +564,9 @@
                                 #mapLegend {
                                         display: block !important;
                                         z-index: 1100;
-                                        bottom: 10px;
-                                        right: 10px;
-                                        max-width: 85vw;
+                                        bottom: 40px;
+                                        right: 6px;
+                                        max-width: 90vw;
                                         max-height: 35vh;
                                         overflow-y: auto;
                                         background: rgba(240, 228, 207, 0.95);
@@ -599,7 +599,12 @@
                                         z-index: 1100;
                                 }
                                 .leaflet-top.leaflet-left {
-                                        top: 50px !important; /* Push Leaflet tools down when owner controls are visible */
+                                        top: 60px; /* Push tools down below nav */
+                                        left: 6px;
+                                }
+                                .leaflet-bottom.leaflet-right {
+                                        right: 6px;  /* Pull in from edge */
+                                        bottom: 6px; /* Ensure it's not cut off */
                                 }
                                 .owner-controls-wrapper,
                                 #ownerControls {
