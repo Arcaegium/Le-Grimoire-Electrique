@@ -620,6 +620,9 @@
                                 #mapLegend.collapsed > div {
                                         display: none !important;
                                 }
+                                #mapLegend:not(.collapsed) > div {
+                                        display: block !important;
+                                }
                               
                                 #mapContainer {
                                         height: calc(var(--vh, 1vh) * 100 - 40px);
