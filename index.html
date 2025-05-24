@@ -592,47 +592,26 @@
                                 }
 
                                 #mapLegend.collapsed {
-                                        position: absolute;
-                                        bottom: 72px;
-                                        right: 10px;
-                                        z-index: 1100;
-                                        background: rgba(240, 228, 207, 0.95);
+                                        overflow: hidden;
+                                        max-height: none;
                                         padding: 6px 10px;
-                                        font-size: 13px;
-                                        font-family: sans-serif;
-                                        color: var(--text-dark);
-                                        font-weight: 600;
-                                        border-radius: 6px;
-                                        box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
-                                        cursor: pointer;
-                                        white-space: nowrap;
-                                        width: auto;
-                                        height: auto;
-                                        min-width: 65px;
-                                        text-align: center;
                                 }
-
+                                
+                                #mapLegend.collapsed > * {
+                                        display: none;
+                                }
+                                
                                 #mapLegend.collapsed::after {
                                         content: "Legend";
+                                        display: block;
                                         font-weight: 600;
                                         color: var(--text-dark);
+                                        font-family: sans-serif;
+                                        font-size: 13px;
+                                        white-space: nowrap;
+                                        text-align: center;
                                 }
-                               #mapLegend.collapsed * {
-                                       display: none !important;
-                               }
-                                
-                                #mapLegend.collapsed::after {
-                                        display: block;
-                                }
-                                
-                                #mapLegend:not(.collapsed) * {
-                                        display: revert !important;
-                                }
-
-                                #mapLegend:not(.collapsed) > div {
-                                        display: block !important;
-                                }
-                              
+                                                              
                                 #mapContainer {
                                         height: calc(var(--vh, 1vh) * 100 - 40px);
                                 }
@@ -1103,8 +1082,9 @@
                                         const el = document.querySelector('.legend');
                                         if (!el) return;
                                         el.id = 'mapLegend';
+                                        L.DomEvent.disableClickPropagation(el);
+                                        L.DomEvent.disableScrollPropagation(el);
                                         el.style.display = 'block';
-                                        
                                         el.removeEventListener('click', legendToggleHandler);
                                         el.addEventListener('click', legendToggleHandler);
                                 }, 250);
