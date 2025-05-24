@@ -257,7 +257,7 @@
                           #mapContainer {
                                   position: relative;
                                   width: 100%;
-                                  height: calc(100vh - 40px); /* match nav height */
+                                  height: calc(var(--vh, 1vh) * 100 - 40px);
                                   box-sizing: border-box;
                                   z-index: 0;
                                   overflow: visible;
@@ -590,7 +590,7 @@
                                 }
                               
                                 #mapContainer {
-                                        height: calc(100vh - 40px); /* keep consistent with desktop */
+                                        height: calc(var(--vh, 1vh) * 100 - 40px);
                                 }
                                 .leaflet-control-attribution {
                                         position: absolute !important;
@@ -786,6 +786,13 @@
                 <script src="galleryData.js"></script>
                 
                 <script>
+                        function setViewportHeight() {
+                                const vh = window.innerHeight * 0.01;
+                                document.documentElement.style.setProperty('--vh', `${vh}px`);
+                        }
+                        window.addEventListener('resize', setViewportHeight);
+                        setViewportHeight();
+                        
                         function showView(id) {
                                 document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
                                 document.getElementById(id).classList.add('active');
@@ -799,6 +806,7 @@
                                 
                                 if (id === 'map') {
                                         initMap();
+                                        window.dispatchEvent(new Event('resize'));
                                 } else if (id === 'gallery') {
                                         requestAnimationFrame(() => {
                                                 setupGallery();
