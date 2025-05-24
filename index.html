@@ -579,14 +579,29 @@
                                 }
 
                                 #mapLegend.collapsed {
+                                        all: unset;
+                                        position: absolute;
+                                        bottom: 72px;
+                                        right: 10px;
+                                        z-index: 1100;
+                                        background: rgba(240, 228, 207, 0.95);
+                                        font-size: 13px;
                                         padding: 6px 10px;
-                                        max-width: unset;
-                                        background: rgba(240, 228, 207, 0.9);
+                                        border-radius: 6px;
+                                        box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
                                         cursor: pointer;
                                         white-space: nowrap;
-                                        font-size: 12px;
-                                        min-width: 60px;
-                                        margin: 4px;
+                                        min-width: unset;
+                                        width: auto;
+                                        height: auto;
+                                }
+                                #mapLegend.collapsed::after {
+                                        content: "Legend";
+                                        font-weight: 600;
+                                        color: var(--text-dark);
+                                }
+                                #mapLegend.collapsed > div {
+                                        display: none !important;
                                 }
                               
                                 #mapContainer {
