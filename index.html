@@ -891,6 +891,11 @@
                                         img.onclick = () => {
                                                 preview.src = src;
                                                 preview.alt = label || src.split('/').pop();
+                                                index = images.findIndex(i => i.src === src);
+                                                if (!isPaused) {
+                                                        clearInterval(autoCycleInterval);
+                                                        autoCycleInterval = setInterval(advanceImage, 2500);
+                                                }
                                         };
                                         strip.appendChild(img);
                                 });
