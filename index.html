@@ -544,7 +544,10 @@
                         .doc-sidebar {
                                 min-width: 200px;
                                 max-width: 300px;
-                                background: var(--bg-light);
+                                background-image: url("gifs/sidebar tile.png");
+                                background-repeat: repeat;
+                                background-size: auto;
+                                background-position: top left;
                                 border: 2px solid black;
                                 padding: 1em;
                                 font-family: serif;
@@ -853,12 +856,12 @@
 
                         
                         <div class="view" id="documents">
-                                <h1>Archive of Documents</h1>
+                                <img src="gifs/Documents.gif" alt="Documents" style="display: block; margin: 40px auto; max-width: 100%; height: auto;" />
                                 <div style="display: flex; flex-wrap: wrap; gap: 2em;">
                                         <aside id="docSidebar" class="doc-sidebar"></aside>
                                         <div id="docList" class="doc-list" style="flex: 1;"></div>
                                 </div>
-                        </div>                       
+                        </div>
                         
                         <div class="view" id="mechanics">
                                 <h1>Game Mechanics View</h1>
