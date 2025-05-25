@@ -858,6 +858,7 @@
                                                 preview.src = '';
                                                 preview.alt = '';
                                         }
+                                        if (autoCycleInterval) clearInterval(autoCycleInterval);
                                 }
                         }
                        
@@ -898,6 +899,8 @@
                                         preview.src = items[0].src;
                                         preview.alt = items[0].label || '';
                                 }
+                                startAutoCycle(category);
+
 
                                 // FIX: This must be inside the function, after the buttons exist
                                 document.querySelectorAll('.gallery-switch button').forEach(b => b.classList.remove('active'));
@@ -931,6 +934,27 @@
                                 scrollRight.addEventListener('click', () => {
                                         scrollStrip.scrollBy({ left: 200, behavior: 'smooth' });
                                 });
+                        }
+
+                        let autoCycleInterval = null;
+                        
+                        function startAutoCycle(category) {
+                                const preview = document.getElementById('mainPreview');
+                                const strip = document.getElementById('thumbnailStrip');
+                                const images = Array.from(strip.querySelectorAll('img'));
+                                if (!images.length) return;
+                                
+                                let index = 0;
+                                preview.src = images[0].src;
+                                preview.alt = images[0].alt || '';
+                                
+                                if (autoCycleInterval) clearInterval(autoCycleInterval);
+                                
+                                autoCycleInterval = setInterval(() => {
+                                        index = (index + 1) % images.length;
+                                        preview.src = images[index].src;
+                                        preview.alt = images[index].alt || '';
+                                }, 5000);
                         }
                        
                 </script>
