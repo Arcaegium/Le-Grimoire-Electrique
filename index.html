@@ -541,6 +541,33 @@
                         .doc-content.open {
                                 display: block;
                         }
+                        .doc-sidebar {
+                                min-width: 200px;
+                                max-width: 300px;
+                                background: var(--bg-light);
+                                border: 2px solid black;
+                                padding: 1em;
+                                font-family: serif;
+                                font-size: 0.95em;
+                                line-height: 1.4;
+                                overflow-y: auto;
+                                max-height: 80vh;
+                        }
+                        .doc-sidebar ul {
+                                list-style: none;
+                                padding: 0;
+                                margin: 0;
+                        }
+                        .doc-sidebar li {
+                                margin-bottom: 0.5em;
+                                cursor: pointer;
+                                color: #222;
+                                text-decoration: underline;
+                        }
+                        .doc-sidebar li:hover {
+                                color: #000;
+                                font-weight: bold;
+                        }
                         
                         @media (max-width: 768px) {
                                 .gallery-controls {
@@ -826,12 +853,12 @@
 
                         
                         <div class="view" id="documents">
-                                <h1>Documents Archive</h1>
-                                <div id="docList" class="doc-list">
-                                        <!-- Rows get inserted here by script -->
+                                <h1>Archive of Documents</h1>
+                                <div style="display: flex; flex-wrap: wrap; gap: 2em;">
+                                        <aside id="docSidebar" class="doc-sidebar"></aside>
+                                        <div id="docList" class="doc-list" style="flex: 1;"></div>
                                 </div>
-
-                        
+                        </div>                       
                         
                         <div class="view" id="mechanics">
                                 <h1>Game Mechanics View</h1>
@@ -1208,10 +1235,11 @@
                                 "40_Circuses_of_the_World",
                                 "41_Performer_Archetypes"
                         ];
-
-                        const docList = document.getElementById("docList");
                         
-                        documents.forEach(doc => {
+                        const docList = document.getElementById("docList");
+                        const sidebar = document.getElementById("docSidebar");
+                        
+                        documents.forEach((doc, index) => {
                                 const row = document.createElement("div");
                                 row.className = "doc-entry";
                                 
@@ -1222,19 +1250,42 @@
                                 content.className = "doc-content";
                                 content.dataset.loaded = "false";
                                 content.dataset.src = `Documents/${doc}.html`;
+                                content.id = `doc-content-${index}`;
                                 
                                 row.appendChild(title);
                                 row.appendChild(content);
                                 docList.appendChild(row);
                                 
+                                const tocItem = document.createElement("li");
+                                tocItem.textContent = title.textContent;
+                                tocItem.addEventListener("click", () => {
+                                        document.querySelectorAll(".doc-content").forEach(el => el.classList.remove("open"));
+                                        const target = document.getElementById(`doc-content-${index}`);
+                                        if (target.dataset.loaded === "false") {
+                                                fetch(target.dataset.src)
+                                                        .then(res => res.text())
+                                                        .then(html => {
+                                                                html = html.replace(/src="media\//g, 'src="Documents/media/');
+                                                                target.innerHTML = html;
+                                                                target.dataset.loaded = "true";
+                                                                target.classList.add("open");
+                                                        });
+                                        } else {
+                                                target.classList.add("open");
+                                        }
+                                        target.scrollIntoView({ behavior: "smooth", block: "start" });
+                                });
+                                
+                                if (!sidebar.querySelector("ul")) sidebar.appendChild(document.createElement("ul"));
+                                sidebar.querySelector("ul").appendChild(tocItem);
+                                
+                                // Also enable row click behavior (as before)
                                 row.addEventListener("click", () => {
                                         if (content.classList.contains("open")) {
                                                 content.classList.remove("open");
                                                 return;
                                         }
-                                        
                                         document.querySelectorAll(".doc-content").forEach(el => el.classList.remove("open"));
-                                        
                                         if (content.dataset.loaded === "false") {
                                                 fetch(content.dataset.src)
                                                         .then(res => res.text())
