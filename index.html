@@ -513,6 +513,34 @@
                         .thumbnail-strip img:hover {
                           border-color: black;
                         }
+
+                        .doc-list {
+                                display: flex;
+                                flex-direction: column;
+                                gap: 1em;
+                                max-width: 1000px;
+                                margin: 2em auto;
+                        }
+                        .doc-entry {
+                                border: 2px solid black;
+                                background: var(--bg-light);
+                                padding: 1em;
+                                cursor: pointer;
+                        }
+                        .doc-entry h2 {
+                                margin: 0;
+                                font-size: 1.2em;
+                        }
+                        .doc-content {
+                                display: none;
+                                margin-top: 1em;
+                                border-top: 1px solid #444;
+                                padding-top: 1em;
+                                background: white;
+                        }
+                        .doc-content.open {
+                                display: block;
+                        }
                         
                         @media (max-width: 768px) {
                                 .gallery-controls {
@@ -798,9 +826,11 @@
 
                         
                         <div class="view" id="documents">
-                                <h1>Documents View</h1>
-                                <p>Placeholder for document list.</p>
-                        </div>
+                                <h1>Documents Archive</h1>
+                                <div id="docList" class="doc-list">
+                                        <!-- Rows get inserted here by script -->
+                                </div>
+
                         
                         
                         <div class="view" id="mechanics">
@@ -1163,6 +1193,61 @@
                                         el.addEventListener('click', legendToggleHandler);
                                 }, 250);
                         }
-                </script>              
+                </script>
+
+                <script>
+                        const documents = [
+                                "10_World_Overview",
+                                "11_Timeline",
+                                "12_Ether",
+                                "15_Electrique_Devices",
+                                "16_Wards",
+                                "20_Society",
+                                "30_Aetherial_Engines",
+                                "31_Currency_&_Cost_of_Living",
+                                "40_Circuses_of_the_World",
+                                "41_Performer_Archetypes"
+                        ];
+                        
+                        const docList = document.getElementById("docList");
+                        
+                        documents.forEach(doc => {
+                                const row = document.createElement("div");
+                                row.className = "doc-entry";
+                                
+                                const title = document.createElement("h2");
+                                title.textContent = doc.replace(/^\d+_/, "").replace(/_/g, " ").replace(/&/g, "and");
+                                
+                                const content = document.createElement("div");
+                                content.className = "doc-content";
+                                content.dataset.loaded = "false";
+                                content.dataset.src = `Documents/${doc}.html`;
+                                
+                                row.appendChild(title);
+                                row.appendChild(content);
+                                docList.appendChild(row);
+                                
+                                row.addEventListener("click", () => {
+                                        if (content.classList.contains("open")) {
+                                                content.classList.remove("open");
+                                                return;
+                                        }
+                                        
+                                        document.querySelectorAll(".doc-content").forEach(el => el.classList.remove("open"));
+                                        
+                                        if (content.dataset.loaded === "false") {
+                                                fetch(content.dataset.src)
+                                                        .then(res => res.text())
+                                                        .then(html => {
+                                                                content.innerHTML = html;
+                                                                content.dataset.loaded = "true";
+                                                                content.classList.add("open");
+                                                        });
+                                        } else {
+                                                content.classList.add("open");
+                                        }
+                                });
+                        });
+                </script>
         </body>
 </html>
