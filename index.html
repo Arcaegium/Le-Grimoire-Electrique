@@ -973,10 +973,16 @@
                                         autoCycleInterval = setInterval(advanceImage, 2500);
                                 });
                                 
-                                preview.addEventListener('touchstart', () => clearInterval(autoCycleInterval));
-                                preview.addEventListener('touchend', () => {
-                                        clearInterval(autoCycleInterval);
-                                        autoCycleInterval = setInterval(advanceImage, 2500);
+                                let isPaused = false;
+
+                                preview.addEventListener('touchstart', () => {
+                                        if (!isPaused) {
+                                                clearInterval(autoCycleInterval);
+                                                isPaused = true;
+                                        } else {
+                                                autoCycleInterval = setInterval(advanceImage, 2500);
+                                                isPaused = false;
+                                        }
                                 });
                         }                       
                 </script>
