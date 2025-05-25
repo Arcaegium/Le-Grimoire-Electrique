@@ -926,6 +926,15 @@
                                         }
                                         if (autoCycleInterval) clearInterval(autoCycleInterval);
                                 }
+                                
+                                const sidebar = document.getElementById('docSidebar');
+                                if (sidebar) {
+                                        if (id === 'documents') {
+                                                sidebar.style.display = 'block';
+                                        } else {
+                                                sidebar.style.display = 'none';\
+                                        }
+                                }
                         }
                        
                         function showInViewer(src, title) {
