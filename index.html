@@ -542,6 +542,11 @@
                                 display: block;
                         }
                         .doc-sidebar {
+                                position: sticky;
+                                top: 36px; /* below the navbar */
+                                align-self: flex-start;
+                                height: calc(100vh - 36px);
+                                overflow-y: auto;
                                 min-width: 200px;
                                 max-width: 300px;
                                 background-image: url("gifs/sidebar tile.png");
@@ -553,8 +558,7 @@
                                 font-family: serif;
                                 font-size: 0.95em;
                                 line-height: 1.4;
-                                overflow-y: auto;
-                                max-height: 80vh;
+                                z-index: 10;
                         }
                         .doc-sidebar ul {
                                 list-style: none;
