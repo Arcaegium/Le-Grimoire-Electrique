@@ -522,28 +522,43 @@
                                 margin: 2em 2em 2em 0;
                                 align-items: stretch;
                         }
-                        .doc-entry {
-                                border: 2px solid black;
-                                background: var(--bg-light);
-                                padding: 1em;
-                                cursor: pointer;
-                                width: 100%;
-                                box-sizing: border-box;
-                        }
+                       .doc-entry {
+                               border: 2px solid black;
+                               background: var(--bg-light);
+                               padding: 2em;
+                               width: 100%;
+                               box-sizing: border-box;
+                               font-family: 'Georgia', 'Times New Roman', serif;
+                               font-size: 1.1em;
+                               line-height: 1.6;
+                               text-align: justify;
+                               box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
+                               column-count: 2;
+                               column-gap: 3em;
+                               column-rule: 1px solid #999;
+                       }
                         .doc-entry h2 {
-                                margin: 0;
-                                font-size: 1.2em;
+                                column-span: all;
+                                font-size: 1.4em;
+                                text-align: center;
+                                font-weight: bold;
+                                text-transform: uppercase;
+                                letter-spacing: 1px;
+                                margin-bottom: 1em;
+                                border-bottom: 2px solid black;
+                                padding-bottom: 0.3em;
                         }
                         .doc-content {
                                 display: none;
-                                margin-top: 1em;
-                                border-top: 1px solid #444;
+                                margin-top: 1.5em;
                                 padding-top: 1em;
                                 background: white;
+                                column-span: all;
                         }
                         .doc-content.open {
                                 display: block;
                         }
+
                         .doc-sidebar {
                                 position: fixed;
                                 top: 36px; /* stick directly under nav */
