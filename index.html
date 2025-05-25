@@ -953,25 +953,32 @@
                                 
                                 if (autoCycleInterval) clearInterval(autoCycleInterval);
                                 
-                                autoCycleInterval = setInterval(() => {
+                                function advanceImage() {
                                         index++;
                                         if (index >= images.length) {
                                                 index = 0;
                                                 const nextCategory = getNextCategory(currentGalleryCategory);
-                                                loadCategory(nextCategory);
-                                                return; // `loadCategory` will restart the cycle
+                                                loadCategory(nextCategory); // this restarts the cycle
+                                                return;
                                         }
                                         preview.src = images[index].src;
                                         preview.alt = images[index].alt || '';
-                                }, 2500);
-                        }
-                        
-                        function getNextCategory(current) {
-                                const sequence = ['people', 'places', 'things'];
-                                const idx = sequence.indexOf(current);
-                                return sequence[(idx + 1) % sequence.length];
-                        }
-                       
+                                }
+                                
+                                autoCycleInterval = setInterval(advanceImage, 2500);
+                                
+                                preview.addEventListener('mouseenter', () => clearInterval(autoCycleInterval));
+                                preview.addEventListener('mouseleave', () => {
+                                        clearInterval(autoCycleInterval);
+                                        autoCycleInterval = setInterval(advanceImage, 2500);
+                                });
+                                
+                                preview.addEventListener('touchstart', () => clearInterval(autoCycleInterval));
+                                preview.addEventListener('touchend', () => {
+                                        clearInterval(autoCycleInterval);
+                                        autoCycleInterval = setInterval(advanceImage, 2500);
+                                });
+                        }                       
                 </script>
 
                 
