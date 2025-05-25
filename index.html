@@ -873,42 +873,42 @@
                 </script>
                
                 <script>                        
-                        function loadCategory(category) {
-                                const galleryView = document.getElementById('gallery');
-                                if (!galleryView.classList.contains('active')) return;
-                                
-                                const preview = document.getElementById('mainPreview');
-                                const strip = document.getElementById('thumbnailStrip');
-                                
-                                strip.innerHTML = '';
-                                const items = window.imageLibrary?.[category] || [];
-                                
-                                items.forEach(({ src, label }) => {
-                                        const img = document.createElement('img');
-                                        img.src = src;
-                                        img.alt = label || src.split('/').pop();
-                                        img.title = label || '';
-                                        img.onclick = () => {
-                                                preview.src = src;
-                                                preview.alt = label || src.split('/').pop();
-                                                index = images.findIndex(i => i.src === src);
-                                                // Do not resume cycling if paused
-                                        };
-                                        strip.appendChild(img);
-                                });
-                                
-                                if (items[0]) {
-                                        preview.src = items[0].src;
-                                        preview.alt = items[0].label || '';
-                                }
-                                
-                                startAutoCycle(category);
-                                
-                                // Update active button
-                                document.querySelectorAll('.gallery-switch button').forEach(b => b.classList.remove('active'));
-                                const activeBtn = document.querySelector(`.gallery-switch button[data-category="${category}"]`);
-                                if (activeBtn) activeBtn.classList.add('active');
-                        }
+                       function loadCategory(category) {
+                               const galleryView = document.getElementById('gallery');
+                               if (!galleryView.classList.contains('active')) return;
+                               
+                               const preview = document.getElementById('mainPreview');
+                               const strip = document.getElementById('thumbnailStrip');
+                               
+                               strip.innerHTML = '';
+                               const items = window.imageLibrary?.[category] || [];
+                               
+                               items.forEach(({ src, label }) => {
+                                       const img = document.createElement('img');
+                                       img.src = src;
+                                       img.alt = label || src.split('/').pop();
+                                       img.title = label || '';
+                                       img.onclick = () => {
+                                               preview.src = src;
+                                               preview.alt = label || src.split('/').pop();
+                                               images = Array.from(strip.querySelectorAll('img')); // refresh image list
+                                               index = images.findIndex(i => i.src === src); // update global index
+                                               // do not alter isPaused here
+                                       };
+                                       strip.appendChild(img);
+                               });
+                               if (items[0]) {
+                                       preview.src = items[0].src;
+                                       preview.alt = items[0].label || '';
+                               }
+                               
+                               startAutoCycle(category);
+                               
+                               // Update active button
+                               document.querySelectorAll('.gallery-switch button').forEach(b => b.classList.remove('active'));
+                               const activeBtn = document.querySelector(`.gallery-switch button[data-category="${category}"]`);
+                               if (activeBtn) activeBtn.classList.add('active');
+                       }
                         
                         let galleryInitialized = false;
 
