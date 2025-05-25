@@ -577,7 +577,7 @@
                                 #mapLegend {
                                         display: block !important;
                                         position: absolute;
-                                        bottom: 16vh;
+                                        bottom: clamp(48px, 12vh, 20vh); /* allows dynamic balance */
                                         right: 8vh;
                                         z-index: 1100;
                                         max-width: 95vw;
