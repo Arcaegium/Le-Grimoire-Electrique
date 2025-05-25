@@ -873,6 +873,12 @@
                 </script>
                
                 <script>
+                        let autoCycleInterval = null;
+                        let currentGalleryCategory = 'people';
+                        let index = 0;
+                        let images = []
+                        let isPaused = false;
+                        
                         function loadCategory(category) {
                                 const galleryView = document.getElementById('gallery');
                                 if (!galleryView.classList.contains('active')) return;
@@ -892,11 +898,13 @@
                                                 preview.src = src;
                                                 preview.alt = label || src.split('/').pop();
                                                 index = images.findIndex(i => i.src === src);
+                                                // Respect current pause state: do not resume if paused
                                                 if (!isPaused) {
                                                         clearInterval(autoCycleInterval);
                                                         autoCycleInterval = setInterval(advanceImage, 2500);
                                                 }
                                         };
+
                                         strip.appendChild(img);
                                 });
                                 
@@ -940,17 +948,15 @@
                                         scrollStrip.scrollBy({ left: 200, behavior: 'smooth' });
                                 });
                         }
-
-                        let autoCycleInterval = null;
-                        let currentGalleryCategory = 'people';
-                        
+                                               
                         function startAutoCycle(category) {
                                 const preview = document.getElementById('mainPreview');
                                 const strip = document.getElementById('thumbnailStrip');
-                                const images = Array.from(strip.querySelectorAll('img'));
+                                index = 0;
+                                images = Array.from(strip.querySelectorAll('img'));
+                                isPaused = false;
                                 if (!images.length) return;
-                                
-                                let index = 0;
+                                                                
                                 currentGalleryCategory = category;
                                 
                                 preview.src = images[0].src;
@@ -978,8 +984,6 @@
                                         autoCycleInterval = setInterval(advanceImage, 2500);
                                 });
                                 
-                                let isPaused = false;
-
                                 preview.addEventListener('touchstart', () => {
                                         if (!isPaused) {
                                                 clearInterval(autoCycleInterval);
