@@ -1208,7 +1208,7 @@
                                 "40_Circuses_of_the_World",
                                 "41_Performer_Archetypes"
                         ];
-                        
+
                         const docList = document.getElementById("docList");
                         
                         documents.forEach(doc => {
@@ -1239,6 +1239,7 @@
                                                 fetch(content.dataset.src)
                                                         .then(res => res.text())
                                                         .then(html => {
+                                                                html = html.replace(/src="media\//g, 'src="Documents/media/');
                                                                 content.innerHTML = html;
                                                                 content.dataset.loaded = "true";
                                                                 content.classList.add("open");
