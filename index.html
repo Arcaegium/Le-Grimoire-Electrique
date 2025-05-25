@@ -1300,7 +1300,9 @@
                                                 target.classList.add("open");
                                         }
                                         setTimeout(() => {
-                                                target.scrollIntoView({ behavior: "smooth", block: "start" });
+                                                const offset = 60; // height of nav bar
+                                                const y = element.getBoundingClientRect().top + window.scrollY - offset;
+                                                window.scrollTo({ top: y, behavior: "smooth" });
                                         }, 50);
                                 });
                                 
@@ -1323,13 +1325,17 @@
                                                                 content.dataset.loaded = "true";
                                                                 content.classList.add("open");
                                                                 setTimeout(() => {
-                                                                        row.scrollIntoView({ behavior: "smooth", block: "start" });
+                                                                        const offset = 60; // height of nav bar
+                                                                        const y = element.getBoundingClientRect().top + window.scrollY - offset;
+                                                                        window.scrollTo({ top: y, behavior: "smooth" });
                                                                 }, 50);
                                                         });
                                         } else {
                                                 content.classList.add("open");
                                                 setTimeout(() => {
-                                                        row.scrollIntoView({ behavior: "smooth", block: "start" });
+                                                        const offset = 60; // height of nav bar
+                                                        const y = element.getBoundingClientRect().top + window.scrollY - offset;
+                                                        window.scrollTo({ top: y, behavior: "smooth" });
                                                 }, 0);
                                         }
                                 });
