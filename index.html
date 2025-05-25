@@ -578,7 +578,7 @@
                                         display: block !important;
                                         position: absolute;
                                         bottom: clamp(48px, 12vh, 20vh); /* allows dynamic balance */
-                                        right: 8vh;
+                                        right: 5vw;
                                         z-index: 1100;
                                         max-width: 95vw;
                                         max-height: 40vh;
@@ -593,7 +593,7 @@
                                 #mapLegend.collapsed {
                                         position: absolute;
                                         bottom: 16vh;
-                                        right: 9vh
+                                        right: 9vw;
                                         z-index: 1100;
                                         background: rgba(240, 228, 207, 0.95);
                                         padding: 6px 10px;
@@ -643,7 +643,7 @@
                                         left: 6px;
                                 }
                                 .leaflet-bottom.leaflet-right {
-                                        right: 8vh;  /* Pull in from edge */
+                                        right: 8vw;  /* Pull in from edge */
                                         bottom: calc(env(safe-area-inset-bottom, 0px) + 6px);
                                 }
                                 .owner-controls-wrapper,
@@ -1096,6 +1096,8 @@
                                         L.DomEvent.disableClickPropagation(el);
                                         L.DomEvent.disableScrollPropagation(el);
                                         el.style.display = 'block';
+                                        el.style.bottom = '12vh';
+                                        el.style.right = '6vh';
                                         el.removeEventListener('click', legendToggleHandler);
                                         el.addEventListener('click', legendToggleHandler);
                                 }, 250);
