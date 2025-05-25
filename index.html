@@ -937,6 +937,7 @@
                         }
 
                         let autoCycleInterval = null;
+                        let currentGalleryCategory = 'people';
                         
                         function startAutoCycle(category) {
                                 const preview = document.getElementById('mainPreview');
@@ -945,16 +946,30 @@
                                 if (!images.length) return;
                                 
                                 let index = 0;
+                                currentGalleryCategory = category;
+                                
                                 preview.src = images[0].src;
                                 preview.alt = images[0].alt || '';
                                 
                                 if (autoCycleInterval) clearInterval(autoCycleInterval);
                                 
                                 autoCycleInterval = setInterval(() => {
-                                        index = (index + 1) % images.length;
+                                        index++;
+                                        if (index >= images.length) {
+                                                index = 0;
+                                                const nextCategory = getNextCategory(currentGalleryCategory);
+                                                loadCategory(nextCategory);
+                                                return; // `loadCategory` will restart the cycle
+                                        }
                                         preview.src = images[index].src;
                                         preview.alt = images[index].alt || '';
-                                }, 5000);
+                                }, 2500);
+                        }
+                        
+                        function getNextCategory(current) {
+                                const sequence = ['people', 'places', 'things'];
+                                const idx = sequence.indexOf(current);
+                                return sequence[(idx + 1) % sequence.length];
                         }
                        
                 </script>
