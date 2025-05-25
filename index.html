@@ -577,7 +577,7 @@
                                 #mapLegend {
                                         display: block !important;
                                         position: absolute;
-                                        bottom: clamp(48px, 12vh, 20vh); /* allows dynamic balance */
+                                        bottom: clamp(48px, 8vh, 16vh); /* allows dynamic balance */
                                         right: 2vw;
                                         z-index: 1100;
                                         max-width: 95vw;
@@ -644,7 +644,7 @@
                                 }
                                 .leaflet-bottom.leaflet-right {
                                         right: 2vw;  /* Pull in from edge */
-                                        bottom: calc(env(safe-area-inset-bottom, 0px) + 6px);
+                                        bottom: calc(env(safe-area-inset-bottom, 0px) + 2vh);
                                 }
                                 .owner-controls-wrapper,
                                 #ownerControls {
