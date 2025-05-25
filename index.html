@@ -1299,7 +1299,9 @@
                                         } else {
                                                 target.classList.add("open");
                                         }
-                                        target.scrollIntoView({ behavior: "smooth", block: "start" });
+                                        setTimeout(() => {
+                                                target.scrollIntoView({ behavior: "smooth", block: "start" });
+                                        }, 50);
                                 });
                                 
                                 if (!sidebar.querySelector("ul")) sidebar.appendChild(document.createElement("ul"));
@@ -1320,9 +1322,15 @@
                                                                 content.innerHTML = html;
                                                                 content.dataset.loaded = "true";
                                                                 content.classList.add("open");
+                                                                setTimeout(() => {
+                                                                        row.scrollIntoView({ behavior: "smooth", block: "start" });
+                                                                }, 50);
                                                         });
                                         } else {
                                                 content.classList.add("open");
+                                                setTimeout(() => {
+                                                        row.scrollIntoView({ behavior: "smooth", block: "start" });
+                                                }, 0);
                                         }
                                 });
                         });
