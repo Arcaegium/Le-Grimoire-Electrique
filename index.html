@@ -872,13 +872,7 @@
                         }
                 </script>
                
-                <script>
-                        let autoCycleInterval = null;
-                        let currentGalleryCategory = 'people';
-                        let index = 0;
-                        let images = []
-                        let isPaused = false;
-                        
+                <script>                        
                         function loadCategory(category) {
                                 const galleryView = document.getElementById('gallery');
                                 if (!galleryView.classList.contains('active')) return;
@@ -898,13 +892,8 @@
                                                 preview.src = src;
                                                 preview.alt = label || src.split('/').pop();
                                                 index = images.findIndex(i => i.src === src);
-                                                // Respect current pause state: do not resume if paused
-                                                if (!isPaused) {
-                                                        clearInterval(autoCycleInterval);
-                                                        autoCycleInterval = setInterval(advanceImage, 2500);
-                                                }
+                                                // Do not resume cycling if paused
                                         };
-
                                         strip.appendChild(img);
                                 });
                                 
@@ -912,10 +901,10 @@
                                         preview.src = items[0].src;
                                         preview.alt = items[0].label || '';
                                 }
+                                
                                 startAutoCycle(category);
-
-
-                                // FIX: This must be inside the function, after the buttons exist
+                                
+                                // Update active button
                                 document.querySelectorAll('.gallery-switch button').forEach(b => b.classList.remove('active'));
                                 const activeBtn = document.querySelector(`.gallery-switch button[data-category="${category}"]`);
                                 if (activeBtn) activeBtn.classList.add('active');
@@ -949,27 +938,33 @@
                                 });
                         }
                                                
+                        let autoCycleInterval = null;
+                        let currentGalleryCategory = 'people';
+                        let index = 0;
+                        let images = [];
+                        let isPaused = false;
+                        
                         function startAutoCycle(category) {
                                 const preview = document.getElementById('mainPreview');
                                 const strip = document.getElementById('thumbnailStrip');
-                                index = 0;
-                                images = Array.from(strip.querySelectorAll('img'));
-                                isPaused = false;
-                                if (!images.length) return;
-                                                                
-                                currentGalleryCategory = category;
                                 
+                                images = Array.from(strip.querySelectorAll('img'));
+                                if (!images.length) return;
+                                
+                                currentGalleryCategory = category;
+                                index = 0;
+                                isPaused = false;
                                 preview.src = images[0].src;
                                 preview.alt = images[0].alt || '';
                                 
                                 if (autoCycleInterval) clearInterval(autoCycleInterval);
                                 
                                 function advanceImage() {
+                                        if (isPaused) return;
                                         index++;
                                         if (index >= images.length) {
-                                                index = 0;
                                                 const nextCategory = getNextCategory(currentGalleryCategory);
-                                                loadCategory(nextCategory); // this restarts the cycle
+                                                loadCategory(nextCategory); // restarts cycle
                                                 return;
                                         }
                                         preview.src = images[index].src;
@@ -978,22 +973,27 @@
                                 
                                 autoCycleInterval = setInterval(advanceImage, 2500);
                                 
-                                preview.addEventListener('mouseenter', () => clearInterval(autoCycleInterval));
-                                preview.addEventListener('mouseleave', () => {
-                                        clearInterval(autoCycleInterval);
-                                        autoCycleInterval = setInterval(advanceImage, 2500);
+                                // Desktop hover to pause
+                                preview.addEventListener('mouseenter', () => {
+                                        if (!isPaused) clearInterval(autoCycleInterval);
                                 });
                                 
-                                preview.addEventListener('touchstart', () => {
+                                preview.addEventListener('mouseleave', () => {
                                         if (!isPaused) {
                                                 clearInterval(autoCycleInterval);
-                                                isPaused = true;
-                                        } else {
                                                 autoCycleInterval = setInterval(advanceImage, 2500);
-                                                isPaused = false;
                                         }
                                 });
-                        }                       
+
+                                // Mobile or desktop click/tap to toggle pause
+                                preview.onclick = () => {
+                                        isPaused = !isPaused;
+                                        clearInterval(autoCycleInterval);
+                                        if (!isPaused) {
+                                                autoCycleInterval = setInterval(advanceImage, 2500);
+                                        }
+                                };
+                        }
                 </script>
 
                 
