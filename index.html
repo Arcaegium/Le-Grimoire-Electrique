@@ -1398,6 +1398,10 @@
                                 // Also enable row click behavior (as before)
                                 row.addEventListener("click", () => {
                                         const isOpen = content.classList.contains("open");
+                                                                                
+                                        document.querySelectorAll(".doc-entry").forEach(el => {
+                                                el.classList.remove("expanded");
+                                        });
                                         
                                         // Reset all open articles
                                         document.querySelectorAll(".doc-content").forEach(el => {
@@ -1405,10 +1409,6 @@
                                                 el.scrollLeft = 0;
                                                 el.scrollTop = 0;
                                                 el.style.height = "";
-                                        });
-                                        
-                                        document.querySelectorAll(".doc-entry").forEach(el => {
-                                                el.classList.remove("expanded");
                                         });
 
                                         if (row.classList.contains("expanded")) return;
