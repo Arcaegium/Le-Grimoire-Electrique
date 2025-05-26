@@ -586,9 +586,15 @@
                                 column-count: 4;
                                 column-gap: 4em;
                                 column-fill: auto;
-                                width: max-content;
-                                padding-right: 2em;
+                                height: 90vh;
+                                overflow: hidden;
+                                max-height: 90vh;
+                                overflow-x: auto;
+                                overflow-y: hidden;
+                                white-space: nowrap;
+                                display: none;
                         }
+
 
                         .doc-content p:nth-of-type(6n)::after {
                                 content: "";
@@ -1388,7 +1394,7 @@
                                                 content.classList.add("open");
                                                 setTimeout(() => {
                                                         const offset = 60; // height of nav bar
-                                                        const y = element.getBoundingClientRect().top + window.scrollY - offset;
+                                                        const y = row.getBoundingClientRect().top + window.scrollY - offset;
                                                         window.scrollTo({ top: y, behavior: "smooth" });
                                                 }, 0);
                                         }
