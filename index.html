@@ -599,6 +599,7 @@
                                 overflow-y: hidden;
                                 box-sizing: border-box;
                                 scroll-behavior: smooth;
+                                height: 100%;
                         }
                         
                         .doc-content.open {
@@ -1409,6 +1410,12 @@
                                         document.querySelectorAll(".doc-entry").forEach(el => {
                                                 el.classList.remove("expanded");
                                                 el.style.height = "";
+                                                el.style.position = "";
+                                                el.style.top = "";
+                                                el.style.left = "";
+                                                el.style.width = "";
+                                                el.style.overflow = "";
+                                                el.style.display = "";
                                         });
                                         
                                         if (!isOpen) {
