@@ -582,23 +582,25 @@
                                 flex-direction: column;
                                 overflow: hidden;
                         }
+                        
                         .doc-entry.expanded h2 {
-                                position: relative;
+                                flex: 0 0 auto;
                                 z-index: 5;
-                                padding: 1em 0 0 2em;
+                                padding: 1em 2em 0 2em;
                                 margin: 0;
                                 background: inherit;
                                 border-bottom: 1px dashed #444;
                                 column-span: all;
                         }
-                       .doc-content {
-                               flex: 1;
-                               overflow-x: auto;
-                               overflow-y: hidden;
-                               box-sizing: border-box;
-                               scroll-behavior: smooth;
-                               border: 2px solid red; /* for debug */
-                       }
+
+                        .doc-content {
+                                flex: 1 1 auto;
+                                overflow-x: auto;
+                                overflow-y: hidden;
+                                box-sizing: border-box;
+                                scroll-behavior: smooth;
+                        }
+                        
                         .doc-content.open {
                                 display: block;
                         }
@@ -1397,8 +1399,17 @@
                                         const isOpen = content.classList.contains("open");
                                         
                                         // Reset all open articles
-                                        document.querySelectorAll(".doc-content").forEach(el => el.classList.remove("open"));
-                                        document.querySelectorAll(".doc-entry").forEach(el => el.classList.remove("expanded"));
+                                        document.querySelectorAll(".doc-content").forEach(el => {
+                                                el.classList.remove("open");
+                                                el.scrollLeft = 0;
+                                                el.scrollTop = 0;
+                                                el.style.height = "";
+                                        });
+                                        
+                                        document.querySelectorAll(".doc-entry").forEach(el => {
+                                                el.classList.remove("expanded");
+                                                el.style.height = "";
+                                        });
                                         
                                         if (!isOpen) {
                                                 // Load content if needed
