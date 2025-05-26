@@ -571,15 +571,25 @@
                                 font-family: 'Georgia', serif;
                         }
                         .doc-content {
-                                display: none;
-                                margin-top: 1.5em;
-                                padding-top: 1em;
-                                background: transparent;
+                                column-count: 2;
+                                column-gap: 3em;
+                                height: 100vh;
+                                overflow-y: auto;
+                                padding: 2em;
+                                background: url("your-paper-texture.png"); /* optional */
+                                box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.3);
                         }
                         .doc-content.open {
                                 display: block;
                         }
-
+                        .doc-content p:nth-of-type(6n)::after {
+                                content: "";
+                                display: block;
+                                margin: 2em auto;
+                                height: 2px;
+                                background: rgba(0,0,0,0.1);
+                                width: 80%;
+                        }
                         .doc-sidebar {
                                 position: fixed;
                                 top: 36px; /* stick directly under nav */
