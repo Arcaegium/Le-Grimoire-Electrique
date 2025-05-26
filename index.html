@@ -586,8 +586,8 @@
                         .doc-content {
                                 display: none;
                                 position: relative;
-                                width: calc(100vw - 260px); /* 240px sidebar + 20px buffer */
-                                height: calc(100vh - 36px);  /* 36px nav bar height */
+                                width: calc(100vw - 260px); /* matches container width */
+                                height: calc(100vh - 36px);  /* below nav bar */
                                 overflow-x: auto;
                                 overflow-y: hidden;
                                 margin: 0;
@@ -595,7 +595,6 @@
                                 box-sizing: border-box;
                                 scroll-behavior: smooth;
                         }
-
                         .doc-content.open {
                                 display: block;
                                 width: 100%;
@@ -604,8 +603,10 @@
                                 overflow-y: hidden;
                         }
                         .doc-content-inner {
-                                width: max-content; /* removes fixed limit; grows horizontally */
+                                display: block;
+                                width: max-content;
                                 height: 100%;
+                                overflow: hidden;
                                 column-width: 400px;
                                 column-gap: 3em;
                                 column-fill: auto;
