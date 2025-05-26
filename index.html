@@ -571,17 +571,25 @@
                                 font-family: 'Georgia', serif;
                         }
                         .doc-content {
-                                column-count: 2;
-                                column-gap: 3em;
-                                height: 100vh;
-                                overflow-y: auto;
-                                padding: 2em;
-                                background: url("your-paper-texture.png"); /* optional */
-                                box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.3);
+                                display: none;
+                                white-space: nowrap;
+                                overflow-x: auto;
+                                overflow-y: hidden;
+                                max-width: 100%;
+                                height: auto;
+                                padding: 2em 0;
                         }
                         .doc-content.open {
                                 display: block;
                         }
+                        .doc-content-inner {
+                                column-count: 4;
+                                column-gap: 4em;
+                                column-fill: auto;
+                                width: max-content;
+                                padding-right: 2em;
+                        }
+
                         .doc-content p:nth-of-type(6n)::after {
                                 content: "";
                                 display: block;
@@ -1338,7 +1346,7 @@
                                                         .then(res => res.text())
                                                         .then(html => {
                                                                 html = html.replace(/src="media\//g, 'src="Documents/media/');
-                                                                target.innerHTML = html;
+                                                                target.innerHTML = `<div class="doc-content-inner">${html}</div>`;
                                                                 target.dataset.loaded = "true";
                                                                 target.classList.add("open");
                                                         });
@@ -1367,7 +1375,7 @@
                                                         .then(res => res.text())
                                                         .then(html => {
                                                                 html = html.replace(/src="media\//g, 'src="Documents/media/');
-                                                                content.innerHTML = html;
+                                                                content.innerHTML = `<div class="doc-content-inner">${html}</div>`;
                                                                 content.dataset.loaded = "true";
                                                                 content.classList.add("open");
                                                                 setTimeout(() => {
