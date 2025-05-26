@@ -1394,40 +1394,39 @@
                                 
                                 // Also enable row click behavior (as before)
                                 row.addEventListener("click", () => {
-                                        if (content.classList.contains("open")) {
-                                                content.classList.remove("open");
-                                                row.classList.remove("expanded");
-                                                return;
-                                        }
+                                        const isOpen = content.classList.contains("open");
                                         
+                                        // Reset all open articles
                                         document.querySelectorAll(".doc-content").forEach(el => el.classList.remove("open"));
                                         document.querySelectorAll(".doc-entry").forEach(el => el.classList.remove("expanded"));
                                         
-                                        if (content.dataset.loaded === "false") {
-                                                fetch(content.dataset.src)
-                                                        .then(res => res.text())
-                                                        .then(html => {
-                                                                html = html.replace(/src="media\//g, 'src="Documents/media/');
-                                                                content.innerHTML = `<div class="doc-content-inner">${html}</div>`;
-                                                                content.dataset.loaded = "true";
-                                                                content.classList.add("open");
-                                                                row.classList.add("expanded");
-                                                                setTimeout(() => {
-                                                                        const offset = 60; // height of nav bar
-                                                                        const y = content.getBoundingClientRect().top + window.scrollY - offset;
-                                                                        window.scrollTo({ top: y, behavior: "smooth" });
-                                                                }, 50);
-                                                        });
-                                        } else {
-                                                content.classList.add("open");
-                                                row.classList.add("expanded");
-                                                setTimeout(() => {
-                                                        const offset = 60; // height of nav bar
-                                                        const y = row.getBoundingClientRect().top + window.scrollY - offset;
-                                                        window.scrollTo({ top: y, behavior: "smooth" });
-                                                }, 0);
+                                        if (!isOpen) {
+                                                // Load content if needed
+                                                if (content.dataset.loaded === "false") {
+                                                        fetch(content.dataset.src)
+                                                                .then(res => res.text())
+                                                                .then(html => {
+                                                                        html = html.replace(/src="media\//g, 'src="Documents/media/');
+                                                                        content.innerHTML = `<div class="doc-content-inner">${html}</div>`;
+                                                                        content.dataset.loaded = "true";
+                                                                        content.classList.add("open");
+                                                                        row.classList.add("expanded");
+                                                                        scrollToEntry(row);
+                                                                });
+                                                } else {
+                                                        content.classList.add("open");
+                                                        row.classList.add("expanded");
+                                                        scrollToEntry(row);
+                                                }
                                         }
                                 });
+                                function scrollToEntry(entry) {
+                                        setTimeout(() => {
+                                                const offset = 60; // height of nav bar
+                                                const y = entry.getBoundingClientRect().top + window.scrollY - offset;
+                                                window.scrollTo({ top: y, behavior: "smooth" });
+                                        }, 0);
+                                }
                         });
                 </script>
         </body>
