@@ -543,19 +543,20 @@
                                word-spacing: 0.05em;
                        }
                         .doc-entry.expanded {
-                                width: 100vw;
-                                height: auto;
-                                min-height: calc(100vh - 36px);
-                                margin: 0;
-                                padding: 0;
-                                overflow: visible;
-                                position: fixed;
-                                top: 36px; /* below navbar */
-                                left: 240px; /* next to sidebar */
-                                z-index: 900;
-                                background: #fdfaf4 url('gifs/paper.png') repeat;
-                                box-shadow: none;
-                        }
+                               position: fixed;
+                               top: 36px;
+                               left: 240px;
+                               width: calc(100vw - 240px);
+                               height: calc(100vh - 36px);
+                               margin: 0;
+                               padding: 0;
+                               overflow: hidden; /* limit document view area */
+                               z-index: 900;
+                               background: #fdfaf4 url('gifs/paper.png') repeat;
+                               box-shadow: none;
+                               display: flex;f
+                               flex-direction: column;
+                       }
                         .doc-entry h2 {
                                 column-span: all;
                                 berak-after: avoid;
@@ -585,24 +586,19 @@
                                 font-family: 'Georgia', serif;
                         }
                         .doc-content {
-                                display: none;
-                                position: relative;
-                                width: calc(100vw - 260px); /* matches container width */
-                                height: calc(100vh - 36px);  /* below nav bar */
+                                flex: 1;
                                 overflow-x: auto;
                                 overflow-y: hidden;
+                                width: 100%;
+                                height: 100%;
                                 margin: 0;
                                 padding: 0;
                                 box-sizing: border-box;
                                 scroll-behavior: smooth;
-                                border: 2px solid red;
+                                border: 2px solid red; /* for debug */
                         }
                         .doc-content.open {
                                 display: block;
-                                width: calc(100vw - 260px);
-                                height: calc(100vh - 36px);
-                                overflow-x: auto;
-                                overflow-y: hidden;
                         }
                         .doc-content-inner {
                                 display: block;
