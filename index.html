@@ -606,6 +606,9 @@
                         .doc-content.open {
                                 display: block;
                         }
+                        .doc-content:not(.open) {
+                                display: none;
+                        }
                         .doc-content-inner {
                                 min-width: 100%;
                                 width: max-content;
@@ -1403,7 +1406,11 @@
                                         const isOpen = content.classList.contains("open");
                                        
                                        document.querySelectorAll(".doc-content").forEach(el => el.classList.remove("open"));
-                                       document.querySelectorAll(".doc-entry").forEach(el => el.classList.remove("expanded"));
+                                       document.querySelectorAll(".doc-entry").forEach(el => {
+                                               el.classList.remove("expanded");
+                                               el.querySelector(".doc-content")?.classList.remove("open");
+                                               el.querySelector(".doc-content")?.scrollTo(0, 0);
+                                       });
                                        
                                        if (!isOpen) {
                                                if (content.dataset.loaded === "false") {
