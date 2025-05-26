@@ -573,25 +573,28 @@
                         .doc-content {
                                 display: none;
                                 position: relative;
-                                width: calc(100vw - 260px); /* account for fixed sidebar width */
-                                height: calc(100vh - 36px); /* account for nav bar height */
+                                width: calc(100vw - 260px); /* 240px sidebar + 20px buffer */
+                                height: calc(100vh - 36px);  /* 36px nav bar height */
                                 overflow-x: auto;
                                 overflow-y: hidden;
-                                padding: 0;
                                 margin: 0;
+                                padding: 0;
+                                box-sizing: border-box;
+                                scroll-behavior: smooth;
                         }
+
                         .doc-content.open {
                                 display: block;
                         }
                         .doc-content-inner {
-                                min-width: 3000px; /* arbitrarily long; grows with content */
+                                width: max-content; /* removes fixed limit; grows horizontally */
                                 height: 100%;
                                 column-width: 400px;
                                 column-gap: 3em;
                                 column-fill: auto;
                                 white-space: normal;
-                                box-sizing: border-box;
                                 padding: 2em;
+                                box-sizing: border-box;
                         }
 
                         .doc-content p:nth-of-type(6n)::after {
@@ -601,6 +604,16 @@
                                 height: 2px;
                                 background: rgba(0,0,0,0.1);
                                 width: 80%;
+                        }
+                        .doc-content::-webkit-scrollbar {
+                                height: 12px;
+                        }
+                        .doc-content::-webkit-scrollbar-thumb {
+                                background: rgba(100, 100, 100, 0.6);
+                                border-radius: 6px;
+                        }
+                        .doc-content::-webkit-scrollbar-track {
+                                background: transparent;
                         }
                         .doc-sidebar {
                                 position: fixed;
