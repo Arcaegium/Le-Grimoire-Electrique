@@ -629,14 +629,17 @@
                         }
                         .doc-content::-webkit-scrollbar {
                                 height: 12px;
+                                background-color: #3a2e1f; /* darker background behind the bar */
                         }
                         .doc-content::-webkit-scrollbar-thumb {
-                                background: rgba(100, 100, 100, 0.6);
+                                background-color: #ccaa66; /* visible gold-ish thumb */
                                 border-radius: 6px;
+                                border: 2px solid #3a2e1f; /* border to give contrast edge */
                         }
                         .doc-content::-webkit-scrollbar-track {
-                                background: transparent;
+                                background-color: #1e1a16; /* fallback darker track */
                         }
+
                         .doc-sidebar {
                                 position: fixed;
                                 top: 36px; /* stick directly under nav */
