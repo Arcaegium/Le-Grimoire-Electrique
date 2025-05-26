@@ -600,17 +600,20 @@
                                 box-sizing: border-box;
                                 scroll-behavior: smooth;
                                 height: 100%;
+                                padding-bottom: 1.5em;
                         }
                         
                         .doc-content.open {
                                 display: block;
                         }
                         .doc-content-inner {
+                                min-width: 100%;
                                 width: max-content;
                                 height: 100%;
+                                padding: 2em 2em 2em 3em;
                                 column-width: 400px;
                                 column-gap: 3em;
-                                padding: 2em;
+                                box-sizing: border-box;
                         }
                         .doc-content p:nth-of-type(6n)::after {
                                 content: "";
@@ -1398,40 +1401,28 @@
                                 // Also enable row click behavior (as before)
                                 row.addEventListener("click", () => {
                                         const isOpen = content.classList.contains("open");
-                                                                                
-                                        document.querySelectorAll(".doc-entry").forEach(el => {
-                                                el.classList.remove("expanded");
-                                        });
-                                        
-                                        // Reset all open articles
-                                        document.querySelectorAll(".doc-content").forEach(el => {
-                                                el.classList.remove("open");
-                                                el.scrollLeft = 0;
-                                                el.scrollTop = 0;
-                                                el.style.height = "";
-                                        });
-
-                                        if (row.classList.contains("expanded")) return;
-                                        
-                                        if (!isOpen) {
-                                                // Load content if needed
-                                                if (content.dataset.loaded === "false") {
-                                                        fetch(content.dataset.src)
-                                                                .then(res => res.text())
-                                                                .then(html => {
-                                                                        html = html.replace(/src="media\//g, 'src="Documents/media/');
-                                                                        content.innerHTML = `<div class="doc-content-inner">${html}</div>`;
-                                                                        content.dataset.loaded = "true";
-                                                                        content.classList.add("open");
-                                                                        row.classList.add("expanded");
-                                                                        scrollToEntry(row);
-                                                                });
-                                                } else {
-                                                        content.classList.add("open");
-                                                        row.classList.add("expanded");
-                                                        scrollToEntry(row);
-                                                }
-                                        }
+                                       
+                                       document.querySelectorAll(".doc-content").forEach(el => el.classList.remove("open"));
+                                       document.querySelectorAll(".doc-entry").forEach(el => el.classList.remove("expanded"));
+                                       
+                                       if (!isOpen) {
+                                               if (content.dataset.loaded === "false") {
+                                                       fetch(content.dataset.src)
+                                                               .then(res => res.text())
+                                                               .then(html => {
+                                                                       html = html.replace(/src="media\//g, 'src="Documents/media/');
+                                                                       content.innerHTML = `<div class="doc-content-inner">${html}</div>`;
+                                                                       content.dataset.loaded = "true";
+                                                                       content.classList.add("open");
+                                                                       row.classList.add("expanded");
+                                                                       scrollToEntry(row);
+                                                               });
+                                               } else {
+                                                       content.classList.add("open");
+                                                       row.classList.add("expanded");
+                                                       scrollToEntry(row);
+                                               }
+                                       }
                                 });
                                 function scrollToEntry(entry) {
                                         setTimeout(() => {
