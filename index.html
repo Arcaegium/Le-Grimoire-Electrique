@@ -1417,6 +1417,8 @@
                                                 el.style.overflow = "";
                                                 el.style.display = "";
                                         });
+
+                                        if (row.classList.contains("expanded")) return;
                                         
                                         if (!isOpen) {
                                                 // Load content if needed
