@@ -572,23 +572,23 @@
                         }
                         .doc-content {
                                 display: none;
+                                width: 100%
                                 overflow-x: auto;
                                 overflow-y: hidden;
                                 height: auto;
-                                padding: 2em 0;
+                                padding: 0;
                                 width: 100%;
                         }
                         .doc-content.open {
                                 display: block;
                         }
                         .doc-content-inner {
+                                min-width: 1800px; /* Adjust as needed to show 4 full columns */
                                 column-count: 4;
                                 column-gap: 4em;
                                 column-fill: auto;
                                 height: 90vh;
                                 max-height: 90vh;
-                                overflow-x: auto;
-                                overflow-y: hidden;
                                 white-space: normal;
                         }
 
