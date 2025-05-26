@@ -1412,10 +1412,14 @@
                                                                .then(html => {
                                                                        html = html.replace(/src="media\//g, 'src="Documents/media/');
                                                                        content.innerHTML = `<div class="doc-content-inner">${html}</div>`;
-                                                                       content.dataset.loaded = "true";
-                                                                       content.classList.add("open");
-                                                                       row.classList.add("expanded");
-                                                                       scrollToEntry(row);
+                                                                       content.offsetHeight; // Force layout reflow
+                                                                       
+                                                                       requestAnimationFrame(() => {
+                                                                               content.dataset.loaded = "true";
+                                                                               content.classList.add("open");
+                                                                               row.classList.add("expanded");
+                                                                               scrollToEntry(row);
+                                                                       });
                                                                });
                                                } else {
                                                        content.classList.add("open");
@@ -1424,6 +1428,7 @@
                                                }
                                        }
                                 });
+                                
                                 function scrollToEntry(entry) {
                                         setTimeout(() => {
                                                 const offset = 60; // height of nav bar
