@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+
+<html lang="en">
+        <head>
+                <meta charset="utf-8"/>
+                <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+                <title>Le Grimoire Électrique</title>
+                <link href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" rel="stylesheet"/>
+                <link href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" rel="stylesheet"/>
+                <link href="https://unpkg.com/leaflet.awesome-markers@2.0.4/dist/leaflet.awesome-markers.css" rel="stylesheet"/>
+                <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+
+                <style>
+                          :root {
+                            --bg-dark: #222;
+                            --bg-light: #f0e4cf;
+                            --text-light: white;
+                            --text-dark: #111;
+                            --max-width: 1600px;
+                            --mobile-break: 768px;
+                          }
+                        
+                        html {
+                                margin: 0;
+                                padding: 0;
+                                font-family: sans-serif;
+                        }
+                        
+                        body {
+                                margin: 0;
+                                padding: 0;
+                                font-family: sans-serif;
+                        }
+                        
+                          a.skip-link {
+                            position: absolute;
+                            top: -40px;
+                            left: 0;
+                            background: var(--bg-dark);
+                            color: var(--text-light);
+                            padding: 8px;
+                            z-index: 100;
+                          }
+                        
+                          a.skip-link:focus {
+                            top: 0;
+                          }
+                        
+                          nav {
+                                  position: fixed;
+                                  top: 0;
+                                  left: 0;
+                                  right: 0;
+                                  height: 36px;
+                                  background: var(--bg-dark);
+                                  color: var(--text-light);
+                                  display: flex;
+                                  align-items: center;
+                                  justify-content: space-between;
+                                  padding: 0 0.4em; /* reduce or normalize padding */
+                                  flex-wrap: nowrap; /* prevent accidental multi-line */
+                                  z-index: 999;
+                                  overflow: hidden;
+                          }
+                        
+                          .nav-buttons {
+                            display: flex;
+                            gap: 1em;
+                            flex-wrap: wrap;
+                          }
+                        
+                          .nav-buttons button {
+                            background: none;
+                            border: none;
+                            color: var(--text-light);
+                            font-size: 1em;
+                            cursor: pointer;
+                          }
+                        
+                          .nav-buttons button.active {
+                            text-decoration: underline;
+                          }
+                        
+                          .nav-dropdown {
+                            display: none;
+                            width: 100%;
+                            margin-top: 0.5em;
+                          }
+                        
+                          .nav-dropdown select {
+                            width: 100%;
+                            padding: 0.5em;
+                            font-size: 1rem;
+                            background: var(--bg-dark);
+                            color: var(--text-light);
+                            border: none;
+                          }
+                        
+                          .view {
+                            display: none;
+                            padding: 4em 2em 2em;
+                          }
+                        
+                          .view.active {
+                            display: block;
+                          }
+                        
+                          .home-content {
+                            padding: 2em;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                          }
+                        
+                          .intro-box {
+                            display: flex;
+                            flex-wrap: wrap;
+                            width: 90%;
+                            max-width: 1000px;
+                            margin: 3em auto;
+                            padding: 0;
+                            background: var(--bg-light);
+                            border: 2px solid black;
+                            box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+                          }
+                        
+                          .intro-title,
+                          .intro-body {
+                            flex: 1 1 50%;
+                            aspect-ratio: 4 / 3;
+                          }
+                        
+                          .intro-title img,
+                          .intro-body img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: contain;
+                            display: block;
+                          }
+                        
+                          .button-grid {
+                            display: grid;
+                            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                            gap: 2em;
+                            width: 100%;
+                            max-width: var(--max-width);
+                            justify-items: center;
+                          }
+                        
+                          .section-button {
+                            width: 100%;
+                            aspect-ratio: 3 / 2;
+                            border: 2px solid black;
+                            background: white;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            cursor: pointer;
+                          }
+                        
+                          .section-button img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                          }
+                        
+                          .video-grid {
+                            display: flex;
+                            flex-wrap: wrap;
+                            gap: 2em;
+                            justify-content: center;
+                            padding: 2em 1em;
+                          }
+                        
+                          .video-item {
+                            width: 100%;
+                            max-width: 560px;
+                            text-align: center;
+                          }
+                        
+                          .video-item h3 {
+                            background: rgba(255, 255, 255, 0.85);
+                            display: inline-block;
+                            padding: 8px 16px;
+                            margin: 0 auto 10px;
+                            font-size: 1.2em;
+                            font-weight: 600;
+                            color: var(--text-dark);
+                            border: 1px solid black;
+                            border-radius: 6px;
+                          }
+                        
+                          .video-item iframe {
+                            width: 100%;
+                            height: 315px;
+                            border: none;
+                          }
+                        
+                          .viewer-panel {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            padding: 1em;
+                            flex-wrap: wrap;
+                          }
+                        
+                          .viewer-container {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+                            width: 100%;
+                            gap: 1em;
+                          }
+                        
+                          .viewer-title {
+                            background: white;
+                            padding: 6px 12px;
+                            font-size: 1.1em;
+                            font-weight: 600;
+                            border: 1px solid #444;
+                            border-radius: 4px;
+                            display: none;
+                          }
+                        
+                          .viewer-image-wrapper {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            width: 100%;
+                            max-height: 80vh;
+                            overflow: hidden;
+                          }
+                        
+                          .viewer-image {
+                            max-width: 100%;
+                            max-height: 100%;
+                            object-fit: contain;
+                          }
+                        
+                          .bg-video,
+                          #bgFallback {
+                            position: fixed;
+                            top: 0;
+                            left: 0;
+                            width: 100vw;
+                            height: 100vh;
+                            object-fit: cover;
+                            z-index: -1;
+                            pointer-events: none;
+                          }
+                        
+                          #bgFallback {
+                            display: none;
+                          }
+                        
+                          #mapContainer {
+                                  position: relative;
+                                  width: 100%;
+                                  height: calc(var(--vh, 1vh) * 100 - 40px);
+                                  box-sizing: border-box;
+                                  z-index: 0;
+                                  overflow: visible;
+                          }
+                        
+                        #map {
+                                width: 100%;
+                                height: 100%;
+                                position: relative;
+                                z-index: 1;
+                        }
+                        .legend {
+                                position: absolute;
+                                bottom: 10px;
+                                right: 10px;
+                                max-width: 90vw;
+                                max-height: 35vh;
+                                overflow-y: auto;
+                                font-size: 14px;
+                                background: var(--bg-light);
+                                padding: 10px;
+                                box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+                                line-height: 22px;
+                                border-radius: 6px;
+                                z-index: 1100;
+                                transition: all 0.3s ease;
+                        }
+                        .legend.collapsed {
+                                padding: 6px 10px;
+                                max-width: unset;
+                                background: rgba(240, 228, 207, 0.9);
+                                cursor: pointer;
+                                white-space: nowrap;
+                                font-size: 12px;
+                                min-width: 60px;
+                                margin: 4px;
+                        }
+                        .legend.collapsed::after {
+                                content: "Legend";
+                                color: var(--text-dark);
+                                font-weight: 600;
+                        }
+                        .legend.collapsed > div {
+                                display: none;
+                        }
+
+                        #mapLegend {
+                                position: absolute;
+                                bottom: 16vh;
+                                right: 6vh;
+                                max-width: 90vw;
+                                max-height: 35vh;
+                                overflow-y: auto;
+                                font-size: 14px;
+                                background: var(--bg-light);
+                                padding: 10px;
+                                box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+                                line-height: 22px;
+                                border-radius: 6px;
+                                z-index: 1000;
+                                transition: all 0.3s ease;
+                        }                        
+                        #mapLegend.collapsed {
+                                position: absolute;
+                                bottom: 16vh;
+                                right: 8vh;
+                                z-index: 1100;
+                                background: rgba(240, 228, 207, 0.95);
+                                padding: 6px 10px;
+                                font-family: sans-serif;
+                                font-size: 13px;
+                                font-weight: 600;
+                                color: var(--text-dark);
+                                border-radius: 6px;
+                                box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+                                cursor: pointer;
+                                white-space: nowrap;
+                                width: auto;
+                                height: auto;
+                                overflow: hidden;
+                        }                      
+                        #mapLegend.collapsed > div {
+                                display: none !important;
+                        }
+                        #mapLegend.collapsed::after {
+                                content: "Legend";
+                                display: block;
+                                text-align: center;
+                                font-family: sans-serif;
+                                font-size: 13px;
+                                font-weight: 600;
+                                color: var(--text-dark);
+                                line-height: 1.4;
+                        }
+                        
+                        #mapLegend i {
+                                width: 20px;
+                                height: 20px;
+                                float: left;
+                                margin-right: 8px;
+                                border-radius: 50%;
+                                text-align: center;
+                                line-height: 20px;
+                                color: white;
+                        }
+                        
+                        .leaflet-control-attribution {
+                                display: flex !important;
+                                flex-wrap: nowrap;
+                                gap: 6px;
+                                bottom: 6vh;
+                                right: 8vh;
+                                justify-content: flex-end;
+                                align-items: center;
+                                white-space: nowrap;
+                                max-width: 95vw;
+                                overflow-x: auto;
+                                overflow-y: hidden;
+                        }
+                        
+                        .leaflet-top.leaflet-left {
+                                top: 50px !important; /* push below navbar */
+                        }
+
+                        .leaflet-control-layers {
+                                z-index: 1000;
+                                background: rgba(255,255,255,0.95);
+                                padding: 6px;
+                                border-radius: 6px;
+                                display: none !important;
+                        }
+                        .leaflet-control-layers-expanded {
+                                max-height: 300px;
+                                overflow-y: auto;
+                        }
+
+                        #ownerControls {
+                                position: absolute;
+                                top: 6vh; /* Adjust to align below nav bar cleanly */
+                                left: 6vh; /* Fine-tuned to sit under 'Videos' */
+                                background: rgba(240, 228, 207, 0.95);
+                                border-radius: 6px;
+                                padding: 6px 10px;
+                                box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+                                z-index: 1100;
+                                display: flex;
+                                flex-direction: row; /* Ensures single line layout */
+                                gap: 10px;
+                                flex-wrap: nowrap; /* Prevent wrapping on desktop */
+                                min-width: 400px;
+                        }
+
+                        #ownerControls select,
+                        #ownerControls button {
+                                display: inline-block;
+                                white-space: nowrap;
+                                padding: 6px 10px;
+                                font-size: 1em;
+                                width: auto;
+                                max-width: 180px; /* optional cap */
+                        }
+                        
+                        .owner-toggle {
+                                display: none;
+                                background: #333;
+                                color: white;
+                                border: none;
+                                padding: 6px;
+                                border-radius: 4px;
+                        }
+                        
+                        .owner-controls {
+                                display: flex;
+                                gap: 10px;
+                        }
+                                                
+                        #gallery {
+                                display: none;
+                                padding: 2em;
+                        }
+
+                        #gallery.view.active {
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                gap: 1em;
+                        }
+                        
+                        .gallery-controls {
+                          display: flex;
+                          justify-content: space-between;
+                          align-items: center;
+                          width: 100%;
+                          max-width: 1000px;
+                        }
+                        
+                        .gallery-switch button {
+                          background: var(--bg-dark);
+                          color: var(--text-light);
+                          border: 2px solid black;
+                          padding: 0.5em 1em;
+                          margin: 0 0.25em;
+                          cursor: pointer;
+                        }
+                        
+                        .gallery-switch button.active {
+                          background: var(--bg-light);
+                          color: var(--text-dark);
+                          font-weight: bold;
+                        }
+                        
+                        .gallery-dial button {
+                          font-size: 1.2em;
+                          padding: 0.5em 1em;
+                          background: var(--bg-dark);
+                          color: var(--text-light);
+                          border: 2px solid black;
+                          cursor: pointer;
+                        }
+                        
+                        .gallery-preview {
+                          width: 100%;
+                          max-width: 1000px;
+                          border: 4px solid black;
+                          background: white;
+                          padding: 1em;
+                          box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+                        }
+                        
+                        .gallery-preview img {
+                          width: 100%;
+                          height: auto;
+                          object-fit: contain;
+                        }
+                        
+                        .thumbnail-strip {
+                          display: flex;
+                          overflow-x: auto;
+                          width: 100%;
+                          max-width: 1000px;
+                          gap: 0.5em;
+                          padding: 1em 0;
+                          scroll-behavior: smooth;
+                        }
+                        
+                        .thumbnail-strip img {
+                          height: 100px;
+                          cursor: pointer;
+                          border: 2px solid transparent;
+                          transition: border 0.2s;
+                        }
+                        
+                        .thumbnail-strip img:hover {
+                          border-color: black;
+                        }
+
+                        .doc-list {
+                                display: flex;
+                                flex-direction: column;
+                                gap: 1em;
+                                width: 100%;
+                                margin: 2em 2em 2em 0;
+                                align-items: stretch;
+                        }
+                       .doc-entry {
+                               width: 100%;
+                               box-sizing: border-box;
+                               font-family: 'Georgia', 'Times New Roman', serif;
+                               font-size: 1.1em;
+                               line-height: 1.8;
+                               text-align: justify;
+                               box-shadow: 0 0 8px rgba(0, 0, 0, 0.25), 4px 4px 0 #ccc;
+                               color: #111;
+                               background: #fdfaf4;
+                               border: 1px solid #333;
+                               padding: 2em;
+                               margin-bottom: 2em;
+                               column-count: 2;
+                               column-gap: 3em;
+                               column-rule: 1px solid #999;
+                               letter-spacing: 0.01em;
+                               word-spacing: 0.05em;
+                       }
+                        .doc-entry h2 {
+                                column-span: all;
+                                berak-after: avoid;
+                                font-family: 'Georgia', serif;
+                                font-size: 1.2em;
+                                font-weight: bold;
+                                text-align: center;
+                                text-transform: uppercase;
+                                margin-bottom: 0.3em;
+                                margin-top: 0;
+                                padding: 0.1em 0;
+                                border-bottom: 1px dashed #444;
+                                letter-spacing: 0.05em;
+                                word-spacing: 0.1em;
+                        }
+                        .doc-entry p {
+                                margin: 0 0 1em 0;
+                        }
+                        .doc-entry p:first-of-type::first-letter {
+                                float: left;
+                                font-size: 3.2em;
+                                line-height: 0.85;
+                                padding-right: 0.15em;
+                                padding-top: 0.1em;
+                                font-weight: 700;
+                                color: #111;
+                                font-family: 'Georgia', serif;
+                        }
+                        .doc-entry.expanded {
+                                position: fixed;
+                                top: 36px;
+                                left: 240px;
+                                width: calc(100vw - 240px);
+                                height: calc(100vh - 36px);
+                                margin: 0;
+                                padding: 0;
+                                display: flex;
+                                flex-direction: column;
+                                overflow: hidden;
+                        }
+                        
+                        .doc-entry.expanded h2 {
+                                flex: 0 0 auto;
+                                z-index: 5;
+                                padding: 1em 2em 0 2em;
+                                margin: 0;
+                                background: inherit;
+                                border-bottom: 1px dashed #444;
+                                column-span: all;
+                        }
+
+                        .doc-content {
+                                flex: 1 1 auto;
+                                overflow-x: auto;
+                                overflow-y: hidden;
+                                box-sizing: border-box;
+                                scroll-behavior: smooth;
+                                height: 100%;
+                                padding-bottom: 1.5em;
+                        }
+                        
+                        .doc-content.open {
+                                display: block;
+                        }
+                        .doc-content:not(.open) {
+                                display: none;
+                        }
+                        .doc-content-inner {
+                                background: url('gifs/paper.png');
+                                background-repeat: repeat;
+                                background-attachment: scroll;
+                                background-position: top left;
+                                background-size: auto;
+                                min-width: 100%;
+                                width: 100%;
+                                height: 100%;
+                                padding: 2em 2em 2em 3em;
+                                column-count: 4;
+                                column-fill: balance;
+                                column-gap: 3em;
+                                box-sizing: border-box;
+                        }
+                        .doc-content p:nth-of-type(6n)::after {
+                                content: "";
+                                display: block;
+                                margin: 2em auto;
+                                height: 2px;
+                                background: rgba(0,0,0,0.1);
+                                width: 80%;
+                        }
+                        
+                        .doc-content::-webkit-scrollbar {
+                                height: 12px;
+                                background-color: #3a2a1a; /* dark bronze base */
+                        }                        
+                        .doc-content::-webkit-scrollbar-thumb {
+                                background: linear-gradient(90deg, #b87333, #cd7f32); /* copper gradient */
+                                border-radius: 6px;
+                                border: 2px solid #3a2a1a;
+                        }                        
+                        .doc-content::-webkit-scrollbar-track {
+                                background-color: #261a10; /* deep shadow tone */
+                        }
+
+                        .doc-sidebar {
+                                position: fixed;
+                                top: 36px; /* stick directly under nav */
+                                left: 0;
+                                width: 240px;
+                                height: 80vh; /* shorter than full viewport */
+                                overflow-y: auto;
+                                background-image: url("gifs/sidebar tile.png");
+                                background-repeat: repeat;
+                                background-size: auto;
+                                background-position: top left;
+                                border: 2px solid black;
+                                padding: 20em 1em 1em 1em;
+                                font-family: serif;
+                                font-size: 1em;
+                                line-height: 1.4;
+                                z-index: 100;
+                        }
+                        .documents-container {
+                                display: flex;
+                                flex-direction: row;
+                                gap: 2em;
+                                align-items: flex-start;
+                                padding-left: 260px;
+                                position: relative;
+                        }
+                        .doc-sidebar ul {
+                                list-style: none;
+                                padding: 0;
+                                margin: 0;
+                        }
+                        .doc-sidebar li {
+                                margin-bottom: 0.5em;
+                                cursor: pointer;
+                                color: #222;
+                                text-decoration: underline;
+                        }
+                        .doc-sidebar li:hover {
+                                color: #000;
+                                font-weight: bold;
+                        }
+                        
+                        @media (max-width: 768px) {
+                                .gallery-controls {
+                                        flex-direction: column;
+                                        gap: 1em;
+                                }
+                                .gallery-dial {
+                                        display: flex;
+                                        justify-content: center;
+                                        gap: 1em;
+                                }                                
+                                .thumbnail-strip img {
+                                        height: 80px;
+                                }                                
+                                .gallery-preview {
+                                        padding: 0.5em;
+                                }                                
+                                .nav-buttons {
+                                        display: none;
+                                }
+                                .nav-dropdown {
+                                        display: block;
+                                }
+                                .bg-video {
+                                        display: none;
+                                }
+                                #bgFallback {
+                                        display: block;
+                                }
+                                .intro-box {
+                                        flex-direction: column;
+                                        margin: 4em auto 2em auto;
+                                        padding: 1em 0;
+                                        width: 95%;
+                                }
+                                .intro-title,
+                                .intro-body {
+                                        aspect-ratio: unset;
+                                        width: 100%;
+                                        height: auto;
+                                }
+                                .intro-title img,
+                                .intro-body img {
+                                        height: auto;
+                                        max-height: 100%;
+                                        object-fit: contain;
+                                }
+                                .legend {
+                                        display: block !important;
+                                        z-index: 1100;
+                                        bottom: 10px;
+                                        right: 10px;
+                                        max-width: 85vw;
+                                        max-height: 35vh;
+                                        overflow-y: auto;
+                                        background: rgba(240, 228, 207, 0.95);
+                                        padding: 10px;
+                                        font-size: 13px;
+                                        border-radius: 6px;
+                                        box-shadow: 0 0 6px rgba(0,0,0,0.2);
+                                }
+                                #mapLegend {
+                                        display: block !important;
+                                        position: absolute;
+                                        bottom: clamp(48px, 8vh, 16vh); /* allows dynamic balance */
+                                        right: 2vw;
+                                        z-index: 1100;
+                                        max-width: 95vw;
+                                        max-height: 40vh;
+                                        overflow-y: auto;
+                                        background: rgba(240, 228, 207, 0.95);
+                                        padding: 10px;
+                                        font-size: 13px;
+                                        border-radius: 6px;
+                                        box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+                                }
+
+                                #mapLegend.collapsed {
+                                        position: absolute;
+                                        bottom: 16vh;
+                                        right: 2vw;
+                                        z-index: 1100;
+                                        background: rgba(240, 228, 207, 0.95);
+                                        padding: 6px 10px;
+                                        font-family: sans-serif;
+                                        font-size: 13px;
+                                        font-weight: 600;
+                                        color: var(--text-dark);
+                                        border-radius: 6px;
+                                        box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+                                        cursor: pointer;
+                                        white-space: nowrap;
+                                        width: auto;
+                                        height: auto;
+                                        overflow: hidden;
+                                }
+                                #mapLegend.collapsed > div {
+                                        display: none !important;
+                                }
+                                #mapLegend.collapsed::after {
+                                        content: "Legend";
+                                        display: block;
+                                        text-align: center;
+                                        font-family: sans-serif;
+                                        font-size: 13px;
+                                        font-weight: 600;
+                                        color: var(--text-dark);
+                                        line-height: 1.4;
+                                }
+                                                              
+                                #mapContainer {
+                                        height: calc(var(--vh, 1vh) * 100 - 40px);
+                                }
+                                .leaflet-control-attribution {
+                                        display: flex !important;
+                                        flex-wrap: nowrap;
+                                        gap: 6px;
+                                        justify-content: flex-end;
+                                        align-items: center;
+                                        white-space: nowrap;
+                                        max-width: 95vw;
+                                        overflow-x: auto;
+                                        overflow-y: hidden;
+                                }
+
+                                .leaflet-top.leaflet-left {
+                                        top: 60px; /* Push tools down below nav */
+                                        left: 6px;
+                                }
+                                .leaflet-bottom.leaflet-right {
+                                        right: 2vw;  /* Pull in from edge */
+                                        bottom: calc(env(safe-area-inset-bottom, 0px) + 2vh);
+                                }
+                                .owner-controls-wrapper,
+                                #ownerControls {
+                                        display: none !important;
+                                }
+                                .doc-sidebar {
+                                        display: none !important;
+                                }
+                                .documents-container {
+                                        padding-left: 0 !important;
+                                        flex-direction: column;
+                                }
+                                .doc-content-inner {
+                                        column-count: 1;
+                                }
+                        }
+                </style>
+              
+        </head>
+        <body>
+                <a class="skip-link" href="#main">Skip to content</a>
+                <video autoplay="" class="bg-video" id="bgVideo" loop="" muted="" playsinline="">
+                        <source src="gifs/Cirque Electrique Main000.mp4" type="video/mp4"/>
+                        Your browser does not support the video tag.
+                </video>
+                <img alt="Cirque Electrique background" id="bgFallback" src="gifs/cirque electrique Still000.png"/>
+                
+                <nav>
+                        <div class="nav-buttons">
+                                <button class="active" onclick="showView('home')">Home</button>
+                                <button onclick="showView('videos')">Videos</button>
+                                <button onclick="showView('map')">Map</button>
+                                <button onclick="showView('gallery')">Gallery</button>
+                                <button onclick="showView('documents')">Documents</button>
+                                <button onclick="showView('mechanics')">Mechanics</button>
+                                <button onclick="showView('faq')">FAQ</button>
+                        </div>
+                        <div class="nav-dropdown">
+                                <select id="navSelect" onchange="showView(this.value)">
+                                        <option value="home">Home</option>
+                                        <option value="videos">Videos</option>
+                                        <option value="map">Map</option>
+                                        <option value="gallery">Gallery</option>
+                                        <option value="documents">Documents</option>
+                                        <option value="mechanics">Mechanics</option>
+                                        <option value="faq">FAQ</option>
+                                </select>
+                        </div>
+                </nav>
+
+                
+                <main id="main">
+                        <div class="view active" id="home">
+                                <div class="home-content">
+                                        <div class="intro-box">
+                                                <div class="intro-title">
+                                                        <img alt="Logo" src="gifs/Le Grimoire Electrique.gif"/>
+                                                </div>
+                                                <div class="intro-body">
+                                                        <img alt="Intro Text" src="gifs/Home Intro Text.png"/>
+                                                </div>
+                                        </div>
+                                        <div class="button-grid">
+                                                <div class="section-button" onclick="showView('videos')">
+                                                        <img alt="Videos" src="gifs/VideosFlash.gif"/>
+                                                </div>
+                                                <div class="section-button" onclick="showView('map')">
+                                                        <img alt="Map" src="gifs/Map.gif"/>
+                                                </div>
+                                                <div class="section-button" onclick="showView('gallery')">
+                                                        <img alt="Gallery" src="gifs/Gallery.gif"/>
+                                                </div>
+                                                <div class="section-button" onclick="showView('documents')">
+                                                        <img alt="Documents" src="gifs/Documents.gif"/>
+                                                </div>
+                                                <div class="section-button" onclick="showView('mechanics')">
+                                                        <img alt="Mechanics" src="gifs/Mechanics.gif"/>
+                                                </div>
+                                                <div class="section-button" onclick="showView('faq')">
+                                                        <img alt="FAQ" src="gifs/FAQ.gif"/>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+
+                        
+                        <div class="view" id="videos">
+                                <img alt="Videos Title" src="gifs/VideosFlash.gif" style="display:block; margin: 40px auto; max-width: 100%; height: auto;"/>
+                                <div class="video-grid">
+                                        <div class="video-item">
+                                                <h3>Intro to Cirque Electrique</h3>
+                                                <iframe allowfullscreen="" frameborder="0" loading="lazy" src="https://www.youtube.com/embed/ygY18Ax94TU" title="Intro to Cirque Electrique"></iframe>
+                                        </div>
+                                        <div class="video-item">
+                                                <h3>Timeline of Cirque Electrique</h3>
+                                                <iframe allowfullscreen="" frameborder="0" loading="lazy" src="https://www.youtube.com/embed/uvXA0CtOm9o" title="Timeline of Cirque Electrique"></iframe>
+                                        </div>
+                                        <div class="video-item">
+                                                <h3>A History in Threads</h3>
+                                                <iframe allowfullscreen="" frameborder="0" loading="lazy" src="https://www.youtube.com/embed/xRujUwXcE_c" title="A History in Threads"></iframe>
+                                        </div>
+                                        <div class="video-item">
+                                                <h3>The Big Top Big Top 10</h3>
+                                                <iframe allowfullscreen="" frameborder="0" loading="lazy" src="https://www.youtube.com/embed/JosZ-q5rGiw" title="The Big Top Big Top 10"></iframe>
+                                        </div>
+                                        <div class="video-item">
+                                                <h3>Circus Management</h3>
+                                                <iframe allowfullscreen="" frameborder="0" loading="lazy" src="https://www.youtube.com/embed/AAH3dVwGmuk" title="Circus Management"></iframe>
+                                        </div>
+                                </div>
+                        </div>
+
+
+                        <div class="view" id="map" style="position: relative;">
+                                <div class="owner-controls-wrapper">
+                                        <div id="ownerControls" style="display: none;">
+                                                <select id="typeSelector">
+                                                        <option value="alchemicals">alchemicals</option>
+                                                        <option value="campsite">campsite</option>
+                                                        <option value="concern">concern</option>
+                                                        <option value="contact">contact</option>
+                                                        <option value="district">district</option>
+                                                        <option value="doctor">doctor</option>
+                                                        <option value="electriques">electriques</option>
+                                                        <option value="mechaniques">mechaniques</option>
+                                                        <option value="performance site">performance site</option>
+                                                        <option value="rumor mill">rumor mill</option>
+                                                        <option value="ward">ward</option>
+                                                </select>
+                                                <select id="visibilityToggle">
+                                                        <option value="public">Public</option>
+                                                        <option value="private">Private</option>
+                                                </select>
+                                                <button id="exportBtn" onclick="exportGeoJSON()">Export GeoJSON</button>
+                                        </div>
+                                </div>
+                                
+                                <div id="mapContainer">
+                                        <div id="map"></div>
+                                </div>
+                        </div>
+                                               
+                        <div class="view" id="gallery">
+                                <div class="gallery-controls">
+                                        <div class="gallery-switch">
+                                                <button data-category="people" class="active">People</button>
+                                                <button data-category="places">Places</button>
+                                                <button data-category="things">Things</button>
+                                        </div>
+                                        <div class="gallery-dial">
+                                                <button id="scrollLeft" aria-label="Scroll Left">&lt;</button>
+                                                <button id="scrollRight" aria-label="Scroll Right">&gt;</button>
+                                        </div>
+                                </div>
+                                <div class="thumbnail-strip" id="thumbnailStrip">
+                                </div>
+                                <div class="gallery-preview">
+                                        <img id="mainPreview" src="" alt="Preview" />
+                                </div>
+                        </div>
+
+                        
+                        <div class="view" id="documents">
+                                <div class="documents-container">
+                                        <aside id="docSidebar" class="doc-sidebar"></aside>
+                                        <div id="docList" class="doc-list">
+                                                <img src="gifs/Documents.gif" alt="Documents" style="display: block; margin: 0 auto 40px; height: auto;" />
+                                        </div>
+                                </div>
+                        </div>
+                        
+                        <div class="view" id="mechanics">
+                                <h1>Game Mechanics View</h1>
+                                <p>Placeholder for game system rules and content.</p>
+                        </div>
+                        
+                        
+                        <div class="view" id="faq">
+                                <h1>FAQ View</h1>
+                                <p>Frequently Asked Questions.</p>
+                        </div>
+
+                        
+                </main>
+                
+                <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+                <script src="https://unpkg.com/leaflet.awesome-markers@2.0.4/dist/leaflet.awesome-markers.js"></script>
+                <script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>
+                <script src="galleryData.js"></script>
+                
+                <script>
+                        function setViewportHeight() {
+                                const vh = window.innerHeight * 0.01;
+                                document.documentElement.style.setProperty('--vh', `${vh}px`);
+                        }
+                        window.addEventListener('resize', setViewportHeight);
+                        setViewportHeight();
+                        
+                        function showView(id) {
+                                document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+                                document.getElementById(id).classList.add('active');
+                                window.scrollTo({ top: 0, behavior: 'instant' });
+                                
+                                document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+                                const activeBtn = [...document.querySelectorAll('nav button')].find(btn => btn.textContent.toLowerCase() === id);
+                                if (activeBtn) activeBtn.classList.add('active');
+                                
+                                const dropdown = document.getElementById('navSelect');
+                                if (dropdown) dropdown.value = id;
+                                
+                                if (id === 'map') {
+                                        initMap();
+                                        window.dispatchEvent(new Event('resize'));
+                                } else if (id === 'gallery') {
+                                        requestAnimationFrame(() => {
+                                                setupGallery();
+                                                loadCategory('people');
+                                        });
+                                } else {
+                                        // Clear gallery state if leaving the gallery
+                                        const strip = document.getElementById('thumbnailStrip');
+                                        const preview = document.getElementById('mainPreview');
+                                        if (strip) strip.innerHTML = '';
+                                        if (preview) {
+                                                preview.src = '';
+                                                preview.alt = '';
+                                        }
+                                        if (autoCycleInterval) clearInterval(autoCycleInterval);
+                                }
+                        }
+                       
+                        function showInViewer(src, title) {
+                                const viewer = document.getElementById('mainImage');
+                                const titleBox = document.getElementById('imageTitle');
+                                viewer.src = src;
+                                viewer.style.display = 'block';
+                                titleBox.textContent = title || src.split('/').pop();
+                                titleBox.style.display = 'block';
+                        }
+                </script>
+               
+                <script>                        
+                       function loadCategory(category) {
+                               const galleryView = document.getElementById('gallery');
+                               if (!galleryView.classList.contains('active')) return;
+                               
+                               const preview = document.getElementById('mainPreview');
+                               const strip = document.getElementById('thumbnailStrip');
+                               
+                               strip.innerHTML = '';
+                               const items = window.imageLibrary?.[category] || [];
+                               
+                               items.forEach(({ src, label }) => {
+                                       const img = document.createElement('img');
+                                       img.src = src;
+                                       img.alt = label || src.split('/').pop();
+                                       img.title = label || '';
+                                       img.onclick = () => {
+                                               preview.src = src;
+                                               preview.alt = label || src.split('/').pop();
+                                               images = Array.from(strip.querySelectorAll('img')); // refresh image list
+                                               index = images.findIndex(i => i.src === src); // update global index
+                                               // do not alter isPaused here
+                                       };
+                                       strip.appendChild(img);
+                               });
+                               if (items[0]) {
+                                       preview.src = items[0].src;
+                                       preview.alt = items[0].label || '';
+                               }
+                               
+                               startAutoCycle(category);
+                               
+                               // Update active button
+                               document.querySelectorAll('.gallery-switch button').forEach(b => b.classList.remove('active'));
+                               const activeBtn = document.querySelector(`.gallery-switch button[data-category="${category}"]`);
+                               if (activeBtn) activeBtn.classList.add('active');
+                       }
+                        
+                        let galleryInitialized = false;
+
+                        function setupGallery() {
+                                if (galleryInitialized) return;
+                                galleryInitialized = true;
+
+                                const switchButtons = document.querySelectorAll('.gallery-switch button');
+                                const scrollStrip = document.getElementById('thumbnailStrip');
+                                const scrollLeft = document.getElementById('scrollLeft');
+                                const scrollRight = document.getElementById('scrollRight');
+                                
+                                switchButtons.forEach(btn => {
+                                        btn.addEventListener('click', () => {
+                                                if (document.getElementById('gallery').classList.contains('active')) {
+                                                        loadCategory(btn.dataset.category);
+                                                }
+                                        });
+                                });
+
+                                scrollLeft.addEventListener('click', () => {
+                                        scrollStrip.scrollBy({ left: -200, behavior: 'smooth' });
+                                });
+
+                                scrollRight.addEventListener('click', () => {
+                                        scrollStrip.scrollBy({ left: 200, behavior: 'smooth' });
+                                });
+                        }
+                                               
+                        let autoCycleInterval = null;
+                        let currentGalleryCategory = 'people';
+                        let index = 0;
+                        let images = [];
+                        let isPaused = false;
+                        
+                        function startAutoCycle(category) {
+                                const preview = document.getElementById('mainPreview');
+                                const strip = document.getElementById('thumbnailStrip');
+                                
+                                images = Array.from(strip.querySelectorAll('img'));
+                                if (!images.length) return;
+                                
+                                currentGalleryCategory = category;
+                                index = 0;
+                                isPaused = false;
+                                preview.src = images[0].src;
+                                preview.alt = images[0].alt || '';
+                                
+                                if (autoCycleInterval) clearInterval(autoCycleInterval);
+                                
+                                function advanceImage() {
+                                        if (isPaused) return;
+                                        index++;
+                                        if (index >= images.length) {
+                                                const nextCategory = getNextCategory(currentGalleryCategory);
+                                                loadCategory(nextCategory); // restarts cycle
+                                                return;
+                                        }
+                                        preview.src = images[index].src;
+                                        preview.alt = images[index].alt || '';
+                                }
+                                
+                                autoCycleInterval = setInterval(advanceImage, 2500);
+                                
+                                // Desktop hover to pause
+                                preview.addEventListener('mouseenter', () => {
+                                        if (!isPaused) clearInterval(autoCycleInterval);
+                                });
+                                
+                                preview.addEventListener('mouseleave', () => {
+                                        if (!isPaused) {
+                                                clearInterval(autoCycleInterval);
+                                                autoCycleInterval = setInterval(advanceImage, 2500);
+                                        }
+                                });
+
+                                // Mobile or desktop click/tap to toggle pause
+                                preview.onclick = () => {
+                                        isPaused = !isPaused;
+                                        clearInterval(autoCycleInterval);
+                                        if (!isPaused) {
+                                                autoCycleInterval = setInterval(advanceImage, 2500);
+                                        }
+                                };
+                        }
+                </script>
+
+                
+                <script>
+                        let mapInitialized = false;
+                        function initMap() {
+                                if (mapInitialized) return;
+                                mapInitialized = true;
+                                
+                                let maptilerKey = new URLSearchParams(window.location.search).get('key') || localStorage.getItem('maptilerKey');
+                                
+                                if (!maptilerKey) {
+                                        maptilerKey = prompt('Enter your MapTiler API key:');
+                                        if (maptilerKey) {
+                                                localStorage.setItem('maptilerKey', maptilerKey);
+                                                window.location.search = `?key=${maptilerKey}`;
+                                        }
+                                }
+                                
+                                const isOwner = maptilerKey === 'r0HKkxDJMfqlCVzaro7d';
+                                const map = L.map('map').setView([51.5074, -0.1278], 13);
+                                
+                                if (isOwner) document.getElementById('ownerControls').style.display = 'block';
+                                L.tileLayer(`https://api.maptiler.com/tiles/uk-osgb10k1888/{z}/{x}/{y}.jpg?key=${maptilerKey}`, {
+                                        tileSize: 256,
+                                        minZoom: 0,
+                                        maxZoom: 18,
+                                        attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://maps.nls.uk/">NLS</a>'
+                                }).addTo(map);
+                                
+                                const publicMarkers = new L.FeatureGroup().addTo(map);
+                                const privateMarkers = new L.FeatureGroup();
+                                
+                                if (isOwner) privateMarkers.addTo(map);
+                                if (isOwner) {
+                                        document.body.classList.add('owner-active');
+                                }
+                                
+                                const drawControl = new L.Control.Draw({
+                                        edit: { featureGroup: publicMarkers, edit: isOwner },
+                                        draw: {
+                                                polygon: true, polyline: true, rectangle: true, marker: true,
+                                                circle: false, circlemarker: false
+                                        }
+                                });
+                                map.addControl(drawControl);
+            
+                                const markerStyles = {
+                                        'alchemicals': { icon: 'flask', markerColor: 'cadetblue' },
+                                        'campsite': { icon: 'home', markerColor: 'blue' },
+                                        'concern': { icon: 'exclamation-triangle', markerColor: 'red' },
+                                        'contact': { icon: 'user', markerColor: 'purple' },
+                                        'district': { icon: 'flag-o', markerColor: 'darkgreen' },
+                                        'doctor': { icon: 'plus-square', markerColor: 'purple' },
+                                        'electriques': { icon: 'tachometer', markerColor: 'cadetblue' },
+                                        'mechaniques': { icon: 'cogs', markerColor: 'cadetblue' },
+                                        'performance site': { icon: 'star', markerColor: 'green' },
+                                        'rumor mill': { icon: 'comments-o', markerColor: 'orange' },
+                                        'ward': { icon: 'shield', markerColor: 'darkred' }
+                                };
+
+                                function getMarkerStyle(type) {
+                                        const style = markerStyles[type] || { icon: 'map-marker', markerColor: 'cadetblue' };
+                                        return L.AwesomeMarkers.icon({ ...style, prefix: 'fa' });
+                                }
+            
+                                map.on(L.Draw.Event.CREATED, e => {
+                                        if (e.layerType === 'marker') {
+                                                const type = document.getElementById('typeSelector').value.trim();
+                                                const isPublic = document.getElementById('visibilityToggle').value === 'public';
+                                                const label = prompt('Enter label for marker:') || '';
+                                                const icon = getMarkerStyle(type);
+                                                const marker = L.marker(e.layer.getLatLng(), { icon });
+                  
+                                                if (label.trim()) marker.bindPopup(label);
+                                                marker.feature = {
+                                                        type: 'Feature',
+                                                        properties: {
+                                                                popupContent: label,
+                                                                markerType: type,
+                                                                visibility: isPublic ? 'public' : 'private'
+                                                        },
+                                                        geometry: {
+                                                                type: 'Point',
+                                                                coordinates: [e.layer.getLatLng().lng, e.layer.getLatLng().lat]
+                                                        }
+                                                };
+
+                                                (isPublic ? publicMarkers : privateMarkers).addLayer(marker);
+                                        }
+                                });
+            
+                                function exportGeoJSON() {
+                                        const allMarkers = new L.FeatureGroup();
+                                        publicMarkers.eachLayer(layer => allMarkers.addLayer(layer));
+                                        privateMarkers.eachLayer(layer => allMarkers.addLayer(layer));
+                                        const json = allMarkers.toGeoJSON();
+                                        const blob = new Blob([JSON.stringify(json, null, 2)], { type: 'application/json' });
+                                        const url = URL.createObjectURL(blob);
+                                        const link = document.createElement('a');
+                                        link.href = url;
+                                        link.download = 'data.geojson';
+                                        link.click();
+                                        URL.revokeObjectURL(url);
+                                }
+        
+                                window.exportGeoJSON = exportGeoJSON;
+            
+                                fetch('data.geojson')
+                                        .then(res => res.ok ? res.json() : null)
+                                        .then(data => {
+                                                if (!data) return;
+                                                L.geoJSON(data, {
+                                                        pointToLayer: (feature, latlng) => {
+                                                                const visibility = feature.properties?.visibility || 'public';
+                                                                const isPrivate = visibility === 'private';
+                                                                if (isPrivate && !isOwner) return null;
+                                                                const icon = getMarkerStyle(feature.properties?.markerType);
+                                                                const marker = L.marker(latlng, { icon });
+                                                                if (feature.properties?.popupContent) marker.bindPopup(feature.properties.popupContent);
+                                                                marker.feature = feature;
+                                                                return marker;
+                                                        }
+                                                }).eachLayer(layer => {
+                                                        const isPrivate = layer.feature?.properties?.visibility === 'private';
+                                                        (isPrivate ? privateMarkers : publicMarkers).addLayer(layer);
+                                                });
+                                                L.control.layers(null, {
+                                                        'Public Markers': publicMarkers,
+                                                        ...(isOwner ? { 'Private Markers': privateMarkers } : {})
+                                                }).addTo(map);   
+                                        });
+        
+                                L.control.scale({ metric: true, imperial: false }).addTo(map);
+                                
+                                const legend = L.control({ position: 'bottomright' });
+                                
+                                legend.onAdd = () => {
+                                        const div = L.DomUtil.create('div', 'legend');
+                                        for (const key in markerStyles) {
+                                                const { icon, markerColor } = markerStyles[key];
+                                                div.innerHTML += `
+                                                <div style="margin-bottom:4px; display:flex; align-items:center;">
+                                                        <i class="fa fa-${icon}" style="color:white; background:${markerColor}; border-radius:50%; width:22px; height:22px; line-height:22px; text-align:center; margin-right:8px;"></i>
+                                                        <span style="white-space:nowrap;">${key}</span>
+                                                </div>`;
+                                        }
+                                        return div;
+                                };
+                                legend.addTo(map);
+
+                                function legendToggleHandler(e) {
+                                        e.stopPropagation();
+                                        this.classList.toggle('collapsed');
+                                }
+                                
+                                setTimeout(() => {
+                                        const el = document.querySelector('.legend');
+                                        if (!el) return;
+                                        el.id = 'mapLegend';
+                                        L.DomEvent.disableClickPropagation(el);
+                                        L.DomEvent.disableScrollPropagation(el);
+                                        el.style.display = 'block';
+                                        el.style.bottom = '12vh';
+                                        el.style.right = '6vh';
+                                        el.removeEventListener('click', legendToggleHandler);
+                                        el.addEventListener('click', legendToggleHandler);
+                                }, 250);
+                        }
+                </script>
+
+                <script>
+                        const documents = [
+                                "10_World_Overview",
+                                "11_Timeline",
+                                "12_Ether",
+                                "15_Electrique_Devices",
+                                "16_Wards",
+                                "20_Society",
+                                "30_Aetherial_Engines",
+                                "31_Currency_&_Cost_of_Living",
+                                "40_Circuses_of_the_World",
+                                "41_Performer_Archetypes"
+                        ];
+                        
+                        const docList = document.getElementById("docList");
+                        const sidebar = document.getElementById("docSidebar");
+                        
+                        documents.forEach((doc, index) => {
+                                const row = document.createElement("div");
+                                row.className = "doc-entry";
+                                
+                                const title = document.createElement("h2");
+                                title.textContent = doc.replace(/^\d+_/, "").replace(/_/g, " ").replace(/&/g, "and");
+                                
+                                const content = document.createElement("div");
+                                content.className = "doc-content";
+                                content.dataset.loaded = "false";
+                                content.dataset.src = `Documents/${doc}.html`;
+                                content.id = `doc-content-${index}`;
+                                
+                                row.appendChild(title);
+                                row.appendChild(content);
+                                docList.appendChild(row);
+                                
+                                const tocItem = document.createElement("li");
+                                tocItem.textContent = title.textContent;
+                                tocItem.addEventListener("click", () => {
+                                        document.querySelectorAll(".doc-content").forEach(el => el.classList.remove("open"));
+                                        const target = document.getElementById(`doc-content-${index}`);
+                                        if (target.dataset.loaded === "false") {
+                                                fetch(target.dataset.src)
+                                                        .then(res => res.text())
+                                                        .then(html => {
+                                                                html = html.replace(/src="media\//g, 'src="Documents/media/');
+                                                                target.innerHTML = `<div class="doc-content-inner">${html}</div>`;
+                                                                target.dataset.loaded = "true";
+                                                                target.classList.add("open");
+                                                        });
+                                        } else {
+                                                target.classList.add("open");
+                                        }
+                                        setTimeout(() => {
+                                                const offset = 60; // height of nav bar
+                                                const y = target.getBoundingClientRect().top + window.scrollY - offset;
+                                                window.scrollTo({ top: y, behavior: "smooth" });
+                                        }, 50);
+                                });
+                                
+                                if (!sidebar.querySelector("ul")) sidebar.appendChild(document.createElement("ul"));
+                                sidebar.querySelector("ul").appendChild(tocItem);
+                                
+                                // Also enable row click behavior (as before)
+                                row.addEventListener("click", () => {
+                                        const isOpen = content.classList.contains("open");
+                                       
+                                       document.querySelectorAll(".doc-content").forEach(el => el.classList.remove("open"));
+                                       document.querySelectorAll(".doc-entry").forEach(el => {
+                                               el.classList.remove("expanded");
+                                               el.querySelector(".doc-content")?.classList.remove("open");
+                                               el.querySelector(".doc-content")?.scrollTo(0, 0);
+                                       });
+                                       
+                                       if (!isOpen) {
+                                               if (content.dataset.loaded === "false") {
+                                                       fetch(content.dataset.src)
+                                                               .then(res => res.text())
+                                                               .then(html => {
+                                                                       html = html.replace(/src="media\//g, 'src="Documents/media/');
+                                                                       content.innerHTML = `<div class="doc-content-inner">${html}</div>`;
+                                                                       content.offsetHeight; // Force layout reflow
+                                                                       
+                                                                       requestAnimationFrame(() => {
+                                                                               content.dataset.loaded = "true";
+                                                                               content.classList.add("open");
+                                                                               row.classList.add("expanded");
+                                                                               scrollToEntry(row);
+                                                                       });
+                                                               });
+                                               } else {
+                                                       content.classList.add("open");
+                                                       row.classList.add("expanded");
+                                                       scrollToEntry(row);
+                                               }
+                                       }
+                                });
+                                
+                                function scrollToEntry(entry) {
+                                        setTimeout(() => {
+                                                const offset = 60; // height of nav bar
+                                                const y = entry.getBoundingClientRect().top + window.scrollY - offset;
+                                                window.scrollTo({ top: y, behavior: "smooth" });
+                                        }, 0);
+                                }
+                        });
+                </script>
+        </body>
+</html>
