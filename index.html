@@ -1487,8 +1487,6 @@
                                                                         target.dataset.loaded = "true";
                                                                         target.classList.add("open");
                                                                 });
-                                                                target.dataset.loaded = "true";
-                                                                target.classList.add("open");
                                                         });
                                         } else {
                                                 target.classList.add("open");
@@ -1529,15 +1527,6 @@
                                                                                        row.classList.add("expanded");
                                                                                        scrollToEntry(row);
                                                                                });
-                                                                       });
-                                                                                                                                             
-                                                                       content.offsetHeight; // Force layout reflow
-                                                                       
-                                                                       requestAnimationFrame(() => {
-                                                                               content.dataset.loaded = "true";
-                                                                               content.classList.add("open");
-                                                                               row.classList.add("expanded");
-                                                                               scrollToEntry(row);
                                                                        });
                                                                });
                                                } else {
