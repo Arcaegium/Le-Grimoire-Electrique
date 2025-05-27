@@ -598,6 +598,8 @@
                                 overflow-y: hidden;
                                 box-sizing: border-box;
                                 scroll-behavior: smooth;
+                                display: block;
+                                width: 100%
                                 height: 100%;
                                 padding-bottom: 1.5em;
                         }
@@ -615,7 +617,10 @@
                                 background-attachment: scroll;
                                 background-position: top left;
                                 background-size: auto;
-                                overflow-x: auto;  /* keep horizontal scrollbar */
+                                overflow-x: auto;
+                                display: inline-block;
+                                min-width: max-content;
+                                height: 100%;
                         }
                         .doc-content-inner {
                                 column-count: 4;
