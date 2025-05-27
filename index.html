@@ -612,8 +612,8 @@
                         }
                         
                         .doc-content-wrapper {
-                                width: 100%;
-                                height: 100%;
+                                width: max-content;
+                                min-height: 100%;
                                 overflow: auto;
                                 background: url('gifs/paper.png') repeat;
                                 background-attachment: scroll;
@@ -622,12 +622,13 @@
                         }
 
                         .doc-content-inner {
-                                column-width: 360px;
+                                column-width: 320px;
                                 column-gap: 3em;
-                                column-fill: auto;                                
+                                column-fill: balance;                                
                                 padding: 2em 2em 2em 3em;
                                 box-sizing: border-box;
                                 min-height: 100%;
+                                height: 100%
                         }
 
                         .doc-content p:nth-of-type(6n)::after {
