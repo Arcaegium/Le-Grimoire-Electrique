@@ -612,9 +612,9 @@
                         }
                         
                         .doc-content-wrapper {
-                                width: max-content;
+                                min-width: 100%;
+                                max-width: 3000px;
                                 min-height: 100%;
-                                overflow: auto;
                                 background: url('gifs/paper.png') repeat;
                                 background-attachment: scroll;
                                 background-position: top left;
@@ -624,11 +624,10 @@
                         .doc-content-inner {
                                 column-width: 320px;
                                 column-gap: 3em;
-                                column-fill: balance;                                
+                                column-fill: auto;
                                 padding: 2em 2em 2em 3em;
                                 box-sizing: border-box;
-                                min-height: 100%;
-                                height: 100%
+                                max-width: 3000px; /* enforce layout stability */
                         }
 
                         .doc-content p:nth-of-type(6n)::after {
