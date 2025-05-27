@@ -1399,13 +1399,18 @@
                                         let loadedCount = 0;
                                         const checkDone = () => {
                                                 if (loadedCount >= images.length) {
+                                                        let currentCol = document.createElement("div");
+                                                        currentCol.className = "doc-content-inner";
+                                                        wrapper.appendChild(currentCol);
+                                                        
                                                         elements.forEach(el => {
-                                                                currentCol.appendChild(el);
+                                                                const clone = el.cloneNode(true);
+                                                                currentCol.appendChild(clone);
                                                                 if (currentCol.scrollHeight > maxHeight) {
-                                                                        currentCol.removeChild(el);
+                                                                        currentCol.removeChild(clone);
                                                                         currentCol = document.createElement("div");
                                                                         currentCol.className = "doc-content-inner";
-                                                                        currentCol.appendChild(el);
+                                                                        currentCol.appendChild(clone);
                                                                         wrapper.appendChild(currentCol);
                                                                 }
                                                         });
