@@ -608,21 +608,25 @@
                         .doc-content:not(.open) {
                                 display: none;
                         }
-                        .doc-content-inner {
+                        
+                        .doc-content-wrapper {
                                 background: url('gifs/paper.png');
                                 background-repeat: repeat;
                                 background-attachment: scroll;
                                 background-position: top left;
                                 background-size: auto;
-                                width: max-content;
-                                min-width: unset;
-                                height: 100%;
-                                padding: 2em 2em 2em 3em;
+                                overflow-x: auto;  /* keep horizontal scrollbar */
+                        }
+                        .doc-content-inner {
                                 column-count: 4;
                                 column-fill: balance;
                                 column-gap: 3em;
                                 box-sizing: border-box;
+                                padding: 2em 2em 2em 3em;
+                                min-width: 100%;
+                                width: 100%;
                         }
+
                         .doc-content p:nth-of-type(6n)::after {
                                 content: "";
                                 display: block;
@@ -1430,7 +1434,11 @@
                                                                .then(res => res.text())
                                                                .then(html => {
                                                                        html = html.replace(/src="media\//g, 'src="Documents/media/');
-                                                                       content.innerHTML = `<div class="doc-content-inner">${html}</div>`;
+                                                                       content.innerHTML = `
+                                                                       <div class="doc-content-wrapper">
+                                                                               <div class="doc-content-inner">${html}</div>`;
+                                                                       </div>
+                                                                                                                                             
                                                                        content.offsetHeight; // Force layout reflow
                                                                        
                                                                        requestAnimationFrame(() => {
