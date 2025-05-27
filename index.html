@@ -612,24 +612,23 @@
                         }
                         
                         .doc-content-wrapper {
-                                background: url('gifs/paper.png');
-                                background-repeat: repeat;
+                                width: 100%;
+                                height: 100%;
+                                overflow: auto;
+                                background: url('gifs/paper.png') repeat;
                                 background-attachment: scroll;
                                 background-position: top left;
                                 background-size: auto;
-                                overflow-x: auto;
-                                display: inline-block;
-                                min-width: max-content;
-                                height: 100%;
                         }
+
                         .doc-content-inner {
-                                column-count: auto;
-                                Column-width: 320px;
+                                column-count: 4;
+                                column-fill: auto;
                                 column-gap: 3em;
-                                column-fill: balance;
-                                box-sizing: border-box;
                                 padding: 2em 2em 2em 3em;
-                                height: 100%
+                                box-sizing: border-box;
+                                width: max-content;
+                                min-height: 100%;
                         }
 
                         .doc-content p:nth-of-type(6n)::after {
