@@ -610,20 +610,26 @@
                         }
                         
                         .doc-content-wrapper {
+                                display: flex;
+                                flex-direction: row;
+                                align-items: flex-start;
                                 background: url('gifs/paper.png') repeat;
                                 background-attachment: scroll;
                                 background-position: top left;
                                 background-size: auto;
-                                height: auto;
                                 min-width: max-content;
+                                width: fit-content;
+                                height: 100%;
+                                overflow: hidden;
                         }
                         
                         .doc-content-inner {
-                                column-width: 320px;
-                                column-gap: 3em;
-                                padding: 2em 2em 2em 3em;
-                                height: 100%;
+                                flex: 0 0 auto;
+                                width: 320px;
+                                padding: 2em;
                                 box-sizing: border-box;
+                                column-count: unset;        /* Cancel multicol */
+                                column-gap: unset;
                         }
 
                         .doc-content p:nth-of-type(6n)::after {
