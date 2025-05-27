@@ -1435,9 +1435,10 @@
                                                                .then(html => {
                                                                        html = html.replace(/src="media\//g, 'src="Documents/media/');
                                                                        content.innerHTML = `
-                                                                       <div class="doc-content-wrapper">
-                                                                               <div class="doc-content-inner">${html}</div>`;
-                                                                       </div>
+                                                                               <div class="doc-content-wrapper">
+                                                                                       <div class="doc-content-inner">${html}</div>
+                                                                               </div>
+                                                                       `;
                                                                                                                                              
                                                                        content.offsetHeight; // Force layout reflow
                                                                        
