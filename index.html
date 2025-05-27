@@ -612,24 +612,23 @@
                         .doc-content-wrapper {
                                 display: flex;
                                 flex-direction: row;
-                                align-items: flex-start;
+                                overflow-x: auto;
+                                overflow-y: hidden;
+                                white-space: nowrap;
+                                height: 100%;
                                 background: url('gifs/paper.png') repeat;
-                                background-attachment: scroll;
                                 background-position: top left;
                                 background-size: auto;
-                                min-width: max-content;
-                                width: fit-content;
+                                min-width: 100%;
+                        }
+                        .doc-content-inner {
+                                flex: 0 0 320px;
+                                box-sizing: border-box;
+                                padding: 2em;
                                 height: 100%;
                                 overflow: hidden;
-                        }
-                        
-                        .doc-content-inner {
-                                flex: 0 0 auto;
-                                width: 320px;
-                                padding: 2em;
-                                box-sizing: border-box;
-                                column-count: unset;        /* Cancel multicol */
-                                column-gap: unset;
+                                display: inline-block;
+                                vertical-align: top;
                         }
 
                         .doc-content p:nth-of-type(6n)::after {
@@ -1362,6 +1361,31 @@
                 </script>
 
                 <script>
+                        function splitIntoColumns(html, groupSize = 6) {
+                                const temp = document.createElement("div");
+                                temp.innerHTML = html;
+                                const paragraphs = Array.from(temp.querySelectorAll("p"));
+                                
+                                const columnCount = Math.ceil(paragraphs.length / groupSize);
+                                const columns = [];
+                                
+                                for (let i = 0; i < columnCount; i++) {
+                                        const col = document.createElement("div");
+                                        col.className = "doc-content-inner";
+                                        columns.push(col);
+                                }
+                                
+                                paragraphs.forEach((p, i) => {
+                                        columns[Math.floor(i / groupSize)].appendChild(p);
+                                });
+                                
+                                const wrapper = document.createElement("div");
+                                wrapper.className = "doc-content-wrapper";
+                                columns.forEach(col => wrapper.appendChild(col));
+                                
+                                return wrapper.outerHTML;
+                        }
+                        
                         const documents = [
                                 "10_World_Overview",
                                 "11_Timeline",
@@ -1398,6 +1422,7 @@
                                 const tocItem = document.createElement("li");
                                 tocItem.textContent = title.textContent;
                                 tocItem.addEventListener("click", () => {
+                                        
                                         document.querySelectorAll(".doc-content").forEach(el => el.classList.remove("open"));
                                         const target = document.getElementById(`doc-content-${index}`);
                                         if (target.dataset.loaded === "false") {
@@ -1405,7 +1430,7 @@
                                                         .then(res => res.text())
                                                         .then(html => {
                                                                 html = html.replace(/src="media\//g, 'src="Documents/media/');
-                                                                target.innerHTML = `<div class="doc-content-inner">${html}</div>`;
+                                                                target.innerHTML = splitIntoColumns(html);
                                                                 target.dataset.loaded = "true";
                                                                 target.classList.add("open");
                                                         });
@@ -1439,11 +1464,7 @@
                                                                .then(res => res.text())
                                                                .then(html => {
                                                                        html = html.replace(/src="media\//g, 'src="Documents/media/');
-                                                                       content.innerHTML = `
-                                                                               <div class="doc-content-wrapper">
-                                                                                       <div class="doc-content-inner">${html}</div>
-                                                                               </div>
-                                                                       `;
+                                                                       content.innerHTML = splitIntoColumns(html);
                                                                                                                                              
                                                                        content.offsetHeight; // Force layout reflow
                                                                        
