@@ -630,6 +630,12 @@
                                 display: inline-block;
                                 vertical-align: top;
                         }
+                        .doc-content-inner img {
+                                max-width: 100%;
+                                height: auto;
+                                display: block;
+                                margin: 1em 0;
+                        }
 
                         .doc-content p:nth-of-type(6n)::after {
                                 content: "";
@@ -1361,28 +1367,35 @@
                 </script>
 
                 <script>
-                        function splitIntoColumns(html, groupSize = 6) {
+                        function splitIntoColumns(html, maxHeight = 800) {
                                 const temp = document.createElement("div");
                                 temp.innerHTML = html;
-                                const paragraphs = Array.from(temp.querySelectorAll("p"));
                                 
-                                const columnCount = Math.ceil(paragraphs.length / groupSize);
-                                const columns = [];
-                                
-                                for (let i = 0; i < columnCount; i++) {
-                                        const col = document.createElement("div");
-                                        col.className = "doc-content-inner";
-                                        columns.push(col);
-                                }
-                                
-                                paragraphs.forEach((p, i) => {
-                                        columns[Math.floor(i / groupSize)].appendChild(p);
-                                });
+                                const elements = Array.from(temp.childNodes).filter(el =>
+                                        el.nodeType === Node.ELEMENT_NODE
+                                                                                   );
                                 
                                 const wrapper = document.createElement("div");
                                 wrapper.className = "doc-content-wrapper";
-                                columns.forEach(col => wrapper.appendChild(col));
                                 
+                                let currentCol = document.createElement("div");
+                                currentCol.className = "doc-content-inner";
+                                wrapper.appendChild(currentCol);
+                                
+                                document.body.appendChild(wrapper); // Temp mount to measure
+                                
+                                elements.forEach(el => {
+                                        currentCol.appendChild(el);
+                                        if (currentCol.scrollHeight > maxHeight) {
+                                                currentCol.removeChild(el);
+                                                currentCol = document.createElement("div");
+                                                currentCol.className = "doc-content-inner";
+                                                currentCol.appendChild(el);
+                                                wrapper.appendChild(currentCol);
+                                        }
+                                });
+                                
+                                document.body.removeChild(wrapper);
                                 return wrapper.outerHTML;
                         }
                         
