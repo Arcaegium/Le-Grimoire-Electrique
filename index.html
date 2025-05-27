@@ -630,11 +630,13 @@
                                 display: inline-block;
                                 vertical-align: top;
                         }
+                        .doc-content-inner figure,
                         .doc-content-inner img {
                                 max-width: 100%;
-                                height: auto;
+                                height: auto !important;
+                                max-height: 100%;
+                                object-fit: contain;
                                 display: block;
-                                margin: 1em 0;
                         }
 
                         .doc-content p:nth-of-type(6n)::after {
@@ -1368,35 +1370,72 @@
 
                 <script>
                         function splitIntoColumns(html, maxHeight = 800) {
-                                const temp = document.createElement("div");
-                                temp.innerHTML = html;
-                                
-                                const elements = Array.from(temp.childNodes).filter(el =>
-                                        el.nodeType === Node.ELEMENT_NODE
-                                                                                   );
-                                
-                                const wrapper = document.createElement("div");
-                                wrapper.className = "doc-content-wrapper";
-                                
-                                let currentCol = document.createElement("div");
-                                currentCol.className = "doc-content-inner";
-                                wrapper.appendChild(currentCol);
-                                
-                                document.body.appendChild(wrapper); // Temp mount to measure
-                                
-                                elements.forEach(el => {
-                                        currentCol.appendChild(el);
-                                        if (currentCol.scrollHeight > maxHeight) {
-                                                currentCol.removeChild(el);
-                                                currentCol = document.createElement("div");
-                                                currentCol.className = "doc-content-inner";
-                                                currentCol.appendChild(el);
-                                                wrapper.appendChild(currentCol);
+                                return new Promise((resolve) => {
+                                        const temp = document.createElement("div");
+                                        temp.innerHTML = html;
+                                        
+                                        const elements = Array.from(temp.childNodes).filter(el =>
+                                                el.nodeType === Node.ELEMENT_NODE
+                                        );
+                                        
+                                        const wrapper = document.createElement("div");
+                                        wrapper.className = "doc-content-wrapper";
+                                        wrapper.style.position = "absolute";
+                                        wrapper.style.visibility = "hidden";
+                                        wrapper.style.pointerEvents = "none";
+                                        wrapper.style.height = `${maxHeight}px`;
+                                        wrapper.style.width = "100vw";
+                                        wrapper.style.overflow = "hidden";
+                                        wrapper.style.zIndex = -1;
+                                        
+                                        let currentCol = document.createElement("div");
+                                        currentCol.className = "doc-content-inner";
+                                        wrapper.appendChild(currentCol);
+                                        
+                                        document.body.appendChild(wrapper);
+                                        
+                                        // Wait for all images to load before measuring
+                                        const images = temp.querySelectorAll("img");
+                                        let loadedCount = 0;
+                                        const checkDone = () => {
+                                                if (loadedCount >= images.length) {
+                                                        elements.forEach(el => {
+                                                                currentCol.appendChild(el);
+                                                                if (currentCol.scrollHeight > maxHeight) {
+                                                                        currentCol.removeChild(el);
+                                                                        currentCol = document.createElement("div");
+                                                                        currentCol.className = "doc-content-inner";
+                                                                        currentCol.appendChild(el);
+                                                                        wrapper.appendChild(currentCol);
+                                                                }
+                                                        });
+                                                        
+                                                        const output = wrapper.cloneNode(true);
+                                                        wrapper.remove();
+                                                        resolve(output.outerHTML);
+                                                }
+                                        };
+                                        
+                                        if (images.length === 0) {
+                                                checkDone();
+                                        } else {
+                                                images.forEach(img => {
+                                                        const clone = img.cloneNode();
+                                                        clone.onload = () => {
+                                                                loadedCount++;
+                                                                checkDone();
+                                                        };
+                                                        clone.onerror = () => {
+                                                                loadedCount++;
+                                                                checkDone();
+                                                        };
+                                                        // Trigger loading
+                                                        document.body.appendChild(clone);
+                                                        clone.src = img.src;
+                                                        clone.style.display = "none";
+                                                });
                                         }
                                 });
-                                
-                                document.body.removeChild(wrapper);
-                                return wrapper.outerHTML;
                         }
                         
                         const documents = [
@@ -1443,7 +1482,11 @@
                                                         .then(res => res.text())
                                                         .then(html => {
                                                                 html = html.replace(/src="media\//g, 'src="Documents/media/');
-                                                                target.innerHTML = splitIntoColumns(html);
+                                                                splitIntoColumns(html).then(columns => {
+                                                                        target.innerHTML = columns;
+                                                                        target.dataset.loaded = "true";
+                                                                        target.classList.add("open");
+                                                                });
                                                                 target.dataset.loaded = "true";
                                                                 target.classList.add("open");
                                                         });
@@ -1477,7 +1520,16 @@
                                                                .then(res => res.text())
                                                                .then(html => {
                                                                        html = html.replace(/src="media\//g, 'src="Documents/media/');
-                                                                       content.innerHTML = splitIntoColumns(html);
+                                                                       splitIntoColumns(html).then(columns => {
+                                                                               content.innerHTML = columns;
+                                                                               content.offsetHeight; // Force layout reflow
+                                                                               requestAnimationFrame(() => {
+                                                                                       content.dataset.loaded = "true";
+                                                                                       content.classList.add("open");
+                                                                                       row.classList.add("expanded");
+                                                                                       scrollToEntry(row);
+                                                                               });
+                                                                       });
                                                                                                                                              
                                                                        content.offsetHeight; // Force layout reflow
                                                                        
