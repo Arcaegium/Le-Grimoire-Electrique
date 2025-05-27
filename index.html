@@ -1399,10 +1399,6 @@
                                         let loadedCount = 0;
                                         const checkDone = () => {
                                                 if (loadedCount >= images.length) {
-                                                        let currentCol = document.createElement("div");
-                                                        currentCol.className = "doc-content-inner";
-                                                        wrapper.appendChild(currentCol);
-                                                        
                                                         elements.forEach(el => {
                                                                 const clone = el.cloneNode(true);
                                                                 currentCol.appendChild(clone);
