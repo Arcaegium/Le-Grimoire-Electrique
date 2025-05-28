@@ -586,6 +586,7 @@
                                 flex: 0 0 auto;
                                 z-index: 5;
                                 padding: 1em 2em 0 2em;
+                                padding-left: 2em;
                                 margin: 0;
                                 background: inherit;
                                 border-bottom: 1px dashed #444;
@@ -1404,13 +1405,29 @@
                                                         elements.forEach(el => {
                                                                 const clone = el.cloneNode(true);
                                                                 currentCol.appendChild(clone);
-                                                                
                                                                 if (currentCol.scrollHeight > maxHeight) {
                                                                         currentCol.removeChild(clone);
-                                                                        currentCol = document.createElement("div");
-                                                                        currentCol.className = "doc-content-inner";
-                                                                        currentCol.appendChild(clone);
-                                                                        wrapper.appendChild(currentCol);
+                                                                        
+                                                                        // Skip if single element is too tall to fit in one column
+                                                                        const test = document.createElement("div");
+                                                                        test.className = "doc-content-inner";
+                                                                        test.appendChild(clone.cloneNode(true));
+                                                                        wrapper.appendChild(test);
+                                                                        const isTooTall = test.scrollHeight > maxHeight;
+                                                                        wrapper.removeChild(test);
+                                                                        
+                                                                        if (isTooTall) {
+                                                                                // Force into its own column anyway
+                                                                                currentCol = document.createElement("div");
+                                                                                currentCol.className = "doc-content-inner";
+                                                                                currentCol.appendChild(clone);
+                                                                                wrapper.appendChild(currentCol);
+                                                                        } else {
+                                                                                currentCol = document.createElement("div");
+                                                                                currentCol.className = "doc-content-inner";
+                                                                                currentCol.appendChild(clone);
+                                                                                wrapper.appendChild(currentCol);
+                                                                        }
                                                                 }
                                                         });
                                                         
