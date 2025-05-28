@@ -1412,7 +1412,13 @@
                                                                 }
                                                         });
                                                         
-                                                        const output = wrapper.cloneNode(true);
+                                                        // Clone visible structure only, not invisible styles
+                                                        const output = document.createElement("div");
+                                                        output.className = "doc-content-wrapper";
+                                                        
+                                                        const cols = wrapper.querySelectorAll(".doc-content-inner");
+                                                        cols.forEach(col => output.appendChild(col.cloneNode(true)));
+                                                        
                                                         document.body.removeChild(wrapper);
                                                         resolve(output.outerHTML);
                                                 }
