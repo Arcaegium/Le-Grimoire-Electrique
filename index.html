@@ -1374,7 +1374,7 @@
                 </script>
 
                 <script>
-                        function splitIntoColumns(html, maxHeight = maxHeight) {
+                        function splitIntoColumns(html, maxHeight) {
                                 return new Promise((resolve) => {
                                         const temp = document.createElement("div");
                                         temp.innerHTML = html;
@@ -1512,7 +1512,8 @@
                                                         .then(res => res.text())
                                                         .then(html => {
                                                                 html = html.replace(/src="media\//g, 'src="Documents/media/');
-                                                                splitIntoColumns(html).then(columns => {
+                                                                const height = window.innerHeight - 36; // subtract navbar height
+                                                                splitIntoColumns(html, height).then(columns => {
                                                                         if (!columns || !columns.trim()) {
                                                                                 console.warn("No columns returned, fallback triggered.");
                                                                                 target.innerHTML = "<div class='doc-content-wrapper'><div class='doc-content-inner'><p><b>Error:</b> No content rendered.</p></div></div>";
@@ -1553,7 +1554,8 @@
                                                                .then(res => res.text())
                                                                .then(html => {
                                                                        html = html.replace(/src="media\//g, 'src="Documents/media/');
-                                                                       splitIntoColumns(html).then(columns => {
+                                                                       const height = window.innerHeight - 36; // subtract navbar height
+                                                                       splitIntoColumns(html, height).then(columns => {
                                                                                content.innerHTML = (!columns || !columns.trim())
                                                                                        ? "<div class='doc-content-wrapper'><div class='doc-content-inner'><p><b>Error:</b> No content rendered.</p></div></div>"
                                                                                        : columns;
