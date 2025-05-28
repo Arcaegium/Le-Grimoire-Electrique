@@ -1404,34 +1404,55 @@
                                         
                                         const checkDone = () => {
                                                 if (loadedCount >= images.length) {
-                                                        elements.forEach(el => {
-                                                                const clone = el.cloneNode(true);
-                                                                currentCol.appendChild(clone);
-                                                                if (currentCol.scrollHeight > maxHeight) {
-                                                                        currentCol.removeChild(clone);
-                                                                        
-                                                                        // Skip if single element is too tall to fit in one column
-                                                                        const test = document.createElement("div");
-                                                                        test.className = "doc-content-inner";
-                                                                        test.appendChild(clone.cloneNode(true));
-                                                                        wrapper.appendChild(test);
-                                                                        const isTooTall = test.scrollHeight > maxHeight;
-                                                                        wrapper.removeChild(test);
-                                                                        
-                                                                        if (isTooTall) {
-                                                                                // Force into its own column anyway
-                                                                                currentCol = document.createElement("div");
-                                                                                currentCol.className = "doc-content-inner";
-                                                                                currentCol.appendChild(clone);
-                                                                                wrapper.appendChild(currentCol);
-                                                                        } else {
-                                                                                currentCol = document.createElement("div");
-                                                                                currentCol.className = "doc-content-inner";
-                                                                                currentCol.appendChild(clone);
-                                                                                wrapper.appendChild(currentCol);
-                                                                        }
-                                                                }
-                                                        });
+                                                       elements.forEach(el => {
+                                                               const clone = el.cloneNode(true);
+                                                               currentCol.appendChild(clone);
+                                                               
+                                                               if (currentCol.scrollHeight > maxHeight) {
+                                                                       currentCol.removeChild(clone);
+                                                                       
+                                                                       // Paragraph-only split support for now
+                                                                       if (el.tagName === "P") {
+                                                                               const words = el.textContent.split(" ");
+                                                                               const p1 = document.createElement("p");
+                                                                               const p2 = document.createElement("p");
+                                                                               
+                                                                               for (let i = 0; i < words.length; i++) {
+                                                                                       p1.textContent += words[i] + " ";
+                                                                                       currentCol.appendChild(p1);
+                                                                                       if (currentCol.scrollHeight > maxHeight) {
+                                                                                               p1.textContent = p1.textContent.trim().split(" ").slice(0, -1).join(" ");
+                                                                                               p2.textContent = words.slice(i).join(" ");
+                                                                                               currentCol.removeChild(p1);
+                                                                                               
+                                                                                               const finalP1 = document.createElement("p");
+                                                                                               finalP1.textContent = p1.textContent;                                                                                               
+                                                                                               currentCol.appendChild(finalP1);
+                                                                                               
+                                                                                               currentCol = document.createElement("div");
+                                                                                               currentCol.className = "doc-content-inner";
+                                                                                               wrapper.appendChild(currentCol);
+                                                                                               currentCol.appendChild(p2);
+                                                                                               break;
+                                                                                       }
+                                                                                       currentCol.removeChild(p1);
+                                                                               }
+                                                                       } else {
+                                                                               // Fallback to normal column shift
+                                                                               const test = document.createElement("div");
+                                                                               test.className = "doc-content-inner";
+                                                                               test.appendChild(clone.cloneNode(true));
+                                                                               wrapper.appendChild(test);
+                                                                               const isTooTall = test.scrollHeight > maxHeight;
+                                                                               wrapper.removeChild(test);
+                                                                               
+                                                                               currentCol = document.createElement("div");
+                                                                               currentCol.className = "doc-content-inner";
+                                                                               wrapper.appendChild(currentCol);
+                                                                               currentCol.appendChild(clone);
+                                                                       }
+                                                               }
+                                                       });
                                                         
                                                         // Clone visible structure only, not invisible styles
                                                         const output = document.createElement("div");
