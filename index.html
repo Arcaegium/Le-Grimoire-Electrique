@@ -1374,9 +1374,10 @@
                                         const temp = document.createElement("div");
                                         temp.innerHTML = html;
                                         
-                                        const elements = Array.from(temp.childNodes).filter(el =>
-                                                el.nodeType === Node.ELEMENT_NODE
-                                        );
+                                        // Match all visible, block-structured elements likely to appear in your documents
+                                        const elements = Array.from(temp.querySelectorAll("p, h1, h2, h3, figure, img, ul, ol, li, blockquote"));
+                                        
+                                        console.log("Split target elements count:", elements.length);
                                         
                                         const wrapper = document.createElement("div");
                                         wrapper.className = "doc-content-wrapper";
@@ -1388,61 +1389,57 @@
                                         wrapper.style.overflow = "hidden";
                                         wrapper.style.zIndex = -1;
                                         document.body.appendChild(wrapper);
-                                        
+
                                         let currentCol = document.createElement("div");
                                         currentCol.className = "doc-content-inner";
-                                        wrapper.appendChild(currentCol);                                       
+                                        wrapper.appendChild(currentCol);
                                         
-                                        // Wait for all images to load before measuring
                                         const images = temp.querySelectorAll("img");
                                         let loadedCount = 0;
+                                        
                                         const checkDone = () => {
-                                               if (loadedCount >= images.length) {
-                                                       let currentCol = document.createElement("div");
-                                                       currentCol.className = "doc-content-inner";
-                                                       wrapper.appendChild(currentCol);
-                                                       
-                                                       console.log("Generating columns...", elements.length, "elements");
-                                                       
-                                                       elements.forEach(el => {
-                                                               const clone = el.cloneNode(true);
-                                                               currentCol.appendChild(clone);
-                                                               if (currentCol.scrollHeight > maxHeight) {
-                                                                       currentCol.removeChild(clone);
-                                                                       currentCol = document.createElement("div");
-                                                                       currentCol.className = "doc-content-inner";
-                                                                       currentCol.appendChild(clone);
-                                                                       wrapper.appendChild(currentCol);
-                                                               }
-                                                       });
-                                                       
-                                                       const output = wrapper.cloneNode(true);
-                                                       document.body.removeChild(wrapper);
-                                                       resolve(output.outerHTML);
-                                               }
+                                                if (loadedCount >= images.length) {
+                                                        elements.forEach(el => {
+                                                                const clone = el.cloneNode(true);
+                                                                currentCol.appendChild(clone);
+                                                                
+                                                                if (currentCol.scrollHeight > maxHeight) {
+                                                                        currentCol.removeChild(clone);
+                                                                        currentCol = document.createElement("div");
+                                                                        currentCol.className = "doc-content-inner";
+                                                                        currentCol.appendChild(clone);
+                                                                        wrapper.appendChild(currentCol);
+                                                                }
+                                                        });
+                                                        
+                                                        const output = wrapper.cloneNode(true);
+                                                        document.body.removeChild(wrapper);
+                                                        resolve(output.outerHTML);
+                                                }
                                         };
                                         
                                         if (images.length === 0) {
                                                 checkDone();
                                         } else {
                                                 images.forEach(img => {
-                                                        const clone = img.cloneNode();
-                                                        clone.onload = () => {
+                                                        const probe = new Image();
+                                                        probe.onload = () => {
                                                                 loadedCount++;
                                                                 checkDone();
+                                                                probe.remove();
                                                         };
-                                                        clone.onerror = () => {
+                                                        probe.onerror = () => {
                                                                 loadedCount++;
                                                                 checkDone();
+                                                                probe.remove();
                                                         };
-                                                        // Trigger loading
-                                                        document.body.appendChild(clone);
-                                                        clone.src = img.src;
-                                                        clone.style.display = "none";
+                                                        probe.src = img.src;
+                                                        probe.style.display = "none";
+                                                        document.body.appendChild(probe);
                                                 });
                                         }
                                 });
-                        }
+                        }                      
                         
                         const documents = [
                                 "10_World_Overview",
@@ -1490,6 +1487,7 @@
                                                                 html = html.replace(/src="media\//g, 'src="Documents/media/');
                                                                 splitIntoColumns(html).then(columns => {
                                                                         if (!columns || !columns.trim()) {
+                                                                                console.warn("No columns returned, fallback triggered.");
                                                                                 target.innerHTML = "<div class='doc-content-wrapper'><div class='doc-content-inner'><p><b>Error:</b> No content rendered.</p></div></div>";
                                                                         } else {
                                                                                 target.innerHTML = columns;
