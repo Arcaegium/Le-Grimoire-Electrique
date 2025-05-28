@@ -1379,9 +1379,7 @@
                                         const temp = document.createElement("div");
                                         temp.innerHTML = html;
                                         
-                                        // Match all visible, block-structured elements likely to appear in your documents
                                         const elements = Array.from(temp.querySelectorAll("p, h1, h2, h3, figure, img, ul, ol, li, blockquote"));
-                                        
                                         console.log("Split target elements count:", elements.length);
                                         
                                         const wrapper = document.createElement("div");
@@ -1394,7 +1392,7 @@
                                         wrapper.style.overflow = "hidden";
                                         wrapper.style.zIndex = -1;
                                         document.body.appendChild(wrapper);
-
+                                        
                                         let currentCol = document.createElement("div");
                                         currentCol.className = "doc-content-inner";
                                         wrapper.appendChild(currentCol);
@@ -1402,67 +1400,67 @@
                                         const images = temp.querySelectorAll("img");
                                         let loadedCount = 0;
                                         
-                                        const checkDone = () => {
-                                                if (loadedCount >= images.length) {
-                                                       elements.forEach(el => {
-                                                               const clone = el.cloneNode(true);
-                                                               currentCol.appendChild(clone);
-                                                               
-                                                               if (currentCol.scrollHeight > maxHeight) {
-                                                                       currentCol.removeChild(clone);
-                                                                       
-                                                                       // Paragraph-only split support for now
-                                                                       if (el.tagName === "P") {
-                                                                               const words = el.textContent.split(" ");
-                                                                               const p1 = document.createElement("p");
-                                                                               const p2 = document.createElement("p");
-                                                                               
-                                                                               for (let i = 0; i < words.length; i++) {
-                                                                                       p1.textContent += words[i] + " ";
-                                                                                       currentCol.appendChild(p1);
-                                                                                       if (currentCol.scrollHeight > maxHeight) {
-                                                                                               p1.textContent = p1.textContent.trim().split(" ").slice(0, -1).join(" ");
-                                                                                               p2.textContent = words.slice(i).join(" ");
-                                                                                               currentCol.removeChild(p1);
-                                                                                               
-                                                                                               const finalP1 = document.createElement("p");
-                                                                                               finalP1.textContent = p1.textContent;                                                                                               
-                                                                                               currentCol.appendChild(finalP1);
-                                                                                               
-                                                                                               currentCol = document.createElement("div");
-                                                                                               currentCol.className = "doc-content-inner";
-                                                                                               wrapper.appendChild(currentCol);
-                                                                                               currentCol.appendChild(p2);
-                                                                                               break;
-                                                                                       }
-                                                                                       currentCol.removeChild(p1);
-                                                                               }
-                                                                       } else {
-                                                                               // Fallback to normal column shift
-                                                                               const test = document.createElement("div");
-                                                                               test.className = "doc-content-inner";
-                                                                               test.appendChild(clone.cloneNode(true));
-                                                                               wrapper.appendChild(test);
-                                                                               const isTooTall = test.scrollHeight > maxHeight;
-                                                                               wrapper.removeChild(test);
-                                                                               
-                                                                               currentCol = document.createElement("div");
-                                                                               currentCol.className = "doc-content-inner";
-                                                                               wrapper.appendChild(currentCol);
-                                                                               currentCol.appendChild(clone);
-                                                                       }
-                                                               }
-                                                       });
-                                                        
-                                                        // Clone visible structure only, not invisible styles
+                                        const processElements = (index = 0) => {
+                                                if (index >= elements.length) {
                                                         const output = document.createElement("div");
                                                         output.className = "doc-content-wrapper";
-                                                        
                                                         const cols = wrapper.querySelectorAll(".doc-content-inner");
                                                         cols.forEach(col => output.appendChild(col.cloneNode(true)));
-                                                        
                                                         document.body.removeChild(wrapper);
                                                         resolve(output.outerHTML);
+                                                        return;
+                                                }
+                                                
+                                                const el = elements[index];
+                                                const clone = el.cloneNode(true);
+                                                currentCol.appendChild(clone);
+                                                
+                                                requestAnimationFrame(() => {
+                                                        if (currentCol.scrollHeight > maxHeight) {
+                                                                currentCol.removeChild(clone);
+                                                                
+                                                                if (el.tagName === "P") {
+                                                                        const words = el.textContent.trim().split(" ");
+                                                                        const p1 = document.createElement("p");
+                                                                        const p2 = document.createElement("p");
+                                                                        
+                                                                        for (let i = 0; i < words.length; i++) {
+                                                                                p1.textContent += words[i] + " ";
+                                                                                currentCol.appendChild(p1);
+                                                                                
+                                                                                if (currentCol.scrollHeight > maxHeight) {
+                                                                                        p1.textContent = p1.textContent.trim().split(" ").slice(0, -1).join(" ");
+                                                                                        p2.textContent = words.slice(i).join(" ");
+                                                                                        
+                                                                                        currentCol.removeChild(p1);
+                                                                                        const finalP1 = document.createElement("p");
+                                                                                        finalP1.textContent = p1.textContent;
+                                                                                        currentCol.appendChild(finalP1);
+                                                                                        
+                                                                                        currentCol = document.createElement("div");
+                                                                                        currentCol.className = "doc-content-inner";
+                                                                                        wrapper.appendChild(currentCol);
+                                                                                        currentCol.appendChild(p2);
+                                                                                        break;
+                                                                                }
+                                                                                
+                                                                                currentCol.removeChild(p1);
+                                                                        }
+                                                                } else {
+                                                                        currentCol = document.createElement("div");\
+                                                                        currentCol.className = "doc-content-inner";
+                                                                        wrapper.appendChild(currentCol);
+                                                                        currentCol.appendChild(clone);
+                                                                }
+                                                        }
+                                                        
+                                                        processElements(index + 1);
+                                                });
+                                        };
+                                        
+                                        const checkDone = () => {
+                                                if (loadedCount >= images.length) {
+                                                        processElements();
                                                 }
                                         };
                                         
@@ -1487,7 +1485,7 @@
                                                 });
                                         }
                                 });
-                        }                      
+                        }
                         
                         const documents = [
                                 "10_World_Overview",
