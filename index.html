@@ -1374,7 +1374,7 @@
                 </script>
 
                 <script>
-                       function splitIntoColumns(html, maxHeight) {
+                        function splitIntoColumns(html, maxHeight) {
                             return new Promise((resolve) => {
                                 const temp = document.createElement("div");
                                 temp.innerHTML = html;
@@ -1386,8 +1386,10 @@
                                 wrapper.style.position = "absolute";
                                 wrapper.style.visibility = "hidden";
                                 wrapper.style.pointerEvents = "none";
-                                wrapper.style.height = `${maxHeight}px`;
+                                wrapper.style.top = "0";
+                                wrapper.style.left = "0";
                                 wrapper.style.width = "100vw";
+                                wrapper.style.height = `${maxHeight}px`;
                                 wrapper.style.overflow = "hidden";
                                 wrapper.style.zIndex = -1;
                                 document.body.appendChild(wrapper);
@@ -1408,6 +1410,10 @@
                                     resolve(output.outerHTML);
                                 }
                         
+                                function getPhysicalHeight(el) {
+                                    return el.getBoundingClientRect().bottom - el.getBoundingClientRect().top;
+                                }
+                        
                                 function processElement(index) {
                                     if (index >= elements.length) {
                                         finish();
@@ -1419,7 +1425,7 @@
                                     currentCol.appendChild(clone);
                         
                                     requestAnimationFrame(() => {
-                                        if (currentCol.scrollHeight > maxHeight) {
+                                        if (getPhysicalHeight(currentCol) > maxHeight) {
                                             currentCol.removeChild(clone);
                         
                                             if (el.tagName === "P") {
@@ -1428,6 +1434,7 @@
                                                 const p2 = document.createElement("p");
                         
                                                 let splitIndex = 0;
+                        
                                                 function stepSplit() {
                                                     if (splitIndex >= words.length) {
                                                         currentCol.appendChild(p1);
@@ -1443,7 +1450,7 @@
                                                     currentCol.appendChild(p1);
                         
                                                     requestAnimationFrame(() => {
-                                                        if (currentCol.scrollHeight > maxHeight) {
+                                                        if (getPhysicalHeight(currentCol) > maxHeight) {
                                                             p1.textContent = p1.textContent.trim().split(" ").slice(0, -1).join(" ");
                                                             p2.textContent = words.slice(splitIndex).join(" ");
                                                             currentCol.removeChild(p1);
@@ -1507,7 +1514,7 @@
                                 }
                             });
                         }
-                        
+     
                         const documents = [
                                 "10_World_Overview",
                                 "11_Timeline",
