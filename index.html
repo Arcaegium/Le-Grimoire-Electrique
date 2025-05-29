@@ -1374,7 +1374,7 @@
                 </script>
 
                 <script>
-                        function splitIntoColumns(html, maxHeight) {
+                         function splitIntoColumns(html, maxHeight) {
                             return new Promise((resolve) => {
                                 const temp = document.createElement("div");
                                 temp.innerHTML = html;
@@ -1384,14 +1384,14 @@
                                 const wrapper = document.createElement("div");
                                 wrapper.className = "doc-content-wrapper";
                                 wrapper.style.position = "absolute";
-                                wrapper.style.visibility = "hidden";
-                                wrapper.style.pointerEvents = "none";
                                 wrapper.style.top = "0";
                                 wrapper.style.left = "0";
                                 wrapper.style.width = "100vw";
                                 wrapper.style.height = `${maxHeight}px`;
-                                wrapper.style.overflow = "hidden";
+                                wrapper.style.visibility = "hidden";
                                 wrapper.style.zIndex = -1;
+                                wrapper.style.display = "flex";
+                                wrapper.style.overflow = "visible"; // Let it measure full scroll height
                                 document.body.appendChild(wrapper);
                         
                                 let currentCol = document.createElement("div");
@@ -1410,10 +1410,6 @@
                                     resolve(output.outerHTML);
                                 }
                         
-                                function getPhysicalHeight(el) {
-                                    return el.getBoundingClientRect().bottom - el.getBoundingClientRect().top;
-                                }
-                        
                                 function processElement(index) {
                                     if (index >= elements.length) {
                                         finish();
@@ -1425,7 +1421,7 @@
                                     currentCol.appendChild(clone);
                         
                                     requestAnimationFrame(() => {
-                                        if (getPhysicalHeight(currentCol) > maxHeight) {
+                                        if (currentCol.scrollHeight > maxHeight) {
                                             currentCol.removeChild(clone);
                         
                                             if (el.tagName === "P") {
@@ -1435,7 +1431,7 @@
                         
                                                 let splitIndex = 0;
                         
-                                                function stepSplit() {
+                                                function splitStep() {
                                                     if (splitIndex >= words.length) {
                                                         currentCol.appendChild(p1);
                                                         currentCol = document.createElement("div");
@@ -1450,7 +1446,7 @@
                                                     currentCol.appendChild(p1);
                         
                                                     requestAnimationFrame(() => {
-                                                        if (getPhysicalHeight(currentCol) > maxHeight) {
+                                                        if (currentCol.scrollHeight > maxHeight) {
                                                             p1.textContent = p1.textContent.trim().split(" ").slice(0, -1).join(" ");
                                                             p2.textContent = words.slice(splitIndex).join(" ");
                                                             currentCol.removeChild(p1);
@@ -1467,12 +1463,12 @@
                                                         } else {
                                                             currentCol.removeChild(p1);
                                                             splitIndex++;
-                                                            stepSplit();
+                                                            splitStep();
                                                         }
                                                     });
                                                 }
                         
-                                                stepSplit();
+                                                splitStep();
                                             } else {
                                                 currentCol = document.createElement("div");
                                                 currentCol.className = "doc-content-inner";
