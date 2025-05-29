@@ -846,9 +846,6 @@
                                         padding-left: 0 !important;
                                         flex-direction: column;
                                 }
-                                .doc-content-inner {
-                                        column-count: 1;
-                                }
                                 .doc-entry.expanded {
                                           position: relative !important;
                                           top: 0 !important;
@@ -860,6 +857,17 @@
                                           display: block !important;
                                           overflow: visible !important;
                                           box-shadow: none !important;
+                                }
+                                .doc-content-wrapper {
+                                          display: block !important;
+                                          overflow-x: visible !important;
+                                }
+                                .doc-content-inner {
+                                          width: 100% !important;
+                                          max-width: 100% !important;
+                                          box-sizing: border-box !important;
+                                          display: block !important;
+                                          overflow-x: visible !important;
                                 }
                         }
                 </style>
