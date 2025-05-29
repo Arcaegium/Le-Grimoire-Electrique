@@ -1432,7 +1432,11 @@
                                                         .then(res => res.text())
                                                         .then(html => {
                                                                 html = html.replace(/src="media\//g, 'src="Documents/media/');
-                                                                target.innerHTML = `<div class="doc-content-inner">${html}</div>`;
+                                                                target.innerHTML = `
+                                                                        <div class="doc-content-wrapper">
+                                                                                <div class="doc-content-inner">${html}
+                                                                                </div>
+                                                                        </div>`;
                                                                 target.dataset.loaded = "true";
                                                                 target.classList.add("open");
                                                         });
