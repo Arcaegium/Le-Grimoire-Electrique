@@ -1374,117 +1374,138 @@
                 </script>
 
                 <script>
-                        function splitIntoColumns(html, maxHeight) {
-                                return new Promise((resolve) => {
-                                        const temp = document.createElement("div");
-                                        temp.innerHTML = html;
-                                        
-                                        const elements = Array.from(temp.querySelectorAll("p, h1, h2, h3, figure, img, ul, ol, li, blockquote"));
-                                        console.log("Split target elements count:", elements.length);
-                                        
-                                        const wrapper = document.createElement("div");
-                                        wrapper.className = "doc-content-wrapper";
-                                        wrapper.style.position = "absolute";
-                                        wrapper.style.visibility = "hidden";
-                                        wrapper.style.pointerEvents = "none";
-                                        wrapper.style.height = `${maxHeight}px`;
-                                        wrapper.style.width = "100vw";
-                                        wrapper.style.overflow = "hidden";
-                                        wrapper.style.zIndex = -1;
-                                        document.body.appendChild(wrapper);
-                                        
-                                        let currentCol = document.createElement("div");
-                                        currentCol.className = "doc-content-inner";
-                                        wrapper.appendChild(currentCol);
-                                        
-                                        const images = temp.querySelectorAll("img");
-                                        let loadedCount = 0;
-                                        
-                                        const processElements = (index = 0) => {
-                                                if (index >= elements.length) {
-                                                        const output = document.createElement("div");
-                                                        output.className = "doc-content-wrapper";
-                                                        const cols = wrapper.querySelectorAll(".doc-content-inner");
-                                                        cols.forEach(col => output.appendChild(col.cloneNode(true)));
-                                                        document.body.removeChild(wrapper);
-                                                        resolve(output.outerHTML);
+                       function splitIntoColumns(html, maxHeight) {
+                            return new Promise((resolve) => {
+                                const temp = document.createElement("div");
+                                temp.innerHTML = html;
+                        
+                                const elements = Array.from(temp.querySelectorAll("p, h1, h2, h3, figure, img, ul, ol, li, blockquote"));
+                        
+                                const wrapper = document.createElement("div");
+                                wrapper.className = "doc-content-wrapper";
+                                wrapper.style.position = "absolute";
+                                wrapper.style.visibility = "hidden";
+                                wrapper.style.pointerEvents = "none";
+                                wrapper.style.height = `${maxHeight}px`;
+                                wrapper.style.width = "100vw";
+                                wrapper.style.overflow = "hidden";
+                                wrapper.style.zIndex = -1;
+                                document.body.appendChild(wrapper);
+                        
+                                let currentCol = document.createElement("div");
+                                currentCol.className = "doc-content-inner";
+                                wrapper.appendChild(currentCol);
+                        
+                                const images = temp.querySelectorAll("img");
+                                let loadedCount = 0;
+                        
+                                function finish() {
+                                    const output = document.createElement("div");
+                                    output.className = "doc-content-wrapper";
+                                    const cols = wrapper.querySelectorAll(".doc-content-inner");
+                                    cols.forEach(col => output.appendChild(col.cloneNode(true)));
+                                    document.body.removeChild(wrapper);
+                                    resolve(output.outerHTML);
+                                }
+                        
+                                function processElement(index) {
+                                    if (index >= elements.length) {
+                                        finish();
+                                        return;
+                                    }
+                        
+                                    const el = elements[index];
+                                    const clone = el.cloneNode(true);
+                                    currentCol.appendChild(clone);
+                        
+                                    requestAnimationFrame(() => {
+                                        if (currentCol.scrollHeight > maxHeight) {
+                                            currentCol.removeChild(clone);
+                        
+                                            if (el.tagName === "P") {
+                                                const words = el.textContent.trim().split(" ");
+                                                const p1 = document.createElement("p");
+                                                const p2 = document.createElement("p");
+                        
+                                                let splitIndex = 0;
+                                                function stepSplit() {
+                                                    if (splitIndex >= words.length) {
+                                                        currentCol.appendChild(p1);
+                                                        currentCol = document.createElement("div");
+                                                        currentCol.className = "doc-content-inner";
+                                                        wrapper.appendChild(currentCol);
+                                                        currentCol.appendChild(p2);
+                                                        processElement(index + 1);
                                                         return;
-                                                }
-                                                
-                                                const el = elements[index];
-                                                const clone = el.cloneNode(true);
-                                                currentCol.appendChild(clone);
-                                                
-                                                requestAnimationFrame(() => {
+                                                    }
+                        
+                                                    p1.textContent += words[splitIndex] + " ";
+                                                    currentCol.appendChild(p1);
+                        
+                                                    requestAnimationFrame(() => {
                                                         if (currentCol.scrollHeight > maxHeight) {
-                                                                currentCol.removeChild(clone);
-                                                                
-                                                                if (el.tagName === "P") {
-                                                                        const words = el.textContent.trim().split(" ");
-                                                                        const p1 = document.createElement("p");
-                                                                        const p2 = document.createElement("p");
-                                                                        
-                                                                        for (let i = 0; i < words.length; i++) {
-                                                                                p1.textContent += words[i] + " ";
-                                                                                currentCol.appendChild(p1);
-                                                                                
-                                                                                if (currentCol.scrollHeight > maxHeight) {
-                                                                                        p1.textContent = p1.textContent.trim().split(" ").slice(0, -1).join(" ");
-                                                                                        p2.textContent = words.slice(i).join(" ");
-                                                                                        
-                                                                                        currentCol.removeChild(p1);
-                                                                                        const finalP1 = document.createElement("p");
-                                                                                        finalP1.textContent = p1.textContent;
-                                                                                        currentCol.appendChild(finalP1);
-                                                                                        
-                                                                                        currentCol = document.createElement("div");
-                                                                                        currentCol.className = "doc-content-inner";
-                                                                                        wrapper.appendChild(currentCol);
-                                                                                        currentCol.appendChild(p2);
-                                                                                        break;
-                                                                                }
-                                                                                
-                                                                                currentCol.removeChild(p1);
-                                                                        }
-                                                                } else {
-                                                                        currentCol = document.createElement("div");
-                                                                        currentCol.className = "doc-content-inner";
-                                                                        wrapper.appendChild(currentCol);
-                                                                        currentCol.appendChild(clone);
-                                                                }
+                                                            p1.textContent = p1.textContent.trim().split(" ").slice(0, -1).join(" ");
+                                                            p2.textContent = words.slice(splitIndex).join(" ");
+                                                            currentCol.removeChild(p1);
+                        
+                                                            const finalP1 = document.createElement("p");
+                                                            finalP1.textContent = p1.textContent;
+                                                            currentCol.appendChild(finalP1);
+                        
+                                                            currentCol = document.createElement("div");
+                                                            currentCol.className = "doc-content-inner";
+                                                            wrapper.appendChild(currentCol);
+                                                            currentCol.appendChild(p2);
+                                                            processElement(index + 1);
+                                                        } else {
+                                                            currentCol.removeChild(p1);
+                                                            splitIndex++;
+                                                            stepSplit();
                                                         }
-                                                        
-                                                        processElements(index + 1);
-                                                });
-                                        };
-                                        
-                                        const checkDone = () => {
-                                                if (loadedCount >= images.length) {
-                                                        processElements();
+                                                    });
                                                 }
-                                        };
-                                        
-                                        if (images.length === 0) {
-                                                checkDone();
+                        
+                                                stepSplit();
+                                            } else {
+                                                currentCol = document.createElement("div");
+                                                currentCol.className = "doc-content-inner";
+                                                wrapper.appendChild(currentCol);
+                                                currentCol.appendChild(clone);
+                                                processElement(index + 1);
+                                            }
                                         } else {
-                                                images.forEach(img => {
-                                                        const probe = new Image();
-                                                        probe.onload = () => {
-                                                                loadedCount++;
-                                                                checkDone();
-                                                                probe.remove();
-                                                        };
-                                                        probe.onerror = () => {
-                                                                loadedCount++;
-                                                                checkDone();
-                                                                probe.remove();
-                                                        };
-                                                        probe.src = img.src;
-                                                        probe.style.display = "none";
-                                                        document.body.appendChild(probe);
-                                                });
+                                            processElement(index + 1);
                                         }
-                                });
+                                    });
+                                }
+                        
+                                function checkDone() {
+                                    if (loadedCount >= images.length) {
+                                        processElement(0);
+                                    }
+                                }
+                        
+                                if (images.length === 0) {
+                                    checkDone();
+                                } else {
+                                    images.forEach(img => {
+                                        const probe = new Image();
+                                        probe.onload = () => {
+                                            loadedCount++;
+                                            checkDone();
+                                            probe.remove();
+                                        };
+                                        probe.onerror = () => {
+                                            loadedCount++;
+                                            checkDone();
+                                            probe.remove();
+                                        };
+                                        probe.src = img.src;
+                                        probe.style.display = "none";
+                                        document.body.appendChild(probe);
+                                    });
+                                }
+                            });
                         }
                         
                         const documents = [
