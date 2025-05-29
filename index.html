@@ -860,19 +860,22 @@
                                 }
                                 .doc-content-wrapper {
                                         display: block !important;
-                                        overflow-x: visible !important;
+                                        overflow-x: hidden !important;
                                         min-width: 0 !important;
                                         width: 100% !important;
+                                        box-sizing: border-box !important;
                                 }
+
                                 .doc-content-inner {
+                                        display: block !important;
                                         width: 100% !important;
                                         max-width: 100% !important;
                                         box-sizing: border-box !important;
-                                        display: block !important;
-                                        overflow-x: visible !important;
-                                        column-width: auto !important;
                                         column-count: 1 !important;
-                                        word-break: break-word !important;
+                                        column-width: auto !important;
+                                        column-gap: 0 !important;
+                                        white-space: normal !important;
+                                        word-break: normal !important;
                                 }
                         }
                 </style>
