@@ -989,9 +989,6 @@
                                                 <div class="section-button" onclick="showView('mechanics')">
                                                         <img alt="Mechanics" src="gifs/Mechanics.gif"/>
                                                 </div>
-                                                <div class="section-button" onclick="showView('faq')">
-                                                        <img alt="FAQ" src="gifs/FAQ.gif"/>
-                                                </div>
                                         </div>
                                 </div>
                         </div>
@@ -1092,13 +1089,6 @@
                                         </div>
                                 </div>
                         </div>
-                        
-                        <div class="view" id="faq">
-                                <h1>FAQ View</h1>
-                                <p>FAQ DEEZ NUTS.</p>
-                                <p>lol gottem.</p>
-                        </div>
-
                 </main>
                 
                 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -1562,11 +1552,12 @@
                         ], "Documents");
                         
                         initializeDocumentSection("mech", [
+                                "Map Tiler API Key"
                                 "Core Mechanics",
-                                "Cost of Living Tables",
-                                "Glossary",
                                 "Player Driven Encounters",
                                 "Reputation Upgrade Tables"
+                                "Cost of Living Tables",
+                                "Glossary",
                         ], "Mechanics");
                 </script>
         </body>
