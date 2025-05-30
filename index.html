@@ -1032,6 +1032,7 @@
                         </div>
 
                         
+                        <!-- Documents view -->
                         <div class="view" id="documents">
                                 <div class="documents-container">
                                         <aside id="docSidebar" class="doc-sidebar"></aside>
@@ -1041,18 +1042,22 @@
                                 </div>
                         </div>
                         
+                        <!-- Mechanics view -->
                         <div class="view" id="mechanics">
-                                <h1>Game Mechanics View</h1>
-                                <p>Placeholder for game system rules and content.</p>
+                                <div class="documents-container">
+                                        <aside id="mechSidebar" class="doc-sidebar"></aside>
+                                        <div id="mechList" class="doc-list">
+                                                <img src="gifs/Mechanics.gif" alt="Mechanics" style="display: block; margin: 0 auto 40px; height: auto;" />
+                                        </div>
+                                </div>
                         </div>
-                        
                         
                         <div class="view" id="faq">
                                 <h1>FAQ View</h1>
-                                <p>Frequently Asked Questions.</p>
+                                <p>FAQ DEEZ NUTS.</p>
+                                <p>lol gottem.</p>
                         </div>
 
-                        
                 </main>
                 
                 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -1405,118 +1410,122 @@
                 </script>
 
                 <script>
-                        const documents = [
-                                "10_World_Overview",
-                                "11_Timeline",
-                                "12_Ether",
-                                "15_Electrique_Devices",
-                                "16_Wards",
-                                "20_Society",
-                                "30_Aetherial_Engines",
-                                "31_Currency",
-                                "40_Circuses_of_the_World",
-                                "41_Performer_Archetypes"
-                        ];
+                        function initializeDocumentSection(sectionId, fileList, folderName) {
+                          const listEl = document.getElementById(`${sectionId}List`);
+                          const sidebarEl = document.getElementById(`${sectionId}Sidebar`);
                         
-                        const docList = document.getElementById("docList");
-                        const sidebar = document.getElementById("docSidebar");
+                          fileList.forEach((docName, index) => {
+                            const row = document.createElement("div");
+                            row.className = "doc-entry";
                         
-                        documents.forEach((doc, index) => {
-                                const row = document.createElement("div");
-                                row.className = "doc-entry";
-                                
-                                const title = document.createElement("h2");
-                                title.textContent = doc.replace(/^\d+_/, "").replace(/_/g, " ").replace(/&/g, "and");
-                                
-                                const content = document.createElement("div");
-                                content.className = "doc-content";
-                                content.dataset.loaded = "false";
-                                content.dataset.src = `Documents/${doc}.html`;
-                                content.id = `doc-content-${index}`;
-                                
-                                row.appendChild(title);
-                                row.appendChild(content);
-                                docList.appendChild(row);
-                                
-                                const tocItem = document.createElement("li");
-                                tocItem.textContent = title.textContent;
-                                tocItem.addEventListener("click", () => {
-                                        document.querySelectorAll(".doc-content").forEach(el => el.classList.remove("open"));
-                                        const target = document.getElementById(`doc-content-${index}`);
-                                        if (target.dataset.loaded === "false") {
-                                                fetch(target.dataset.src)
-                                                        .then(res => res.text())
-                                                        .then(html => {
-                                                                html = html.replace(/src="media\//g, 'src="Documents/media/');
-                                                                target.innerHTML = `
-                                                                        <div class="doc-content-wrapper">
-                                                                                <div class="doc-content-inner">${html}
-                                                                                </div>
-                                                                        </div>`;
-                                                                target.dataset.loaded = "true";
-                                                                target.classList.add("open");
-                                                        });
-                                        } else {
-                                                target.classList.add("open");
-                                        }
-                                        setTimeout(() => {
-                                                const offset = 60; // height of nav bar
-                                                const y = target.getBoundingClientRect().top + window.scrollY - offset;
-                                                window.scrollTo({ top: y, behavior: "smooth" });
-                                        }, 50);
-                                });
-                                
-                                if (!sidebar.querySelector("ul")) sidebar.appendChild(document.createElement("ul"));
-                                sidebar.querySelector("ul").appendChild(tocItem);
-                                
-                                // Also enable row click behavior (as before)
-                                row.addEventListener("click", () => {
-                                        const isOpen = content.classList.contains("open");
-                                       
-                                       document.querySelectorAll(".doc-content").forEach(el => el.classList.remove("open"));
-                                       document.querySelectorAll(".doc-entry").forEach(el => {
-                                               el.classList.remove("expanded");
-                                               el.querySelector(".doc-content")?.classList.remove("open");
-                                               el.querySelector(".doc-content")?.scrollTo(0, 0);
-                                       });
-                                       
-                                       if (!isOpen) {
-                                               if (content.dataset.loaded === "false") {
-                                                       fetch(content.dataset.src)
-                                                               .then(res => res.text())
-                                                               .then(html => {
-                                                                       html = html.replace(/src="media\//g, 'src="Documents/media/');
-                                                                       content.innerHTML = `
-                                                                               <div class="doc-content-wrapper">
-                                                                                       <div class="doc-content-inner">${html}</div>
-                                                                               </div>
-                                                                       `;
-                                                                                                                                             
-                                                                       content.offsetHeight; // Force layout reflow
-                                                                       
-                                                                       requestAnimationFrame(() => {
-                                                                               content.dataset.loaded = "true";
-                                                                               content.classList.add("open");
-                                                                               row.classList.add("expanded");
-                                                                               scrollToEntry(row);
-                                                                       });
-                                                               });
-                                               } else {
-                                                       content.classList.add("open");
-                                                       row.classList.add("expanded");
-                                                       scrollToEntry(row);
-                                               }
-                                       }
-                                });
-                                
-                                function scrollToEntry(entry) {
-                                        setTimeout(() => {
-                                                const offset = 60; // height of nav bar
-                                                const y = entry.getBoundingClientRect().top + window.scrollY - offset;
-                                                window.scrollTo({ top: y, behavior: "smooth" });
-                                        }, 0);
+                            const title = document.createElement("h2");
+                            title.textContent = docName;
+                        
+                            const content = document.createElement("div");
+                            content.className = "doc-content";
+                            content.dataset.loaded = "false";
+                            content.dataset.src = `${folderName}/${docName}.html`;
+                            content.id = `${sectionId}-content-${index}`;
+                        
+                            row.appendChild(title);
+                            row.appendChild(content);
+                            listEl.appendChild(row);
+                        
+                            const tocItem = document.createElement("li");
+                            tocItem.textContent = docName;
+                            tocItem.addEventListener("click", () => {
+                              document.querySelectorAll(".doc-content").forEach(el => el.classList.remove("open"));
+                              const target = document.getElementById(`${sectionId}-content-${index}`);
+                              if (target.dataset.loaded === "false") {
+                                fetch(target.dataset.src)
+                                  .then(res => res.text())
+                                  .then(html => {
+                                    html = html.replace(/src="media\//g, `src="${folderName}/media/`);
+                                    target.innerHTML = `
+                                      <div class="doc-content-wrapper">
+                                        <div class="doc-content-inner">${html}</div>
+                                      </div>`;
+                                    target.dataset.loaded = "true";
+                                    target.classList.add("open");
+                                  });
+                              } else {
+                                target.classList.add("open");
+                              }
+                              setTimeout(() => {
+                                const offset = 60;
+                                const y = target.getBoundingClientRect().top + window.scrollY - offset;
+                                window.scrollTo({ top: y, behavior: "smooth" });
+                              }, 50);
+                            });
+                        
+                            if (!sidebarEl.querySelector("ul")) sidebarEl.appendChild(document.createElement("ul"));
+                            sidebarEl.querySelector("ul").appendChild(tocItem);
+                        
+                            row.addEventListener("click", () => {
+                              const isOpen = content.classList.contains("open");
+                              document.querySelectorAll(".doc-content").forEach(el => el.classList.remove("open"));
+                              document.querySelectorAll(".doc-entry").forEach(el => {
+                                el.classList.remove("expanded");
+                                el.querySelector(".doc-content")?.classList.remove("open");
+                                el.querySelector(".doc-content")?.scrollTo(0, 0);
+                              });
+                              if (!isOpen) {
+                                if (content.dataset.loaded === "false") {
+                                  fetch(content.dataset.src)
+                                    .then(res => res.text())
+                                    .then(html => {
+                                      html = html.replace(/src="media\//g, `src="${folderName}/media/`);
+                                      content.innerHTML = `
+                                        <div class="doc-content-wrapper">
+                                          <div class="doc-content-inner">${html}</div>
+                                        </div>`;
+                                      content.offsetHeight;
+                                      requestAnimationFrame(() => {
+                                        content.dataset.loaded = "true";
+                                        content.classList.add("open");
+                                        row.classList.add("expanded");
+                                        scrollToEntry(row);
+                                      });
+                                    });
+                                } else {
+                                  content.classList.add("open");
+                                  row.classList.add("expanded");
+                                  scrollToEntry(row);
                                 }
-                        });
+                              }
+                            });
+                        
+                            function scrollToEntry(entry) {
+                              setTimeout(() => {
+                                const offset = 60;
+                                const y = entry.getBoundingClientRect().top + window.scrollY - offset;
+                                window.scrollTo({ top: y, behavior: "smooth" });
+                              }, 0);
+                            }
+                          });
+                        }
+                        
+                        // Initialize both sections
+                        initializeDocumentSection("doc", [
+                          "10_World_Overview",
+                          "11_Timeline",
+                          "12_Ether",
+                          "15_Electrique_Devices",
+                          "16_Wards",
+                          "20_Society",
+                          "30_Aetherial_Engines",
+                          "31_Currency",
+                          "40_Circuses_of_the_World",
+                          "41_Performer_Archetypes"
+                        ], "Documents");
+                        
+                        initializeDocumentSection("mech", [
+                                "Core Mechanics",
+                                "Cost of Living Tables",
+                                "Glossary",
+                                "Player Driven Encounters",
+                                "Reputation Upgrade Tables"
+                        ], "Mechanics");
                 </script>
         </body>
 </html>
