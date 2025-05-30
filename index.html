@@ -387,7 +387,6 @@
                                 background: rgba(255,255,255,0.95);
                                 padding: 6px;
                                 border-radius: 6px;
-                                display: none !important;
                         }
                         .leaflet-control-layers-expanded {
                                 max-height: 300px;
@@ -819,6 +818,9 @@
                                                               
                                 #mapContainer {
                                         height: calc(var(--vh, 1vh) * 100 - 40px);
+                                }
+                                .leaflet-control-layers {
+                                        display: none !important;
                                 }
                                 .leaflet-control-attribution {
                                         display: flex !important;
