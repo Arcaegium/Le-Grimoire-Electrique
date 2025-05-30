@@ -1559,6 +1559,12 @@
                                 "Cost of Living Tables",
                                 "Glossary"
                         ], "Mechanics");
+
+                        const params = new URLSearchParams(window.location.search);
+                        if (params.get('key') && window.location.hash === '#map') {
+                                showView('map');
+                        }
+
                 </script>
         </body>
 </html>
