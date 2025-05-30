@@ -886,6 +886,17 @@
                                         word-break: normal !important;
                                 }
                         }
+                        
+                        body[data-view="mechanics"] .doc-entry,
+                        body[data-view="mechanics"] .doc-entry.expanded,
+                        body[data-view="mechanics"] .doc-content-inner {
+                                column-count: 1 !important;
+                                column-width: auto !important;
+                                column-gap: 0 !important;
+                                column-rule: none !important;
+                                padding: 2em !important;
+                        }
+                        
                 </style>
               
         </head>
@@ -1076,6 +1087,7 @@
                         function showView(id) {
                                 document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
                                 document.getElementById(id).classList.add('active');
+                                document.body.dataset.view = id;
                                 window.scrollTo({ top: 0, behavior: 'instant' });
                                 
                                 document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
