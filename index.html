@@ -715,6 +715,16 @@
                           font-size: 1em;
                           font-weight: bold;
                         }
+                        .spotify-player {
+                                width: 100%;
+                                max-width: 600px;
+                                margin: 2em auto;
+                        }
+                        .spotify-player iframe {
+                                width: 100%;
+                                height: 352px;
+                        }
+                        
                         @media (max-width: 768px) {
                                 .gallery-controls {
                                         flex-direction: column;
@@ -899,6 +909,16 @@
                                 #mechanics .mobile-rotate-warning {
                                         display: block;
                                 }
+                                .spotify-player {
+                                        position: relative;
+                                        width: 100vw;
+                                        margin: 1em 0;
+                                        padding: 0 0.5em;
+                                }
+                                .spotify-player iframe {
+                                        height: 48px;
+                                        border-radius: 0;
+                                }
                         }
                         
                         body[data-view="mechanics"] .doc-entry,
@@ -995,6 +1015,14 @@
                                                         <img alt="Intro Text" src="gifs/Home Intro Text.png"/>
                                                 </div>
                                         </div>
+                                        <div class="spotify-player">
+                                                <iframe style="border-radius:12px;" 
+                                                        src="https://open.spotify.com/embed/playlist/0voZz5prKfdnHHLVNAqhjj?utm_source=generator&theme=0"
+                                                        frameborder="0" allowfullscreen=""
+                                                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                                                        loading="lazy">
+                                                </iframe>
+                                        </div>
                                         <div class="button-grid">
                                                 <div class="section-button" onclick="showView('videos')">
                                                         <img alt="Videos" src="gifs/VideosFlash.gif"/>
@@ -1011,14 +1039,6 @@
                                                 <div class="section-button" onclick="showView('mechanics')">
                                                         <img alt="Mechanics" src="gifs/Mechanics.gif"/>
                                                 </div>
-                                        </div>
-                                        <div style="max-width:90vw; margin:2em auto; overflow-x:hidden;">
-                                                <iframe style="border-radius:12px; width:100%; height:352px;" 
-                                                        src="https://open.spotify.com/embed/playlist/0voZz5prKfdnHHLVNAqhjj?utm_source=generator&theme=0"
-                                                        frameborder="0" allowfullscreen="" 
-                                                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                                                        loading="lazy">
-                                                </iframe>
                                         </div>
                                 </div>
                         </div>
