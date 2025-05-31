@@ -200,7 +200,7 @@
     {
       "type": "Feature",
       "properties": {
-        "popupContent": "Lem's Spot",
+        "popupContent": "Home Base",
         "markerType": "campsite"
       },
       "geometry": {
