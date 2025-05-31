@@ -706,7 +706,15 @@
                                 color: #000;
                                 font-weight: bold;
                         }
-                        
+                        .mobile-rotate-warning {
+                          display: none;
+                          color: white;
+                          background: rgba(0, 0, 0, 0.6);
+                          text-align: center;
+                          padding: 1em;
+                          font-size: 1em;
+                          font-weight: bold;
+                        }
                         @media (max-width: 768px) {
                                 .gallery-controls {
                                         flex-direction: column;
@@ -886,6 +894,10 @@
                                         column-gap: 0 !important;
                                         white-space: normal !important;
                                         word-break: normal !important;
+                                }
+                                #documents .mobile-rotate-warning,
+                                #mechanics .mobile-rotate-warning {
+                                        display: block;
                                 }
                         }
                         
@@ -1083,6 +1095,9 @@
                         <!-- Documents view -->
                         <div class="view" id="documents">
                                 <div class="documents-container">
+                                        <div class="mobile-rotate-warning">
+                                                Please turn your phone horizontally for the best reading experience.
+                                        </div>
                                         <aside id="docSidebar" class="doc-sidebar"></aside>
                                         <div id="docList" class="doc-list">
                                                 <img src="gifs/Documents.gif" alt="Documents" style="display: block; margin: 0 auto 40px; height: auto;" />
@@ -1093,6 +1108,9 @@
                         <!-- Mechanics view -->
                         <div class="view" id="mechanics">
                                 <div class="documents-container">
+                                        <div class="mobile-rotate-warning">
+                                                Please turn your phone horizontally for the best reading experience.
+                                        </div>
                                         <aside id="mechSidebar" class="doc-sidebar"></aside>
                                         <div id="mechList" class="doc-list">
                                                 <img src="gifs/Mechanics.gif" alt="Mechanics" style="display: block; margin: 0 auto 40px; height: auto;" />
