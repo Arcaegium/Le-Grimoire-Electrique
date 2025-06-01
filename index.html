@@ -718,10 +718,16 @@
                           font-size: 1em;
                           font-weight: bold;
                         }
+                        .button-grid-wrapper {
+                                width: 100%;
+                                display: flex;
+                                justify-content: center;
+                                margin-top: 2em;
+                        }
                         .spotify-player {
                                 flex: 0 0 30%;
                                 align-self: flex-start;
-                                margin-top: 1.7em; /* align with intro-box top */
+                                margin-top: 2em; /* align with intro-box top */
                         }
                         .spotify-player iframe {
                                 width: 100%;
@@ -1027,22 +1033,24 @@
                                                 </div>
                                         </div>
                                 </div>
-                                
-                                <div class="button-grid">
-                                        <div class="section-button" onclick="showView('videos')">
-                                                <img alt="Videos" src="gifs/VideosFlash.gif" />
-                                        </div>
-                                        <div class="section-button" onclick="showView('map')">
-                                                <img alt="Map" src="gifs/Map.gif" />
-                                        </div>
-                                        <div class="section-button" onclick="showView('gallery')">
-                                                <img alt="Gallery" src="gifs/Gallery.gif" />
-                                        </div>
-                                        <div class="section-button" onclick="showView('documents')">
-                                                <img alt="Documents" src="gifs/Documents.gif" />
-                                        </div>
-                                        <div class="section-button" onclick="showView('mechanics')">
-                                                <img alt="Mechanics" src="gifs/Mechanics.gif" />
+
+                                <div class="button-grid-wrapper">
+                                        <div class="button-grid">
+                                                <div class="section-button" onclick="showView('videos')">
+                                                        <img alt="Videos" src="gifs/VideosFlash.gif" />
+                                                </div>
+                                                <div class="section-button" onclick="showView('map')">
+                                                        <img alt="Map" src="gifs/Map.gif" />
+                                                </div>
+                                                <div class="section-button" onclick="showView('gallery')">
+                                                        <img alt="Gallery" src="gifs/Gallery.gif" />
+                                                </div>
+                                                <div class="section-button" onclick="showView('documents')">
+                                                        <img alt="Documents" src="gifs/Documents.gif" />
+                                                </div>
+                                                <div class="section-button" onclick="showView('mechanics')">
+                                                        <img alt="Mechanics" src="gifs/Mechanics.gif" />
+                                                </div>
                                         </div>
                                 </div>
                         </div>
