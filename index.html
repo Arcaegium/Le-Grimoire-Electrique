@@ -918,16 +918,21 @@
                                 #mechanics .mobile-rotate-warning {
                                         display: block;
                                 }
+                                .home-content {
+                                        flex-direction: column;
+                                        align-items: center;
+                                        gap: 1.5em;
+                                }
                                 .spotify-player {
                                         width: 100%;
                                         padding: 0 0.5em;
                                         margin: 0 auto 1em auto;
                                         align-self: center;
-                                        order: -1; /* forces it to the top of the flex container */
+                                        order: -1;
                                 }
                                 .spotify-player iframe {
                                         width: 100%;
-                                        height: 80px; /* tall enough for play button */
+                                        height: 80px;
                                         border-radius: 0;
                                 }
                         }
