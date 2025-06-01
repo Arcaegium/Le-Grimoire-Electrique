@@ -919,13 +919,15 @@
                                         display: block;
                                 }
                                 .spotify-player {
-                                        position: relative;
-                                        width: 100vw;
-                                        margin: 1em 0;
+                                        width: 100%;
                                         padding: 0 0.5em;
+                                        margin: 0 auto 1em auto;
+                                        align-self: center;
+                                        order: -1; /* forces it to the top of the flex container */
                                 }
                                 .spotify-player iframe {
-                                        height: 48px;
+                                        width: 100%;
+                                        height: 80px; /* tall enough for play button */
                                         border-radius: 0;
                                 }
                         }
