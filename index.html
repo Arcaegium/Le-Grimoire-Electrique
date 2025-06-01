@@ -1385,13 +1385,21 @@
                                         document.body.classList.add('owner-active');
                                 }
                                 
+                                // Combine public and private markers into one editable group for owner
+                                const editableGroup = new L.FeatureGroup();
+                                publicMarkers.eachLayer(layer => editableGroup.addLayer(layer));
+                                if (isOwner) {
+                                        privateMarkers.eachLayer(layer => editableGroup.addLayer(layer));
+                                }
+                                
                                 const drawControl = new L.Control.Draw({
-                                        edit: { featureGroup: publicMarkers, edit: isOwner },
+                                        edit: { featureGroup: isOwner ? editableGroup : publicMarkers, edit: isOwner },
                                         draw: {
                                                 polygon: true, polyline: true, rectangle: true, marker: true,
                                                 circle: false, circlemarker: false
                                         }
                                 });
+
                                 map.addControl(drawControl);
             
                                 const markerStyles = {
