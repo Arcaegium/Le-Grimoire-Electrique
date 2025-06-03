@@ -437,7 +437,7 @@
       "properties": {
         "popupContent": "Rumor 001- Carriage Dock",
         "markerType": "concern",
-        "visibility": "public"
+        "visibility": "private"
       },
       "geometry": {
         "type": "Point",
