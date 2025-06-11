@@ -481,7 +481,7 @@
       "type": "Feature",
       "properties": {
         "popupContent": "Southern Ward Limit",
-        "markerType": "concern",
+        "markerType": "ward",
         "visibility": "private"
       },
       "geometry": {
@@ -496,7 +496,7 @@
       "type": "Feature",
       "properties": {
         "popupContent": "Southern Ward Limit",
-        "markerType": "concern",
+        "markerType": "ward",
         "visibility": "private"
       },
       "geometry": {
@@ -511,7 +511,7 @@
       "type": "Feature",
       "properties": {
         "popupContent": "Eastern Ward Limit",
-        "markerType": "concern",
+        "markerType": "ward",
         "visibility": "private"
       },
       "geometry": {
@@ -526,7 +526,7 @@
       "type": "Feature",
       "properties": {
         "popupContent": "Eastern Ward Limit",
-        "markerType": "concern",
+        "markerType": "ward",
         "visibility": "private"
       },
       "geometry": {
@@ -540,8 +540,8 @@
     {
       "type": "Feature",
       "properties": {
-        "popupContent": "NorthN Ward Limit",
-        "markerType": "concern",
+        "popupContent": "Northern Ward Limit",
+        "markerType": "ward",
         "visibility": "private"
       },
       "geometry": {
@@ -556,7 +556,7 @@
       "type": "Feature",
       "properties": {
         "popupContent": "Northern Ward Limit",
-        "markerType": "concern",
+        "markerType": "ward",
         "visibility": "private"
       },
       "geometry": {
@@ -571,7 +571,7 @@
       "type": "Feature",
       "properties": {
         "popupContent": "Western Ward Limit",
-        "markerType": "concern",
+        "markerType": "ward",
         "visibility": "private"
       },
       "geometry": {
@@ -586,7 +586,7 @@
       "type": "Feature",
       "properties": {
         "popupContent": "Western Ward Limit",
-        "markerType": "concern",
+        "markerType": "ward",
         "visibility": "private"
       },
       "geometry": {
@@ -601,7 +601,7 @@
       "type": "Feature",
       "properties": {
         "popupContent": "North-Western Ward Limit",
-        "markerType": "concern",
+        "markerType": "ward",
         "visibility": "private"
       },
       "geometry": {
@@ -616,7 +616,7 @@
       "type": "Feature",
       "properties": {
         "popupContent": "Southern Ward Limit",
-        "markerType": "concern",
+        "markerType": "ward",
         "visibility": "private"
       },
       "geometry": {
@@ -631,7 +631,7 @@
       "type": "Feature",
       "properties": {
         "popupContent": "South-Western Ward Limit",
-        "markerType": "concern",
+        "markerType": "ward",
         "visibility": "private"
       },
       "geometry": {
@@ -646,7 +646,7 @@
       "type": "Feature",
       "properties": {
         "popupContent": "Northern Ward Limit",
-        "markerType": "concern",
+        "markerType": "ward",
         "visibility": "private"
       },
       "geometry": {
@@ -661,7 +661,7 @@
       "type": "Feature",
       "properties": {
         "popupContent": "South-Eastern Ward Limit",
-        "markerType": "concern",
+        "markerType": "ward",
         "visibility": "private"
       },
       "geometry": {
